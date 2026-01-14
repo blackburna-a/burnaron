@@ -3,447 +3,220 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Alex Blackburn — Operations & Customer Support</title>
+  <title>Alex Blackburn — Support · Operations · Technical Problem Solving</title>
 
-  <!--
-    Single-file, static personal website suitable for GitHub Pages.
-    - Plain HTML5, modern CSS (embedded)
-    - No external dependencies
-    - Responsive, professional, neutral aesthetic
-    - Update text, links, and CV path as needed
-  -->
+  <!-- Link to external stylesheet -->
+  <link rel="stylesheet" href="styles.css">
 
-  <style>
-    /* ===========================
-       CSS VARIABLES (THEME)
-       Change these to customize colors quickly.
-       =========================== */
-    :root{
-      --bg: #f7f8fb;
-      --surface: #ffffff;
-      --accent: #2b6cb0; /* blue */
-      --accent-strong: #1e4e86;
-      --text: #0f1724;
-      --muted: #56606b;
-      --shadow: rgba(18, 24, 34, 0.06);
-      --radius: 12px;
-      --gap: 1.25rem;
-      --max-width: 980px;
-      --transition: 180ms cubic-bezier(.2,.9,.2,1);
-      --glass: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.5));
-    }
-
-    /* ===========================
-       Global reset & base
-       =========================== */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:var(--bg);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:1.5;
-      padding:2rem 1rem;
-      display:flex;
-      justify-content:center;
-    }
-    a{color:inherit; text-decoration:none}
-    img{max-width:100%;display:block}
-
-    /* Container */
-    .site{
-      width:100%;
-      max-width:var(--max-width);
-      background:transparent;
-    }
-
-    /* ===========================
-       Header / Hero
-       =========================== */
-    header.hero{
-      display:flex;
-      flex-direction:column;
-      gap:var(--gap);
-      align-items:flex-start;
-      margin-bottom:2rem;
-    }
-
-    .hero-card{
-      width:100%;
-      background:var(--surface);
-      border-radius:var(--radius);
-      box-shadow:0 6px 18px var(--shadow);
-      padding:2rem;
-      display:flex;
-      gap:1.25rem;
-      align-items:center;
-    }
-
-    /* Placeholder avatar (use an actual photo if desired) */
-    .avatar{
-      flex:0 0 84px;
-      height:84px;
-      border-radius:14px;
-      background:linear-gradient(180deg,#e6eefb,#f6f9ff);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:var(--accent-strong);
-      font-weight:600;
-      font-size:28px;
-      box-shadow:inset 0 -6px 18px rgba(27,78,139,0.04);
-    }
-
-    .hero-content{
-      flex:1;
-      min-width:0;
-    }
-
-    .name{
-      font-size:1.5rem;
-      font-weight:700;
-      margin:0 0 0.25rem 0;
-    }
-
-    .tagline{
-      margin:0;
-      color:var(--muted);
-      font-size:1rem;
-    }
-
-    .hero-actions{
-      margin-top:1rem;
-      display:flex;
-      gap:0.75rem;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:0.5rem;
-      padding:0.6rem 0.9rem;
-      border-radius:10px;
-      font-weight:600;
-      cursor:pointer;
-      transition:all var(--transition);
-      border:1px solid transparent;
-      text-decoration:none;
-    }
-
-    .btn-primary{
-      background:var(--accent);
-      color:white;
-      border-color:var(--accent);
-      box-shadow:0 6px 18px rgba(43,108,176,0.12);
-    }
-    .btn-primary:hover{ transform:translateY(-3px); background:var(--accent-strong); border-color:var(--accent-strong) }
-
-    .btn-ghost{
-      background:transparent;
-      color:var(--accent-strong);
-      border-color:rgba(30,78,134,0.08);
-    }
-    .btn-ghost:hover{ background:rgba(30,78,134,0.04); transform:translateY(-2px) }
-
-    /* Smooth scrolling for internal links */
-    html { scroll-behavior: smooth; }
-
-    /* ===========================
-       Main content layout
-       =========================== */
-    main{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:1.25rem;
-    }
-
-    .card{
-      background:var(--surface);
-      border-radius:12px;
-      padding:1.25rem;
-      box-shadow:0 4px 14px var(--shadow);
-    }
-
-    .section-title{
-      margin:0 0 0.75rem 0;
-      font-size:1.05rem;
-      font-weight:700;
-    }
-    p.lead{ margin:0; color:var(--muted) }
-
-    /* Skills grid */
-    .skills-grid{
-      display:grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap:0.75rem;
-    }
-    .skill-cat{
-      padding:0.8rem;
-      border-radius:10px;
-      background:linear-gradient(180deg, rgba(250,250,252,1), rgba(246,247,250,1));
-      border:1px solid rgba(20,24,30,0.03);
-    }
-    .skill-cat h4{ margin:0 0 0.5rem 0; font-size:0.95rem }
-    .skill-list{ margin:0; padding:0; list-style:none; color:var(--muted); display:flex; gap:0.5rem; flex-wrap:wrap }
-    .skill-list li{
-      background:rgba(16,24,34,0.03);
-      padding:0.35rem 0.5rem;
-      border-radius:8px;
-      font-size:0.88rem;
-    }
-
-    /* Experience: simple card/timeline */
-    .experience-list{
-      display:grid;
-      gap:0.75rem;
-    }
-    .exp-item{
-      display:flex;
-      gap:0.75rem;
-      align-items:flex-start;
-    }
-    .exp-meta{
-      width:96px;
-      flex:0 0 96px;
-      color:var(--muted);
-      font-size:0.9rem;
-    }
-    .exp-body{
-      flex:1;
-    }
-    .exp-role{ margin:0; font-weight:700 }
-    .exp-company{ margin:0; color:var(--muted); font-size:0.95rem }
-    .exp-desc{ margin-top:0.5rem; color:var(--muted) }
-
-    /* Contact row */
-    .contact-row{
-      display:flex;
-      gap:1rem;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .contact-link{
-      display:inline-flex;
-      gap:0.6rem;
-      align-items:center;
-      padding:0.5rem 0.75rem;
-      border-radius:8px;
-      background:linear-gradient(180deg, rgba(255,255,255,1), rgba(250,251,253,1));
-      border:1px solid rgba(18,24,34,0.04);
-      color:var(--accent-strong);
-      font-weight:600;
-    }
-    .contact-link:hover{ transform:translateY(-2px) }
-
-    /* Footer */
-    footer{
-      margin-top:1.5rem;
-      text-align:center;
-      color:var(--muted);
-      font-size:0.9rem;
-      padding-bottom:1.25rem;
-    }
-
-    /* ===========================
-       Responsive
-       =========================== */
-    @media (min-width:720px){
-      header.hero{ flex-direction:row; align-items:center; gap:1.25rem }
-      .hero-card{ padding:2rem 2.25rem }
-      main{ grid-template-columns: 1fr 380px; align-items:start; gap:1.5rem }
-      .skills-grid{ grid-template-columns: 1fr }
-    }
-
-    @media (min-width:980px){
-      .skills-grid{ grid-template-columns: repeat(2, 1fr) }
-      main{ grid-template-columns: 1fr 340px; gap:2rem }
-    }
-
-    /* Accessibility focus outline */
-    a:focus, button:focus { outline:3px solid rgba(43,108,176,0.16); outline-offset:2px; border-radius:8px }
-  </style>
+  <!-- Meta description for clarity -->
+  <meta name="description" content="Alex Blackburn — operations, customer support, and technical problem solving. Case studies show how I investigate problems, coordinate fixes, and improve processes.">
 </head>
 <body>
-  <div class="site">
-    <!-- Header / Hero -->
-    <header class="hero" role="banner">
-      <div class="hero-card" aria-labelledby="hero-heading">
-        <!-- Avatar: replace with <img src="..." alt="Alex Blackburn"> if desired -->
-        <div class="avatar" aria-hidden="true">AB</div>
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#main">Skip to content</a>
 
-        <div class="hero-content">
-          <!-- Full name and short tagline -->
-          <h1 id="hero-heading" class="name">Alex Blackburn</h1>
-          <p class="tagline">Operations & Customer Support professional — friendly, reliable, and tech-adjacent</p>
-
-          <!-- CTAs: Contact (scrolls to contact) and Download CV (link to file) -->
-          <div class="hero-actions">
-            <!-- Contact: internal link to contact section -->
-            <a class="btn btn-primary" href="#contact" title="Contact">
-              Contact
-            </a>
-
-            <!-- Download CV: replace href with actual CV file path; 'download' hints browser to save -->
-            <a class="btn btn-ghost" href="/assets/CV-Alex-Blackburn.pdf" download title="Download CV">
-              Download CV
-            </a>
+  <header class="site-header" role="banner" aria-label="Hero">
+    <div class="container header-inner">
+      <div class="hero">
+        <div class="hero-meta">
+          <div class="avatar" aria-hidden="true">AB</div>
+          <div>
+            <h1 class="name">Alex Blackburn</h1>
+            <p class="summary">Practical operator and customer-facing problem solver — I investigate, communicate, and deliver clearer outcomes.</p>
           </div>
         </div>
-      </div>
-    </header>
 
-    <!-- Main content: left = About + Experience, right = Skills + Contact summary -->
-    <main role="main">
-      <!-- Left column -->
-      <section aria-labelledby="about-title" class="card">
-        <!-- About -->
-        <h2 id="about-title" class="section-title">About</h2>
-        <!-- Friendly, concise professional summary -->
-        <p class="lead">
-          I focus on solving practical problems, helping teams run smoothly, and supporting customers with clarity and empathy.
-          I enjoy translating technical information into simple next steps, coordinating across teams, and using lightweight tooling
-          to make day-to-day work more efficient. Reliable communication and steady problem-solving are the foundation of my approach.
+        <p class="hero-blurb">
+          I help teams reduce friction and customers get unstuck. I like lightweight tooling, clear processes, and measurable improvements.
         </p>
 
-        <!-- Experience -->
-        <div style="margin-top:1rem">
-          <h3 class="section-title">Experience</h3>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="#case-studies">View Case Studies</a>
+          <a class="btn btn-ghost" href="#contact">Contact</a>
+        </div>
+      </div>
+    </div>
+  </header>
 
-          <div class="experience-list" role="list">
-            <!-- Placeholder entry 1 -->
-            <article class="exp-item" role="listitem" aria-labelledby="exp1-role">
-              <div class="exp-meta">2023 — Present</div>
-              <div class="exp-body">
-                <h4 id="exp1-role" class="exp-role">Operations Coordinator</h4>
-                <div class="exp-company">Acme Operations</div>
-                <p class="exp-desc">
-                  Supported cross-functional teams to streamline processes, led onboarding documentation updates, and coordinated
-                  vendor relationships. Focused on improving response times and reducing repetitive manual tasks.
-                </p>
-              </div>
-            </article>
+  <main id="main" class="site-main" role="main">
+    <div class="container grid">
 
-            <!-- Placeholder entry 2 -->
-            <article class="exp-item" role="listitem" aria-labelledby="exp2-role">
-              <div class="exp-meta">2020 — 2023</div>
-              <div class="exp-body">
-                <h4 id="exp2-role" class="exp-role">Customer Support Specialist</h4>
-                <div class="exp-company">BrightHelp</div>
-                <p class="exp-desc">
-                  Delivered thoughtful customer support across email and chat, documented common issues, and worked with engineers
-                  to prioritize fixes. Emphasized empathy, clear explanations, and follow-through until resolution.
-                </p>
-              </div>
-            </article>
+      <!-- How I Work -->
+      <section id="how-i-work" class="card work" aria-labelledby="how-title">
+        <h2 id="how-title" class="section-title">How I work</h2>
 
-            <!-- Placeholder entry 3 -->
-            <article class="exp-item" role="listitem" aria-labelledby="exp3-role">
-              <div class="exp-meta">2018 — 2020</div>
-              <div class="exp-body">
-                <h4 id="exp3-role" class="exp-role">Support & Ops Assistant</h4>
-                <div class="exp-company">Local Startup</div>
-                <p class="exp-desc">
-                  Helped maintain knowledge base content, coordinated small projects, and assisted customers with setup and configuration.
-                </p>
+        <p class="section-lead">A short, repeatable approach I use to move ambiguous problems toward reliable outcomes.</p>
+
+        <ol class="work-steps" role="list">
+          <li class="step">
+            <h3 class="step-title">Investigate — start with facts</h3>
+            <p class="step-desc">I collect logs, reproduce the issue, and ask targeted questions to separate symptoms from root causes.</p>
+          </li>
+
+          <li class="step">
+            <h3 class="step-title">Prioritize — keep impact first</h3>
+            <p class="step-desc">I weigh user impact, effort, and risk to pick the smallest meaningful action that reduces customer pain.</p>
+          </li>
+
+          <li class="step">
+            <h3 class="step-title">Communicate — clarity at every step</h3>
+            <p class="step-desc">I surface trade-offs, document decisions, and give clear next steps to teams and customers.</p>
+          </li>
+
+          <li class="step">
+            <h3 class="step-title">Document — make knowledge reusable</h3>
+            <p class="step-desc">I capture diagnostic steps, runbooks, and FAQ entries so fixes are repeatable and onboarding is faster.</p>
+          </li>
+
+          <li class="step">
+            <h3 class="step-title">Improve — measure and iterate</h3>
+            <p class="step-desc">I track metrics, remove manual steps, and automate small, high-value tasks over time.</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Case Studies -->
+      <section id="case-studies" class="card cases" aria-labelledby="cases-title">
+        <h2 id="cases-title" class="section-title">Case studies</h2>
+        <p class="section-lead">Three concise examples that show how I break down problems and deliver results. Expand each item to read the structure: Problem • Constraints • Action • Outcome.</p>
+
+        <div class="case-list">
+
+          <details class="case" data-case-id="1">
+            <summary>
+              <div class="case-summary">
+                <strong>Payment failures after a release</strong>
+                <span class="muted">— reduced failed transactions from 7% to 0.5% in 48 hours</span>
               </div>
-            </article>
-          </div>
+            </summary>
+
+            <div class="case-body">
+              <dl>
+                <dt>Problem</dt>
+                <dd>Customers experienced transient payment failures after a deploy. Volume of support tickets increased and some payments were double-submitted.</dd>
+
+                <dt>Constraints</dt>
+                <dd>Live system, limited engineering time, need to avoid customer billing issues and preserve data integrity.</dd>
+
+                <dt>Action</dt>
+                <dd>I reproduced the failure from logs, isolated a race condition in the payment retry logic, introduced a safe server-side guard, and coordinated a small rollback+patch with engineers. I communicated recommended workarounds to support and published short runbook steps.</dd>
+
+                <dt>Outcome</dt>
+                <dd>Failed payments dropped to 0.5% within 48 hours. No customers were double-charged. The runbook reduced average ticket handling time by 18% for that issue class.</dd>
+              </dl>
+            </div>
+          </details>
+
+          <details class="case" data-case-id="2">
+            <summary>
+              <div class="case-summary">
+                <strong>Confusing onboarding flow</strong>
+                <span class="muted">— improved activation rate by 12% with small UX and docs changes</span>
+              </div>
+            </summary>
+
+            <div class="case-body">
+              <dl>
+                <dt>Problem</dt>
+                <dd>New users frequently dropped out during a multi-step setup; support tickets showed identical points of confusion.</dd>
+
+                <dt>Constraints</dt>
+                <dd>Product roadmap limited immediate UI changes; need low-effort, quick wins to help new users now.</dd>
+
+                <dt>Action</dt>
+                <dd>I mapped the funnel, captured common confusion points, added inline help text and a short checklist in the onboarding email, and worked with product to prioritize a small UI tweak in the next sprint.</dd>
+
+                <dt>Outcome</dt>
+                <dd>Activation (first successful task) rose 12% in the month after the change. Support tickets for the onboarding area dropped by half.</dd>
+              </dl>
+            </div>
+          </details>
+
+          <details class="case" data-case-id="3">
+            <summary>
+              <div class="case-summary">
+                <strong>Recurring manual reporting</strong>
+                <span class="muted">— saved ~6 hours/week through lightweight automation</span>
+              </div>
+            </summary>
+
+            <div class="case-body">
+              <dl>
+                <dt>Problem</dt>
+                <dd>Operations ran a weekly report that required manual extraction, transformation, and emailing to stakeholders.</dd>
+
+                <dt>Constraints</dt>
+                <dd>No new vendor tools allowed; preference for a low-maintenance solution that engineers could review quickly.</dd>
+
+                <dt>Action</dt>
+                <dd>I created a small script that pulled sanitized data via existing APIs, generated the report, and delivered it to a shared location. I documented the setup and added a scheduled CI job to run it.</dd>
+
+                <dt>Outcome</dt>
+                <dd>Saved ~6 hours per week across the team. The report was reliable and auditable; stakeholders received it on time without manual steps.</dd>
+              </dl>
+            </div>
+          </details>
+
         </div>
       </section>
 
-      <!-- Right column / sidebar -->
-      <aside>
-        <!-- Skills -->
-        <section class="card" aria-labelledby="skills-title">
-          <h2 id="skills-title" class="section-title">Skills</h2>
+      <!-- Skills & Tools (sidebar on wider screens) -->
+      <aside class="card skills" aria-labelledby="skills-title">
+        <h2 id="skills-title" class="section-title">Skills & tools</h2>
 
-          <div class="skills-grid" role="list">
-            <div class="skill-cat" role="listitem" aria-label="Customer Support & Operations">
-              <h4>Customer Support & Operations</h4>
-              <ul class="skill-list">
-                <li>Customer communication</li>
-                <li>Ticket triage</li>
-                <li>Process documentation</li>
-                <li>Onboarding & training</li>
-              </ul>
-            </div>
-
-            <div class="skill-cat" role="listitem" aria-label="Technical Skills">
-              <h4>Technical Skills</h4>
-              <ul class="skill-list">
-                <li>Basic SQL</li>
-                <li>Command line</li>
-                <li>APIs & webhooks</li>
-                <li>Troubleshooting</li>
-              </ul>
-            </div>
-
-            <div class="skill-cat" role="listitem" aria-label="Tools & Platforms">
-              <h4>Tools & Platforms</h4>
-              <ul class="skill-list">
-                <li>Zendesk / Freshdesk</li>
-                <li>G Suite / Office</li>
-                <li>GitHub</li>
-                <li>Slack, Notion</li>
-              </ul>
-            </div>
-
-            <div class="skill-cat" role="listitem" aria-label="Soft Skills">
-              <h4>Working Style</h4>
-              <ul class="skill-list">
-                <li>Clear communication</li>
-                <li>Prioritization</li>
-                <li>Empathy</li>
-                <li>Process-oriented</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- Contact -->
-        <section id="contact" class="card" aria-labelledby="contact-title" style="margin-top:1rem">
-          <h2 id="contact-title" class="section-title">Contact</h2>
-
-          <!--
-            Update the email and LinkedIn URL below.
-            - The email below is a placeholder and should be replaced with a real address.
-            - GitHub link uses your provided username.
-          -->
-          <div class="contact-row">
-            <a class="contact-link" href="mailto:hello@alexblackburn.com">hello@alexblackburn.com</a>
-
-            <a class="contact-link" href="https://www.linkedin.com/in/yourprofile" target="_blank" rel="noopener">
-              LinkedIn
-            </a>
-
-            <a class="contact-link" href="https://github.com/blackburna-a" target="_blank" rel="noopener">
-              GitHub
-            </a>
+        <div class="skills-groups">
+          <div class="skill-group">
+            <h3 class="skill-heading">Support</h3>
+            <ul>
+              <li>Customer communication (email & chat)</li>
+              <li>Ticket triage & escalation</li>
+              <li>Runbooks & troubleshooting guides</li>
+            </ul>
           </div>
 
-          <p style="margin-top:0.75rem; color:var(--muted); font-size:0.95rem">
-            Available for operations, customer-facing, and tech-adjacent roles. Open to remote and hybrid opportunities.
-          </p>
-        </section>
+          <div class="skill-group">
+            <h3 class="skill-heading">Operations</h3>
+            <ul>
+              <li>Process definition & improvement</li>
+              <li>Onboarding & training</li>
+              <li>Scheduling and vendor coordination</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3 class="skill-heading">Technical</h3>
+            <ul>
+              <li>Basic SQL & data queries</li>
+              <li>APIs, webhooks, and lightweight scripts</li>
+              <li>Command line and Git</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="muted small">Tools: Zendesk/Freshdesk, Slack, Notion, GitHub, basic spreadsheet tooling.</p>
       </aside>
-    </main>
 
-    <!-- Footer -->
-    <footer role="contentinfo">
-      <div style="max-width:var(--max-width);margin:0 auto">
-        <small>© <span id="year"></span> Alex Blackburn. Built with simple HTML & CSS. Replace content and links to personalize.</small>
-      </div>
-    </footer>
-  </div>
+      <!-- Contact -->
+      <section id="contact" class="card contact" aria-labelledby="contact-title">
+        <h2 id="contact-title" class="section-title">Contact</h2>
 
-  <script>
-    // Minimal script: set current year in footer.
-    // No layout JS required — site uses CSS-only responsive behaviors.
-    (function(){ document.getElementById('year').textContent = new Date().getFullYear(); })();
-  </script>
+        <p class="section-lead">Let's talk about how I can help your team reduce friction and support customers more effectively.</p>
+
+        <div class="contact-links">
+          <a class="contact-item" href="mailto:hello@alexblackburn.com">hello@alexblackburn.com</a>
+          <a class="contact-item" href="https://github.com/blackburna-a" target="_blank" rel="noopener">github.com/blackburna-a</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <small class="muted">© <span id="year">2026</span> Alex Blackburn — Built with plain HTML, CSS, and small JS. Content can be extended.</small>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
 </body>
 </html>
