@@ -3,16 +3,144 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Alex Blackburn — Support · Operations · Technical Problem Solving</title>
+  <title>Aron Blackburn — Support · Operations · Technical Problem Solving</title>
+  <meta name="description" content="Aron Blackburn — operations, customer support, and technical problem solving. Case studies show how I investigate problems, coordinate fixes, and improve processes.">
 
-  <!-- Link to external stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+  <!-- Inlined styles.css -->
+  <style>
+    /* ====== Theme & base ====== */
+    :root{
+      --bg: #f4fbfb;
+      --surface: #ffffff;
+      --muted: #5b6b6a;
+      --text: #062428;
+      --accent: #0ea5a4;
+      --accent-strong: #087f7a;
+      --radius: 12px;
+      --shadow: 0 8px 26px rgba(6,36,40,0.06);
+      --max-width: 980px;
+      --gap: 1.25rem;
+      --transition: 260ms cubic-bezier(.2,.9,.2,1);
+    }
+    @media (prefers-reduced-motion: reduce) { :root { --transition: 0ms; } }
 
-  <!-- Meta description for clarity -->
-  <meta name="description" content="Alex Blackburn — operations, customer support, and technical problem solving. Case studies show how I investigate problems, coordinate fixes, and improve processes.">
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding:1.25rem;
+      display:flex;
+      justify-content:center;
+      font-size:16px;
+    }
+
+    .container{ width:100%; max-width:var(--max-width); margin:0 auto; }
+
+    /* Skip link */
+    .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link:focus{ left:1rem; top:1rem; width:auto; height:auto; padding:0.5rem 0.75rem; background:var(--surface); border-radius:8px; box-shadow:var(--shadow); z-index:1000; }
+
+    /* Splash overlay */
+    .splash{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:var(--surface); z-index:1200; transition:opacity 700ms ease, transform 700ms ease; }
+    .splash-inner{ text-align:center; transform:translateY(0); }
+    .splash-main{ font-weight:800; font-size: clamp(28px, 6.5vw, 56px); color:var(--accent-strong); letter-spacing:-0.02em; }
+    .splash-sub{ margin-top:0.25rem; color:var(--muted); opacity:0; font-size: clamp(14px, 2.6vw, 18px); transition:opacity 1000ms ease; }
+    .splash.ignited .splash-sub{ opacity:1; }
+    .splash.hide{ opacity:0; transform:translateY(-6px); pointer-events:none; }
+
+    /* Header / hero */
+    .site-header{ margin-bottom:1rem; }
+    .header-inner{ padding:0.5rem; }
+    .hero{ background:var(--surface); border-radius:var(--radius); padding:1rem; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:0.75rem; }
+    .hero-meta{ display:flex; gap:0.75rem; align-items:center; }
+    .avatar{ width:68px; height:68px; border-radius:10px; background:linear-gradient(180deg,#e6fbfa,#f8fffe); display:flex; align-items:center; justify-content:center; color:var(--accent-strong); font-weight:700; font-size:20px; box-shadow:inset 0 -6px 18px rgba(8,127,122,0.03); flex-shrink:0; }
+    .name{ margin:0; font-size:1.25rem; letter-spacing:-0.01em; }
+    .summary{ margin:0.125rem 0 0 0; color:var(--muted); font-size:0.98rem; }
+
+    .hero-blurb{ margin:0.5rem 0 0; color:var(--muted); }
+    .hero-ctas{ display:flex; gap:0.5rem; margin-top:0.5rem; flex-wrap:wrap; }
+
+    .btn{
+      display:inline-flex; align-items:center; gap:0.5rem; padding:0.55rem 0.9rem; border-radius:10px; font-weight:600; cursor:pointer;
+      transition:transform var(--transition), background var(--transition), box-shadow var(--transition);
+      border:1px solid transparent; text-decoration:none; color:var(--accent-strong); background:transparent; box-shadow:none;
+    }
+    .btn-primary{ background:var(--accent); color:#fff; border-color:var(--accent); box-shadow:0 10px 28px rgba(14,165,164,0.12); }
+    .btn-primary:hover,.btn-primary:focus{ transform:translateY(-4px) scale(1.02); background:var(--accent-strong); box-shadow:0 18px 36px rgba(14,165,164,0.14); }
+    .btn-ghost{ border-color:rgba(8,127,122,0.06); color:var(--accent-strong); background:linear-gradient(180deg,#fff,#fbfffe) }
+    .btn-ghost:hover,.btn-ghost:focus{ transform:translateY(-3px) scale(1.02); background:rgba(8,127,122,0.04) }
+
+    /* Layout */
+    .grid{ display:grid; gap:var(--gap); grid-template-columns:1fr; align-items:start; }
+    .card{ background:var(--surface); border-radius:12px; padding:1rem; box-shadow:var(--shadow); }
+    .section-title{ margin:0 0 0.5rem 0; font-size:1.05rem; font-weight:700; }
+    .section-lead{ margin:0 0 0.75rem 0; color:var(--muted) }
+
+    /* Work steps */
+    .work-steps{ list-style:none; padding:0; margin:0; display:grid; gap:0.75rem; }
+    .step{ padding:0.75rem; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid rgba(12,16,20,0.03); }
+    .step-title{ margin:0 0 0.25rem 0; font-size:0.98rem }
+    .step-desc{ margin:0; color:var(--muted); font-size:0.95rem }
+
+    /* Cases */
+    .case-list{ display:grid; gap:0.75rem; }
+    .case{ border-radius:10px; overflow:hidden; border:1px solid rgba(12,16,20,0.04); background:linear-gradient(180deg,#fff,#fcfdff); }
+    .case > summary{ list-style:none; cursor:pointer; padding:0.9rem; display:block; transition:background var(--transition); user-select:none; }
+    .case > summary:focus{ outline:3px solid rgba(14,165,164,0.14); outline-offset:2px; border-radius:8px; }
+    .case-summary{ display:flex; gap:0.5rem; align-items:baseline; justify-content:space-between; }
+    .case .muted{ color:var(--muted); font-size:0.95rem; margin-left:0.5rem; }
+    .case-body{ padding:0 0.9rem 0.9rem 0.9rem; color:var(--muted); font-size:0.96rem; }
+    .case dl{ margin:0; }
+    .case dt{ font-weight:700; margin-top:0.5rem; font-size:0.95rem; }
+    .case dd{ margin:0.25rem 0 0.5rem 0; color:var(--muted) }
+
+    /* Skills */
+    .skills-groups{ display:grid; gap:0.6rem; }
+    .skill-group{ background:linear-gradient(180deg,#fff,#fbfdff); padding:0.6rem; border-radius:8px; border:1px solid rgba(12,16,20,0.03) }
+    .skill-heading{ margin:0 0 0.35rem 0; font-size:0.95rem }
+    .skill-group ul{ margin:0; padding:0; list-style:none; color:var(--muted) }
+    .skill-group li{ padding:0.15rem 0; font-size:0.95rem }
+
+    /* Contact (inline quick link) */
+    .contact-links{ display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem }
+    .contact-item{ padding:0.5rem 0.75rem; border-radius:8px; background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid rgba(12,16,20,0.04); color:var(--accent-strong); text-decoration:none; font-weight:600 }
+
+    .muted{ color:var(--muted) }
+    .small{ font-size:0.92rem }
+    .site-footer{ margin-top:1rem; text-align:center; color:var(--muted); font-size:0.95rem; }
+
+    /* Contact page (single-file 'separate' page via hash navigation) */
+    .contact-page{
+      position:fixed; inset:0; background:linear-gradient(180deg, rgba(4,20,20,0.02), rgba(255,255,255,0.96));
+      display:flex; align-items:center; justify-content:center; padding:2rem; z-index:1300;
+      visibility:hidden; opacity:0; transition:opacity 320ms ease, visibility 320ms ease;
+    }
+    .contact-page.active{ visibility:visible; opacity:1; }
+    .contact-shell{ width:100%; max-width:740px; background:var(--surface); border-radius:12px; padding:1.25rem; box-shadow:0 18px 48px rgba(6,36,40,0.08); }
+
+    .form-row{ display:grid; gap:0.5rem; margin-bottom:0.5rem; }
+    .form-row label{ display:block; font-weight:600; margin-bottom:0.25rem; }
+    .form-control{ width:100%; padding:0.6rem; border-radius:8px; border:1px solid rgba(6,36,40,0.06); font-size:1rem; }
+
+    /* Responsive */
+    @media (min-width:720px){
+      .grid{ grid-template-columns: 1fr 320px; gap:1.25rem; }
+      .hero{ flex-direction:row; align-items:center; justify-content:space-between; padding:1rem 1.25rem; }
+      .hero-blurb{ max-width:46ch }
+    }
+
+    /* Focus styles */
+    a:focus, button:focus, summary:focus{ outline:3px solid rgba(14,165,164,0.14); outline-offset:2px; border-radius:8px }
+  </style>
 </head>
 <body>
-  <!-- Splash / intro overlay (shows "burnaron.com" then transitions to "Igniting ideas") -->
+  <!-- SPLASH: burnaron.com then 'igniting ideas' -->
   <div id="splash" class="splash" aria-hidden="true">
     <div class="splash-inner">
       <div class="splash-main">burnaron.com</div>
@@ -20,7 +148,6 @@
     </div>
   </div>
 
-  <!-- Skip link for keyboard users -->
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header" role="banner" aria-label="Hero">
@@ -29,7 +156,7 @@
         <div class="hero-meta">
           <div class="avatar" aria-hidden="true">AB</div>
           <div>
-            <h1 class="name">Alex Blackburn</h1>
+            <h1 class="name">Aron Blackburn</h1>
             <p class="summary">Practical operator and customer-facing problem solver — I investigate, communicate, and deliver clearer outcomes.</p>
           </div>
         </div>
@@ -40,7 +167,8 @@
 
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#case-studies">View Case Studies</a>
-          <a class="btn btn-ghost" href="contact.html">Contact me</a>
+          <!-- Header "Contact me" navigates to the in-page 'separate' contact page -->
+          <a class="btn btn-ghost" href="#contact-page">Contact me</a>
         </div>
       </div>
     </div>
@@ -204,7 +332,7 @@
         <p class="muted small">Tools: Zendesk/Freshdesk, Slack, Notion, basic spreadsheet tooling.</p>
       </aside>
 
-      <!-- Contact -->
+      <!-- Contact (compact) -->
       <section id="contact" class="card contact" aria-labelledby="contact-title">
         <h2 id="contact-title" class="section-title">Contact</h2>
 
@@ -220,10 +348,199 @@
 
   <footer class="site-footer" role="contentinfo">
     <div class="container footer-inner">
-      <small class="muted">© <span id="year">2026</span> Alex Blackburn — Built with plain HTML, CSS, and small JS. Content can be extended.</small>
+      <small class="muted">© <span id="year">2026</span> Aron Blackburn — Built with plain HTML, CSS, and small JS. Content can be extended.</small>
     </div>
   </footer>
 
-  <script src="script.js" defer></script>
+  <!-- Inlined contact 'page' (hash-based separate page) -->
+  <section id="contact-page" class="contact-page" aria-hidden="true" role="dialog" aria-labelledby="contact-page-title">
+    <div class="contact-shell" role="document">
+      <h2 id="contact-page-title">Contact</h2>
+      <p class="muted">Send a message and it will open in your mail client addressed to black@burnaron.com. Fill in a few details and press "Send message".</p>
+
+      <form id="contact-form" style="margin-top:1rem; display:grid; gap:0.75rem;">
+        <div class="form-row">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" required placeholder="Your name" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" required placeholder="you@example.com" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <label for="subject">Subject</label>
+          <input id="subject" name="subject" type="text" placeholder="Optional subject" class="form-control">
+        </div>
+
+        <div class="form-row">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="6" required placeholder="Write a concise message..." class="form-control"></textarea>
+        </div>
+
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <button class="btn btn-primary" type="submit">Send message</button>
+          <a class="btn btn-ghost" href="#/">Close</a>
+        </div>
+
+        <p class="muted small" style="margin-top:0.5rem;">If your mail client doesn't open, you can send directly to black@burnaron.com.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Inlined script.js -->
+  <script>
+    (function () {
+      // Footer year
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      /* SPLASH TIMING
+         - burnaron.com must stay on screen at least 1.5s
+         - then subtext fades in more slowly
+         - then hide overlay after a short delay
+      */
+      const splash = document.getElementById('splash');
+      if (splash) {
+        const VISIBLE_MIN = 1500;       // ms
+        const AFTER_IGNITE = 900;       // ms before hiding after subtext appears
+
+        // Wait minimum time, then show subtext and hide later
+        setTimeout(() => {
+          splash.classList.add('ignited');
+
+          setTimeout(() => {
+            splash.classList.add('hide');
+            // remove from DOM after hide transition
+            setTimeout(() => {
+              if (splash && splash.parentNode) splash.parentNode.removeChild(splash);
+            }, 700);
+          }, AFTER_IGNITE);
+        }, VISIBLE_MIN);
+      }
+
+      /* DETAILS animation (case studies)
+         - smooth open/close using max-height and opacity
+         - accordion behavior: only one open at a time
+      */
+      const animatedDetails = Array.from(document.querySelectorAll('details.case'));
+      animatedDetails.forEach((detail) => {
+        const body = detail.querySelector('.case-body');
+        if (!body) return;
+
+        body.style.overflow = 'hidden';
+        body.style.transition = 'max-height 320ms cubic-bezier(.2,.9,.2,1), opacity 240ms linear';
+        body.style.maxHeight = detail.open ? body.scrollHeight + 'px' : '0px';
+        body.style.opacity = detail.open ? '1' : '0';
+
+        detail.addEventListener('toggle', () => {
+          if (detail.open) {
+            body.style.display = 'block';
+            void body.offsetHeight;
+            body.style.maxHeight = body.scrollHeight + 'px';
+            body.style.opacity = '1';
+            const onOpenEnd = () => {
+              body.style.maxHeight = 'none';
+              body.removeEventListener('transitionend', onOpenEnd);
+            };
+            body.addEventListener('transitionend', onOpenEnd);
+          } else {
+            const currentHeight = body.scrollHeight;
+            body.style.maxHeight = currentHeight + 'px';
+            void body.offsetHeight;
+            body.style.maxHeight = '0px';
+            body.style.opacity = '0';
+          }
+        });
+
+        const summary = detail.querySelector('summary');
+        if (summary) {
+          summary.setAttribute('role', 'button');
+          summary.setAttribute('aria-expanded', detail.open ? 'true' : 'false');
+          detail.addEventListener('toggle', () => {
+            summary.setAttribute('aria-expanded', detail.open ? 'true' : 'false');
+          });
+        }
+      });
+
+      // Accordion: close others when one opens
+      animatedDetails.forEach((detail) => {
+        detail.addEventListener('toggle', () => {
+          if (!detail.open) return;
+          animatedDetails.forEach((other) => {
+            if (other === detail) return;
+            if (other.open) other.open = false;
+          });
+        });
+      });
+
+      // Ensure summary elements are keyboard focusable
+      document.querySelectorAll('details summary').forEach((s) => { s.tabIndex = 0; });
+
+      /* CONTACT PAGE (hash-based single-file page)
+         - link to #contact-page opens the in-page contact 'page'
+         - hashchange and initial load control visibility
+         - form builds a mailto: link to black@burnaron.com
+      */
+      const contactPage = document.getElementById('contact-page');
+      function updateContactPageFromHash() {
+        const visible = location.hash === '#contact-page';
+        if (visible) {
+          contactPage.classList.add('active');
+          contactPage.setAttribute('aria-hidden', 'false');
+          // move focus into the form
+          const firstInput = contactPage.querySelector('input, textarea, button');
+          if (firstInput) firstInput.focus();
+          // prevent background scrolling
+          document.documentElement.style.overflow = 'hidden';
+        } else {
+          contactPage.classList.remove('active');
+          contactPage.setAttribute('aria-hidden', 'true');
+          document.documentElement.style.overflow = '';
+        }
+      }
+      window.addEventListener('hashchange', updateContactPageFromHash);
+      // initialize on load
+      updateContactPageFromHash();
+
+      // Form handler
+      const contactForm = document.getElementById('contact-form');
+      if (contactForm) {
+        contactForm.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          const form = ev.currentTarget;
+          const formData = new FormData(form);
+          const name = formData.get('name') || '';
+          const email = formData.get('email') || '';
+          const subject = formData.get('subject') || 'Message from website';
+          const message = formData.get('message') || '';
+
+          const bodyLines = [];
+          bodyLines.push('Name: ' + name);
+          bodyLines.push('Email: ' + email);
+          bodyLines.push('');
+          bodyLines.push(message);
+
+          const body = encodeURIComponent(bodyLines.join('\n'));
+          const to = 'black@burnaron.com';
+          const mailto = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subject) + '&body=' + body;
+
+          // open mail client
+          window.location.href = mailto;
+        });
+      }
+
+      // Close contact 'page' when clicking close link (hash navigation handles it),
+      // also close on Escape for convenience.
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && location.hash === '#contact-page') {
+          history.pushState("", document.title, window.location.pathname + window.location.search);
+          updateContactPageFromHash();
+        }
+      });
+
+    })();
+  </script>
 </body>
 </html>
