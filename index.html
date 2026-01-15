@@ -178,7 +178,7 @@
   .cards .card{background:var(--card-glass-2);padding:14px;border-radius:12px}
   .card h4{margin:0 0 6px; color: #fff}
 
-  /* Case studies & details */
+  /* Experience & details */
   details{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:12px; border-radius:10px; margin-bottom:10px}
   details[open]{box-shadow: 0 10px 30px rgba(0,0,0,0.45)}
   summary{cursor:pointer; font-weight:700; outline:none; list-style:none; color:#fff}
@@ -238,7 +238,6 @@
   <div class="header-inner container">
     <div id="mini-logo" aria-hidden="true">Home</div>
     <div class="site-title">burnaron.com</div>
-    <!-- header contact removed per request -->
   </div>
 </header>
 
@@ -374,7 +373,6 @@
    Startup animation logic (vanilla JS)
    - Creates letter spans for the splash brand and morph text
    - Staggers out/in animation
-   - Ensures brand text is visible for at least 1.5s
    - Computes transform to scale+move splash into header mini-logo
    - Reveals main content and supports a hash-based contact overlay
    ============================================================ */
@@ -422,14 +420,14 @@
   async function runAnimation(){
     if (prefersReduced) {
       brandLetters.forEach(l=>l.classList.add('out'));
-      morphLetters.forEach(l=>l.classList.add('in'));
+      morphLetters.forEach(l=>l.classList.add('in'));8
       await new Promise(r=>setTimeout(r,200));
       await shrinkIntoHeader();
       finalizeTransition();
       return;
     }
 
-    // Ensure brand visible at least MIN_VISIBLE before starting the out animation
+    // Ensure visible at least MIN_VISIBLE before starting the out animation
     const MIN_VISIBLE = 3000; // ms
     // Wait a small baseline so page isn't jarring
     await new Promise(r => setTimeout(r, 350));
