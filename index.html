@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>burnaron.com — portfolio</title>
-<meta name="description" content="Aron Blackburn — Fraud & Support Operations professional." />
+<meta name="description" content="[placeholder]" />
 
 <style>
   /* ========== Basic vars & reset ========== */
@@ -83,7 +83,7 @@
   .logo-text span.letter{
     display:inline-block;
     transform-origin:center;
-    transition: transform .90s cubic-bezier(.2,.9,.2,1), opacity .45s ease;
+    transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .45s ease;
     opacity:1;
     will-change: transform, opacity;
     color: #fff;
@@ -94,7 +94,7 @@
     opacity:0;
   }
 
-  /* morph target (igniting ideas...) */
+  /* morph target (tagline) */
   .morph{
     position:absolute;
     left:0; top:0;
@@ -203,11 +203,32 @@
   .form-row label{ display:block; font-weight:700; margin-bottom:0.25rem; color:#fff; }
   .form-control{ width:100%; padding:0.6rem; border-radius:8px; border:1px solid rgba(255,255,255,0.06); font-size:1rem; background:transparent; color:var(--muted) }
 
+  /* floating contact button (bottom-right) */
+  .contact-fab{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    z-index:1400;
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    background:linear-gradient(180deg,var(--accent),var(--accent-strong));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#0b0604;
+    font-weight:800;
+    box-shadow: 0 18px 36px rgba(255,87,34,0.16);
+    text-decoration:none;
+  }
+  .contact-fab:focus{ outline:3px solid rgba(255,138,61,0.16); outline-offset:4px; }
+
   /* responsiveness */
   @media (max-width:840px){
     .grid{grid-template-columns: 1fr; }
     .hero{flex-direction:column; align-items:flex-start}
     .header-inner{padding:10px 16px}
+    .contact-fab{right:12px; bottom:12px; width:52px; height:52px}
   }
 </style>
 </head>
@@ -216,10 +237,8 @@
 <header>
   <div class="header-inner container">
     <div id="mini-logo" aria-hidden="true">B</div>
-    <div class="site-title">burnaron.com</div>
-    <div style="margin-left:auto;display:flex;gap:10px;">
-      <a class="btn ghost" href="#contact-page" aria-label="Contact">Contact</a>
-    </div>
+    <div class="site-title">[placeholder]</div>
+    <!-- header contact removed per request -->
   </div>
 </header>
 
@@ -229,7 +248,7 @@
     <!-- Primary brand text broken into letters -->
     <div class="logo-text" aria-hidden="true">
       <span class="word" id="brand"></span>
-      <span class="word" style="opacity:.9">.com</span>
+      <span class="word" style="opacity:.9">[placeholder]</span>
     </div>
 
     <!-- Morph target positioned on top (same size/position) -->
@@ -242,102 +261,98 @@
     <div class="avatar" aria-hidden="true">AB</div>
     <div>
       <h1 tabindex="-1">Aron Blackburn</h1>
-      <p class="lead">Problem solver in support & operations — I simplify complex issues and communicate solutions clearly.</p>
-      <div class="cta">
-        <a class="btn" href="#case-studies">View Case Studies</a>
-        <a class="btn ghost" href="#contact-page">Contact</a>
-      </div>
+      <p class="lead">[one-line summary — edit me]</p>
+      <!-- hero CTAs removed; single floating contact button exists instead -->
       <div style="margin-top:8px;color:var(--muted);font-size:14px">
-        <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        [placeholder]
       </div>
     </div>
   </section>
 
   <div class="grid">
     <div>
-      <h3 style="margin-top:18px">How I Work</h3>
+      <h3 style="margin-top:18px">[How I Work — title]</h3>
       <div class="cards">
         <div class="card">
-          <h4>Understand the problem</h4>
-          <div class="muted">Ask the right questions, reproduce the issue and gather facts.</div>
+          <h4>[Step title]</h4>
+          <div class="muted">[Short description — editable]</div>
         </div>
         <div class="card">
-          <h4>Investigate methodically</h4>
-          <div class="muted">Use logs, checkpoints and isolation to find a reproducible root cause.</div>
+          <h4>[Step title]</h4>
+          <div class="muted">[Short description — editable]</div>
         </div>
         <div class="card">
-          <h4>Communicate clearly</h4>
-          <div class="muted">Translate technical context into simple next steps for stakeholders.</div>
+          <h4>[Step title]</h4>
+          <div class="muted">[Short description — editable]</div>
         </div>
         <div class="card">
-          <h4>Document & improve</h4>
-          <div class="muted">Record outcomes and fix the process so the problem doesn't repeat.</div>
+          <h4>[Step title]</h4>
+          <div class="muted">[Short description — editable]</div>
         </div>
       </div>
 
-      <h3 id="case-studies" style="margin-top:20px">Case Studies</h3>
+      <h3 id="case-studies" style="margin-top:20px">[Case Studies — title]</h3>
       <details>
-        <summary>Resolving a payment dispute under pressure</summary>
+        <summary>[Case study title]</summary>
         <div style="margin-top:8px;color:var(--muted);">
-          <strong>Problem:</strong> Chargeback reported by a customer during a major promotion.<br>
-          <strong>Action:</strong> Gathered transaction logs, liaised with bank and partner systems, provided a concise timeline to stakeholders.<br>
-          <strong>Outcome:</strong> Resolved without escalation and retained the customer's trust.
+          <strong>Problem:</strong> [placeholder]<br>
+          <strong>Action:</strong> [placeholder]<br>
+          <strong>Outcome:</strong> [placeholder]
         </div>
       </details>
       <details>
-        <summary>Investigating suspicious account activity</summary>
+        <summary>[Case study title]</summary>
         <div style="margin-top:8px;color:var(--muted);">
-          <strong>Problem:</strong> A user exhibited unusual purchase behaviour triggering fraud alerts.<br>
-          <strong>Action:</strong> Reconciled activity across systems, applied a risk-based score and recommended a follow-up verification.<br>
-          <strong>Outcome:</strong> Fraud prevented; false positives reduced by improved rules.
+          <strong>Problem:</strong> [placeholder]<br>
+          <strong>Action:</strong> [placeholder]<br>
+          <strong>Outcome:</strong> [placeholder]
         </div>
       </details>
       <details>
-        <summary>Reducing response time in support operations</summary>
+        <summary>[Case study title]</summary>
         <div style="margin-top:8px;color:var(--muted);">
-          <strong>Problem:</strong> Slow ticket handling during high volume.<br>
-          <strong>Action:</strong> Implemented templated triage, quick-win automations and routing rules.<br>
-          <strong>Outcome:</strong> Median response time cut by 40%.
+          <strong>Problem:</strong> [placeholder]<br>
+          <strong>Action:</strong> [placeholder]<br>
+          <strong>Outcome:</strong> [placeholder]
         </div>
       </details>
     </div>
 
     <aside>
-      <h4 style="margin-top:0">Skills & Tools</h4>
+      <h4 style="margin-top:0">[Skills & Tools]</h4>
       <div class="skills" aria-hidden="true">
-        <span class="skill">Customer Support</span>
-        <span class="skill">Issue Resolution</span>
-        <span class="skill">Fraud Prevention</span>
-        <span class="skill">Process Improvement</span>
-        <span class="skill">Data Analysis</span>
-        <span class="skill">SQL</span>
-        <span class="skill">Python (basics)</span>
-        <span class="skill">Git</span>
+        <span class="skill">[Skill]</span>
+        <span class="skill">[Skill]</span>
+        <span class="skill">[Skill]</span>
+        <span class="skill">[Skill]</span>
       </div>
 
       <div style="margin-top:20px">
-        <h4>Contact</h4>
-        <div style="color:var(--muted)">Email: <a href="mailto:black@burnaron.com">black@burnaron.com</a></div>
+        <h4>[Contact]</h4>
+        <div style="color:var(--muted)">[placeholder]</div>
         <div style="margin-top:8px" class="socials">
-          <a href="#contact-page" class="btn ghost" style="display:inline-flex;align-items:center">Contact</a>
+          <a href="#contact-page" class="btn ghost" style="display:inline-flex;align-items:center">[Contact]</a>
         </div>
       </div>
     </aside>
   </div>
 
   <footer>
-    <div style="color:var(--muted);font-size:14px">Built for clarity — fast, memorable, and focused on how I solve problems.</div>
+    <div style="color:var(--muted);font-size:14px">[placeholder]</div>
     <div class="socials">
-      <a href="mailto:black@burnaron.com" style="color:var(--muted)">black@burnaron.com</a>
+      <a href="#contact-page" style="color:var(--muted)">[contact]</a>
     </div>
   </footer>
 </main>
 
+<!-- Floating single contact button (bottom-right) -->
+<a href="#contact-page" class="contact-fab" aria-label="Contact">✉️</a>
+
 <!-- Contact overlay (hash-based single-file) -->
 <section id="contact-page" class="contact-page" aria-hidden="true" role="dialog" aria-labelledby="contact-page-title">
   <div class="contact-shell" role="document">
-    <h2 id="contact-page-title">Contact</h2>
-    <p class="muted">Send a message and it will open in your mail client addressed to black@burnaron.com.</p>
+    <h2 id="contact-page-title">[Contact — heading]</h2>
+    <p class="muted">[Please fill out the form to contact]</p>
 
     <form id="contact-form" style="margin-top:1rem; display:grid; gap:0.75rem;">
       <div class="form-row">
@@ -361,11 +376,11 @@
       </div>
 
       <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-        <button class="btn" type="submit">Send message</button>
-        <a class="btn ghost" href="#/">Close</a>
+        <button class="btn" type="submit">[Send]</button>
+        <a class="btn ghost" href="#/">[Close]</a>
       </div>
 
-      <p class="muted small" style="margin-top:0.5rem;">If your mail client doesn't open, send directly to black@burnaron.com.</p>
+      <p class="muted small" style="margin-top:0.5rem;">[If mail client doesn't open, send to black@burnaron.com]</p>
     </form>
   </div>
 </section>
@@ -373,7 +388,7 @@
 <script>
 /* ============================================================
    Startup animation logic (vanilla JS)
-   - Creates letter spans for 'burnaron' and 'igniting ideas...'
+   - Creates letter spans for the splash brand and morph text
    - Staggers out/in animation
    - Ensures brand text is visible for at least 1.5s
    - Computes transform to scale+move splash into header mini-logo
@@ -383,9 +398,9 @@
 (function(){
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Words
-  const brand = 'burnaron';
-  const morphText = 'igniting ideas...';
+  // Words (placeholder values so you can edit quickly)
+  const brand = '[your-site]';
+  const morphText = '[your-tagline...]';
 
   // Build letters in DOM
   const brandEl = document.getElementById('brand');
