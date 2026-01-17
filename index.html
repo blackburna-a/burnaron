@@ -34,7 +34,7 @@
             position: fixed;
             inset: 0;
             z-index: 0;
-            pointer-events: none; /* Crucial: allows clicks to pass through to buttons */
+            pointer-events: none;
             filter: blur(100px);
             opacity: 0.4;
         }
@@ -104,7 +104,7 @@
             right: 2.5rem;
             display: flex;
             gap: 1.2rem;
-            z-index: 9999; /* Highest priority */
+            z-index: 9999; /*Gives priority to buttons*/
         }
 
         .nav-controls button {
@@ -132,7 +132,7 @@
 
         .links { display: flex; gap: 1.5rem; align-items: center; margin-top: 2rem; flex-wrap: wrap; }
         .btn { background: var(--accent); color: #000; padding: 1.2rem 2.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 800; }
-        .phone-link { color: var(--text-primary); font-weight: 600; font-size: 1.1rem; }
+        .contentemail { color: var(--text-primary); font-weight: 600; font-size: 1.1rem; }
         .replay-btn { margin-top: 2.5rem; cursor: pointer; color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; }
         .replay-btn:hover { color: var(--text-primary); }
 
@@ -170,7 +170,7 @@
             <div class="content">
                 <h2>Technical Intuition.</h2>
                 <p>I combine an <span class="highlight">Extended Diploma in Software Development</span> with operational fraud detection.</p>
-                <p>I don't just follow rules; I investigate complex systems to prevent document abuse and fraud patterns.</p>
+                <p>Alongside following rules - I investigate complex systems to prevent document abuse and fraud patterns.</p>
             </div>
         </section>
 
@@ -218,7 +218,7 @@
                 <p>Motivated by solving real-world problems for global operations teams.</p>
                 <div class="links">
                     <a href="mailto:blackburnaron@gmail.com" class="btn">Email Aron</a>
-                    <span class="phone-link">+356 79580956</span>
+                    <span class="contentemail">black@burnaron.com</span>
                 </div>
                 <div class="replay-btn" id="replay">
                     <span>↺ Start Over</span>
