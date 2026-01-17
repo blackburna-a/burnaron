@@ -1,199 +1,119 @@
 :root {
-    /* Colors */
-    --bg-color: #050a10; /* Darker, cooler background for "Security" vibe */
-    --text-primary: #e6f1f5;
-    --text-secondary: #94a3b8;
+    --bg-color: #030712;
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
     --accent: #38bdf8;
-
-    /* Dynamic Theme Colors - Tuned for Fraud/Risk Vibes */
-    --signal-color-intro: #0ea5e9;   /* Sky Blue - Trust/Tech */
-    --signal-color-twist: #6366f1;   /* Indigo - Depth/Analysis */
-    --signal-color-mindset: #10b981; /* Emerald - Calm/Control */
-    --signal-color-exp: #f59e0b;     /* Amber - Alert/Monitoring */
-    --signal-color-skills: #8b5cf6;  /* Violet - Toolkit */
-    --signal-color-contact: #ef4444; /* Red - Action/Urgency */
-
-    /* Spacing & Type */
-    --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --transition-speed: 600ms;
-    --easing: cubic-bezier(0.22, 1, 0.36, 1); 
+    --signal-intro: #0ea5e9;
+    --signal-twist: #6366f1;
+    --signal-mindset: #10b981;
+    --signal-exp: #f59e0b;
+    --signal-skills: #8b5cf6;
+    --signal-contact: #ef4444;
 }
 
-/* Reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-primary);
-    font-family: var(--font-stack);
+    font-family: sans-serif;
     height: 100vh;
-    overflow: hidden; 
-    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
 }
 
-/* --- The Signal (Background Animation) --- */
+/* FIX: Ensure this doesn't block clicks */
 .signal-container {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    inset: 0;
     z-index: 0;
-    pointer-events: none;
-    filter: blur(90px); /* Increased blur for softer, more mysterious effect */
-    opacity: 0.5;
+    pointer-events: none; 
+    filter: blur(100px);
+    opacity: 0.4;
 }
 
 .signal {
     position: absolute;
-    width: 60vh;
-    height: 60vh;
+    width: 50vw;
+    height: 50vw;
     border-radius: 50%;
-    background: var(--signal-color-intro);
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    transition: background 1s ease, transform 1s var(--easing);
+    transition: all 0.8s ease;
 }
 
-/* Theme variations for the signal */
-body[data-current-theme="theme-intro"] .signal { background: var(--signal-color-intro); transform: translate(-50%, -50%) scale(1); }
-body[data-current-theme="theme-twist"] .signal { background: var(--signal-color-twist); transform: translate(-20%, -20%) scale(1.2); }
-body[data-current-theme="theme-mindset"] .signal { background: var(--signal-color-mindset); transform: translate(-80%, -20%) scale(0.9); }
-body[data-current-theme="theme-exp"] .signal { background: var(--signal-color-exp); transform: translate(-50%, -80%) scale(1.1); }
-body[data-current-theme="theme-skills"] .signal { background: var(--signal-color-skills); transform: translate(-20%, -50%) scale(1.3); }
-body[data-current-theme="theme-contact"] .signal { background: var(--signal-color-contact); transform: translate(-50%, -50%) scale(0.8); }
+/* Theme color logic */
+body[data-current-theme="theme-intro"] .signal { background: var(--signal-intro); transform: translate(-50%, -50%) scale(1); }
+body[data-current-theme="theme-twist"] .signal { background: var(--signal-twist); transform: translate(-20%, -30%) scale(1.2); }
+body[data-current-theme="theme-mindset"] .signal { background: var(--signal-mindset); transform: translate(-70%, -20%) scale(0.9); }
+body[data-current-theme="theme-exp"] .signal { background: var(--signal-exp); transform: translate(-40%, -60%) scale(1.1); }
+body[data-current-theme="theme-skills"] .signal { background: var(--signal-skills); transform: translate(-10%, -40%) scale(1.3); }
+body[data-current-theme="theme-contact"] .signal { background: var(--signal-contact); transform: translate(-50%, -50%) scale(0.8); }
 
-/* --- Layout --- */
 main {
     position: relative;
-    width: 100%;
+    z-index: 10;
     height: 100%;
-    z-index: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* --- Slides --- */
 .slide {
     position: absolute;
-    width: 100%;
+    width: 90%;
     max-width: 800px;
-    padding: 2rem;
     opacity: 0;
-    pointer-events: none;
-    transform: translateY(20px) scale(0.95);
-    transition: 
-        opacity var(--transition-speed) ease,
-        transform var(--transition-speed) var(--easing);
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
 }
 
 .slide.active {
     opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0) scale(1);
+    visibility: visible;
+    transform: translateY(0);
 }
 
-/* Content Styling */
-h1 { font-size: 4rem; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1rem; }
-h2 { font-size: 2.5rem; margin-bottom: 1.5rem; letter-spacing: -0.01em; }
-p { font-size: 1.25rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 600px; }
-.sub-text { font-size: 1.5rem; color: var(--text-secondary); }
-.hint { margin-top: 2rem; font-size: 0.875rem; color: #555; text-transform: uppercase; letter-spacing: 0.1em; animation: pulse 2s infinite; }
+h1 { font-size: clamp(2rem, 8vw, 4rem); margin-bottom: 1rem; }
+h2 { font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent); }
+p { font-size: 1.25rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1rem; }
 
-.highlight { color: var(--text-primary); border-bottom: 1px solid var(--text-secondary); }
+.experience-grid { display: grid; gap: 1.5rem; margin-top: 2rem; }
+.exp-item { border-left: 2px solid var(--accent); padding-left: 1rem; }
+.exp-role { display: block; font-weight: bold; margin-bottom: 0.25rem; }
 
-/* Experience Grid */
-.experience-grid { display: grid; gap: 2rem; margin-top: 2rem; }
-.exp-item { border-left: 2px solid rgba(255,255,255,0.1); padding-left: 1rem; }
-.exp-role { display: block; font-weight: bold; font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--accent); }
-.exp-desc { color: var(--text-secondary); font-size: 1rem; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.tag-cloud span { padding: 0.5rem 1rem; border: 1px solid #334155; border-radius: 99px; font-size: 0.9rem; }
 
-/* Tag Cloud */
-.tag-cloud { display: flex; flex-wrap: wrap; gap: 1rem; }
-.tag-cloud span {
-    padding: 0.5rem 1rem;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 50px;
-    font-size: 0.9rem;
-    transition: border-color 0.3s, background 0.3s;
-}
-.tag-cloud span:hover { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); }
-
-/* Links */
-.links { display: flex; gap: 1.5rem; align-items: center; margin-top: 2rem; flex-wrap: wrap; }
-.btn { 
-    background: var(--text-primary); 
-    color: var(--bg-color); 
-    padding: 1rem 2rem; 
-    border-radius: 4px; 
-    text-decoration: none; 
-    font-weight: bold; 
-    transition: transform 0.2s; 
-}
-.btn:hover { transform: translateY(-2px); }
-.btn-text { color: var(--text-primary); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.2s; }
-.btn-text:hover { border-bottom-color: var(--text-primary); }
-
-.replay-btn {
-    margin-top: 3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-secondary);
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-.replay-btn:hover { color: var(--text-primary); }
-
-/* --- Navigation & Progress --- */
 .nav-controls {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
     display: flex;
     gap: 1rem;
-    z-index: 10;
+    z-index: 999; /* Force to top */
 }
 
-/* ... Keep the rest of your CSS ... */
 .nav-controls button {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.2);
-    color: var(--text-primary);
-    width: 50px;
-    height: 50px;
+    background: #1f2937;
+    color: white;
+    border: 1px solid #374151;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
-    font-size: 1.2rem;
-}
-.nav-controls button:hover:not(:disabled) { background: rgba(255,255,255,0.1); }
-.nav-controls button:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.progress-bar {
-    position: fixed;
-    bottom: 0; left: 0;
-    width: 100%;
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    z-index: 10;
-}
-.progress-fill {
-    height: 100%;
-    background: var(--text-primary);
-    width: 0%;
-    transition: width var(--transition-speed) ease;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
 }
 
-/* Animations */
-@keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
+.nav-controls button:hover:not(:disabled) { background: #374151; }
+.nav-controls button:disabled { opacity: 0.2; cursor: default; }
 
-/* Mobile Adjustments */
-@media (max-width: 600px) {
-    h1 { font-size: 2.5rem; }
-    h2 { font-size: 2rem; }
-    .nav-controls { bottom: 1.5rem; right: 1.5rem; }
-    .nav-controls button { width: 40px; height: 40px; }
-}
+.progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: #111827; z-index: 1000; }
+.progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.3s; }
+
+.btn { background: var(--accent); color: #000; padding: 1rem 2rem; border-radius: 0.5rem; text-decoration: none; font-weight: bold; display: inline-block; }
+.replay-btn { margin-top: 2rem; cursor: pointer; color: var(--text-secondary); }
