@@ -4,7 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aron Blackburn | Fraud Operations & Support</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --bg-color: #030712;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --accent: #38bdf8;
+            --signal-intro: #0ea5e9;
+            --signal-twist: #6366f1;
+            --signal-mindset: #10b981;
+            --signal-exp: #f59e0b;
+            --signal-skills: #8b5cf6;
+            --signal-contact: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* The Signal Background Layer */
+        .signal-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none; /* Crucial: allows clicks to pass through to buttons */
+            filter: blur(100px);
+            opacity: 0.4;
+        }
+
+        .signal {
+            position: absolute;
+            width: 50vw;
+            height: 50vw;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Dynamic Theme Positioning */
+        body[data-current-theme="theme-intro"] .signal { background: var(--signal-intro); transform: translate(-50%, -50%) scale(1); }
+        body[data-current-theme="theme-twist"] .signal { background: var(--signal-twist); transform: translate(-20%, -30%) scale(1.2); }
+        body[data-current-theme="theme-mindset"] .signal { background: var(--signal-mindset); transform: translate(-70%, -20%) scale(0.9); }
+        body[data-current-theme="theme-exp"] .signal { background: var(--signal-exp); transform: translate(-40%, -60%) scale(1.1); }
+        body[data-current-theme="theme-skills"] .signal { background: var(--signal-skills); transform: translate(-10%, -40%) scale(1.3); }
+        body[data-current-theme="theme-contact"] .signal { background: var(--signal-contact); transform: translate(-50%, -50%) scale(0.8); }
+
+        main {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            position: absolute;
+            width: 90%;
+            max-width: 800px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); line-height: 1.1; margin-bottom: 1rem; font-weight: 800; letter-spacing: -0.02em; }
+        h2 { font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 1.5rem; color: var(--accent); font-weight: 700; }
+        p { font-size: 1.25rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.2rem; }
+        .sub-text { font-size: 1.5rem; font-weight: 500; }
+        
+        .highlight { color: var(--text-primary); border-bottom: 2px solid var(--accent); }
+
+        .experience-grid { display: grid; gap: 1.5rem; margin-top: 2rem; }
+        .exp-item { border-left: 2px solid var(--accent); padding-left: 1.5rem; }
+        .exp-role { display: block; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.25rem; }
+        .exp-desc { color: var(--text-secondary); font-size: 1rem; }
+
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1rem; }
+        .tag-cloud span { padding: 0.6rem 1.2rem; border: 1px solid #334155; border-radius: 99px; font-size: 0.9rem; background: rgba(255,255,255,0.05); }
+
+        /* Navigation UI */
+        .nav-controls {
+            position: fixed;
+            bottom: 2.5rem;
+            right: 2.5rem;
+            display: flex;
+            gap: 1.2rem;
+            z-index: 9999; /* Highest priority */
+        }
+
+        .nav-controls button {
+            background: #1f2937;
+            color: white;
+            border: 1px solid #374151;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-controls button:hover:not(:disabled) { background: #374151; transform: scale(1.05); }
+        .nav-controls button:active:not(:disabled) { transform: scale(0.95); }
+        .nav-controls button:disabled { opacity: 0.15; cursor: default; }
+
+        .progress-bar { position: fixed; top: 0; left: 0; width: 100%; height: 5px; background: #111827; z-index: 10000; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent); transition: width 0.4s ease; }
+
+        .links { display: flex; gap: 1.5rem; align-items: center; margin-top: 2rem; flex-wrap: wrap; }
+        .btn { background: var(--accent); color: #000; padding: 1.2rem 2.5rem; border-radius: 0.5rem; text-decoration: none; font-weight: 800; }
+        .phone-link { color: var(--text-primary); font-weight: 600; font-size: 1.1rem; }
+        .replay-btn { margin-top: 2.5rem; cursor: pointer; color: var(--text-secondary); font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .replay-btn:hover { color: var(--text-primary); }
+
+        .hint { margin-top: 3rem; font-size: 0.85rem; color: #4b5563; text-transform: uppercase; letter-spacing: 0.15em; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        @media (max-width: 640px) {
+            .nav-controls { bottom: 1.5rem; right: 1.5rem; }
+            .nav-controls button { width: 55px; height: 55px; }
+            h1 { font-size: 2.8rem; }
+        }
+    </style>
 </head>
 <body data-current-theme="theme-intro">
 
@@ -19,39 +160,39 @@
     <main id="app">
         <section class="slide active" data-theme="theme-intro">
             <div class="content">
-                [cite_start]<h1>Hello.<br>I Identify Risk. [cite: 1, 21]</h1>
-                [cite_start]<p class="sub-text">Fraud Operations & Support Specialist[cite: 22].</p>
-                <div class="hint">(Click arrows or press space to continue)</div>
+                <h1>Hello.<br>I Identify Risk.</h1>
+                <p class="sub-text">Aron Blackburn: Fraud Operations & Support Specialist[cite: 1, 22].</p>
+                <div class="hint">Use arrows or click to advance</div>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-twist">
             <div class="content">
                 <h2>Technical Intuition.</h2>
-                [cite_start]<p>I combine a background in <strong>Software Development</strong> [cite: 6] [cite_start]with operational fraud detection[cite: 10].</p>
-                <p>I don't just follow rules; [cite_start]I investigate complex systems to protect users[cite: 23].</p>
+                <p>I combine an <span class="highlight">Extended Diploma in Software Development</span> [cite: 5, 6] with operational fraud detection[cite: 10].</p>
+                <p>I don't just follow rules; I investigate complex systems to prevent document abuse and fraud patterns[cite: 17, 35].</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-mindset">
             <div class="content">
-                <h2>High-Volume Clarity.</h2>
-                [cite_start]<p>I thrive in fast-paced, regulated environments like Flutter and bet365[cite: 22, 26, 31].</p>
-                [cite_start]<p>I stay calm under pressure, whether analyzing logs or navigating on a motorcycle[cite: 19, 24].</p>
+                <h2>Operational Clarity.</h2>
+                <p>I thrive in high-volume, regulated environments[cite: 22].</p>
+                <p>Whether navigating traffic on a motorcycle or investigating logs [cite: 14, 19], I focus on <span class="highlight">control, risk awareness, and decision-making</span> under pressure[cite: 19, 24].</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-exp">
             <div class="content">
-                <h2>Experience.</h2>
+                <h2>Provenance.</h2>
                 <div class="experience-grid">
                     <div class="exp-item">
-                        [cite_start]<span class="exp-role">Flutter / Paddy Power Betfair [cite: 31, 34]</span>
-                        [cite_start]<span class="exp-desc">Investigated high-risk transactions and fraud patterns[cite: 32, 35].</span>
+                        <span class="exp-role">Flutter & Paddy Power Betfair</span>
+                        <span class="exp-desc">Fraud Operations Analyst [cite: 31]: Investigated high-risk transactions and identified complex fraud patterns[cite: 32].</span>
                     </div>
                     <div class="exp-item">
-                        [cite_start]<span class="exp-role">bet365 Specialist [cite: 26]</span>
-                        [cite_start]<span class="exp-desc">Responsible gambling controls and regulatory compliance[cite: 27].</span>
+                        <span class="exp-role">bet365</span>
+                        <span class="exp-desc">Responsible Gambling Specialist [cite: 26]: Monitored player behavior and applied protective measures[cite: 27].</span>
                     </div>
                 </div>
             </div>
@@ -59,36 +200,126 @@
 
         <section class="slide" data-theme="theme-skills">
             <div class="content">
-                <h2>Toolkit.</h2>
+                <h2>The Toolkit.</h2>
                 <div class="tag-cloud">
-                    [cite_start]<span>Fraud Detection [cite: 10]</span>
-                    [cite_start]<span>Risk Analysis [cite: 23]</span>
-                    [cite_start]<span>Jira & Salesforce [cite: 11, 12]</span>
-                    [cite_start]<span>Log Analysis [cite: 14]</span>
-                    [cite_start]<span>C#, Java, PHP [cite: 8]</span>
-                    [cite_start]<span>KYC & AML [cite: 10, 35]</span>
+                    <span>Fraud Detection [cite: 10]</span>
+                    <span>Risk Mitigation [cite: 10]</span>
+                    <span>KYC & AML [cite: 35, 36]</span>
+                    <span>Log Analysis [cite: 14]</span>
+                    <span>Jira & Salesforce [cite: 11, 12]</span>
+                    <span>C#, Java & PHP [cite: 8]</span>
                 </div>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-contact">
             <div class="content">
-                <h2>Get in Touch.</h2>
-                [cite_start]<p>Ready to bring analytical rigour to your operations team[cite: 20, 24].</p>
+                <h2>Secure the Connection.</h2>
+                <p>Motivated by solving real-world problems for global operations teams[cite: 22, 24].</p>
                 <div class="links">
-                    [cite_start]<a href="mailto:blackburnaron@gmail.com" class="btn">Email Aron [cite: 3]</a>
-                    [cite_start]<span class="phone-link">+356 79580956 [cite: 2]</span>
+                    <a href="mailto:blackburnaron@gmail.com" class="btn">Email Aron [cite: 3]</a>
+                    <span class="phone-link">+356 79580956 [cite: 2]</span>
                 </div>
-                <div class="replay-btn" id="replay"><span>&cularr; Start Over</span></div>
+                <div class="replay-btn" id="replay">
+                    <span>↺ Start Over</span>
+                </div>
             </div>
         </section>
     </main>
 
     <nav class="nav-controls">
-        <button id="prevBtn" type="button" aria-label="Previous">&larr;</button>
-        <button id="nextBtn" type="button" aria-label="Next">&rarr;</button>
+        <button id="prevBtn" type="button" aria-label="Previous Slide">&larr;</button>
+        <button id="nextBtn" type="button" aria-label="Next Slide">&rarr;</button>
     </nav>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const progressFill = document.querySelector('.progress-fill');
+            const replayBtn = document.getElementById('replay');
+            
+            let currentIndex = 0;
+
+            function updatePage() {
+                // 1. Update Slide Visibility
+                slides.forEach((slide, index) => {
+                    if (index === currentIndex) {
+                        slide.classList.add('active');
+                    } else {
+                        slide.classList.remove('active');
+                    }
+                });
+
+                // 2. Update Global Theme (Changes Background Signal)
+                const currentTheme = slides[currentIndex].getAttribute('data-theme');
+                document.body.setAttribute('data-current-theme', currentTheme);
+
+                // 3. Update Top Progress Bar
+                const progressPercentage = ((currentIndex + 1) / slides.length) * 100;
+                progressFill.style.width = progressPercentage + '%';
+
+                // 4. Handle Navigation Logic
+                prevBtn.disabled = (currentIndex === 0);
+                
+                // Hide Next button on the final contact slide
+                if (currentIndex === slides.length - 1) {
+                    nextBtn.style.visibility = 'hidden';
+                } else {
+                    nextBtn.style.visibility = 'visible';
+                }
+            }
+
+            // Button Event Handlers
+            nextBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent conflict with body clicks
+                if (currentIndex < slides.length - 1) {
+                    currentIndex++;
+                    updatePage();
+                }
+            });
+
+            prevBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    updatePage();
+                }
+            });
+
+            replayBtn.addEventListener('click', () => {
+                currentIndex = 0;
+                updatePage();
+            });
+
+            // Tap/Click Body to Advance (Except on interactive elements)
+            document.body.addEventListener('click', (e) => {
+                const isInteractive = e.target.closest('button') || e.target.closest('a') || e.target.closest('#replay');
+                if (!isInteractive && currentIndex < slides.length - 1) {
+                    currentIndex++;
+                    updatePage();
+                }
+            });
+
+            // Keyboard Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    if (currentIndex < slides.length - 1) {
+                        currentIndex++;
+                        updatePage();
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updatePage();
+                    }
+                }
+            });
+
+            // Initial State Render
+            updatePage();
+        });
+    </script>
 </body>
 </html>
