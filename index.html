@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aron Blackburn | Fraud Operations & Support</title>
-    <meta name="description" content="Portfolio of Aron Blackburn - Fraud Operations and Risk Specialist.">
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body data-current-theme="theme-intro">
 
-    <div class="signal-container" aria-hidden="true">
+    <div class="signal-container">
         <div class="signal"></div>
     </div>
 
@@ -18,42 +17,41 @@
     </div>
 
     <main id="app">
-        
         <section class="slide active" data-theme="theme-intro">
             <div class="content">
-                <h1 class="hero-text">Hello.<br>I Identify Risk.</h1>
-                <p class="sub-text">Fraud Operations & Support Specialist.</p>
-                <div class="hint">(Click or tap to continue)</div>
+                [cite_start]<h1>Hello.<br>I Identify Risk. [cite: 1, 21]</h1>
+                [cite_start]<p class="sub-text">Fraud Operations & Support Specialist[cite: 22].</p>
+                <div class="hint">(Click arrows or press space to continue)</div>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-twist">
             <div class="content">
-                <h2>More than just compliance.</h2>
-                <p>I combine a background in <span class="highlight">software development</span> with operational intuition.</p> 
-                <p>I don't just follow rules; I investigate complex systems to prevent fraud and protect users.</p>
+                <h2>Technical Intuition.</h2>
+                [cite_start]<p>I combine a background in <strong>Software Development</strong> [cite: 6] [cite_start]with operational fraud detection[cite: 10].</p>
+                <p>I don't just follow rules; [cite_start]I investigate complex systems to protect users[cite: 23].</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-mindset">
             <div class="content">
-                <h2>Calm Under Pressure.</h2>
-                <p>Whether analyzing logs or navigating traffic on a motorcycle, I focus on control and risk awareness.</p>
-                <p>I thrive in high-volume environments, making accurate decisions when it counts.</p>
+                <h2>High-Volume Clarity.</h2>
+                [cite_start]<p>I thrive in fast-paced, regulated environments like Flutter and bet365[cite: 22, 26, 31].</p>
+                [cite_start]<p>I stay calm under pressure, whether analyzing logs or navigating on a motorcycle[cite: 19, 24].</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-exp">
             <div class="content">
-                <h2>The Journey.</h2>
+                <h2>Experience.</h2>
                 <div class="experience-grid">
                     <div class="exp-item">
-                        <span class="exp-role">Fraud Operations</span>
-                        <span class="exp-desc">Flutter & Paddy Power Betfair. Investigating high-risk transactions and patterns.</span>
+                        [cite_start]<span class="exp-role">Flutter / Paddy Power Betfair [cite: 31, 34]</span>
+                        [cite_start]<span class="exp-desc">Investigated high-risk transactions and fraud patterns[cite: 32, 35].</span>
                     </div>
                     <div class="exp-item">
-                        <span class="exp-role">Safety & Support</span>
-                        <span class="exp-desc">bet365 & Abtran. Responsible gambling measures and front-line support.</span>
+                        [cite_start]<span class="exp-role">bet365 Specialist [cite: 26]</span>
+                        [cite_start]<span class="exp-desc">Responsible gambling controls and regulatory compliance[cite: 27].</span>
                     </div>
                 </div>
             </div>
@@ -61,35 +59,36 @@
 
         <section class="slide" data-theme="theme-skills">
             <div class="content">
-                <h2>The Toolkit.</h2>
+                <h2>Toolkit.</h2>
                 <div class="tag-cloud">
-                    <span>Fraud Detection</span>
-                    <span>Risk Analysis</span>
-                    <span>Transaction Monitoring</span>
-                    <span>Jira & Salesforce</span>
-                    <span>Log Analysis</span>
-                    <span>HTML/CSS/Java</span>
-                    <span>KYC & AML</span>
+                    [cite_start]<span>Fraud Detection [cite: 10]</span>
+                    [cite_start]<span>Risk Analysis [cite: 23]</span>
+                    [cite_start]<span>Jira & Salesforce [cite: 11, 12]</span>
+                    [cite_start]<span>Log Analysis [cite: 14]</span>
+                    [cite_start]<span>C#, Java, PHP [cite: 8]</span>
+                    [cite_start]<span>KYC & AML [cite: 10, 35]</span>
                 </div>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-contact">
             <div class="content">
-                <h2>Let's Talk.</h2>
-                <p>I’m ready to solve real-world problems for your team.</p>
+                <h2>Get in Touch.</h2>
+                [cite_start]<p>Ready to bring analytical rigour to your operations team[cite: 20, 24].</p>
                 <div class="links">
-                    <a href="mailto:blackburnaron@gmail.com" class="btn">Email Me</a>
-                    <span class="btn-text">+356 79580956</span>
+                    [cite_start]<a href="mailto:blackburnaron@gmail.com" class="btn">Email Aron [cite: 3]</a>
+                    [cite_start]<span class="phone-link">+356 79580956 [cite: 2]</span>
                 </div>
-                <div class="replay-btn" id="replay">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M23 4v6h-6"></path>
-                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                    </svg>
-                    <span>Start Over</span>
-                </div>
+                <div class="replay-btn" id="replay"><span>&cularr; Start Over</span></div>
             </div>
         </section>
-
     </main>
+
+    <nav class="nav-controls">
+        <button id="prevBtn" type="button" aria-label="Previous">&larr;</button>
+        <button id="nextBtn" type="button" aria-label="Next">&rarr;</button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
