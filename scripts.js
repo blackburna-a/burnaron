@@ -15,6 +15,10 @@ class NarrativeSite {
     }
 
     init() {
+        if (!this.btnNext || !this.btnPrev) {
+            console.error("Navigation buttons not found. Check HTML IDs.");
+            return;
+        }
         this.updateUI();
         this.addEventListeners();
     }
@@ -31,16 +35,19 @@ class NarrativeSite {
             this.prevSlide();
         });
 
-        if(this.btnReplay) {
+        if (this.btnReplay) {
             this.btnReplay.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.goToSlide(0);
             });
         }
 
-        // Click anywhere on body to advance (desktop/mobile tap)
+        // Global Click (Advance slide)
+        // We filter out clicks on links (A) and buttons (BUTTON) so they work normally
         document.body.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+            const isInteractive = e.target.closest('a') || e.target.closest('button') || e.target.closest('.replay-btn');
+            if (isInteractive) return;
+
             if (this.currentIndex < this.totalSlides - 1) {
                 this.nextSlide();
             }
@@ -94,7 +101,7 @@ class NarrativeSite {
     updateUI() {
         // Update Progress Bar
         const progress = ((this.currentIndex + 1) / this.totalSlides) * 100;
-        this.progressFill.style.width = `${progress}%`;
+        if(this.progressFill) this.progressFill.style.width = `${progress}%`;
 
         // Update Background Theme (Signal)
         const currentTheme = this.slides[this.currentIndex].getAttribute('data-theme');
