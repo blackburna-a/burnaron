@@ -151,7 +151,7 @@ p { font-size: 1.25rem; line-height: 1.6; color: var(--text-secondary); margin-b
     right: 2rem;
     display: flex;
     gap: 1rem;
-    z-index: 100;
+    z-index: 10;
 }
 
 /* ... Keep the rest of your CSS ... */
