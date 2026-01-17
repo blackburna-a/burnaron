@@ -1,579 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>burnaron.com — portfolio</title>
-<meta name="description" content="[placeholder]" />
-
-<style>
-  /* ========== Basic vars & reset ========== */
-  :root{
-    /* orangey palette */
-    --bg-a: #120905;
-    --bg-b: #1b0f07;
-    --card-glass: rgba(255,255,255,0.03);
-    --card-glass-2: rgba(255,255,255,0.02);
-    --muted: #e6dcd6;
-    --accent: #ff8a3d;      /* warm orange */
-    --accent-strong: #ff5722; /* stronger orange */
-    --glass: rgba(255,255,255,0.03);
-    --glass-2: rgba(255,255,255,0.04);
-    --radius: 14px;
-    --max-width: 1000px;
-  }
-
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-    background: linear-gradient(180deg,var(--bg-a) 0%, var(--bg-b) 100%);
-    color: var(--muted);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.45;
-    overflow-x:hidden;
-  }
-
-  a{color:var(--accent); text-decoration:none}
-  .container{max-width:var(--max-width);margin:0 auto;padding:28px;}
-
-  /* ========== Splash (startup screen) ========== */
-
-  #splash-wrap{
-    position:fixed;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:1200;
-    pointer-events:none;
-  }
-
-  #splash{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:28px 40px;
-    border-radius:20px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    backdrop-filter: blur(6px) saturate(.95);
-    transform-origin: top left;
-    pointer-events:auto;
-    will-change: transform, opacity;
-  }
-
-  .logo-text{
-    font-weight:800;
-    font-size: clamp(28px, 8vw, 56px);
-    letter-spacing: -0.02em;
-    color: var(--muted);
-    display:inline-flex;
-    align-items:center;
-    gap:.5rem;
-    position:relative;
-  }
-  .logo-text .word{
-    display:inline-block;
-    white-space:nowrap;
-    position:relative;
-    height:1em;
-  }
-  .logo-text span.letter{
-    display:inline-block;
-    transform-origin:center;
-    transition: transform 2.0s cubic-bezier(.2,.9,.2,1),
-    opacity 1.4s ease;
-    will-change: transform, opacity;
-    color: #fff;
-  }
-  /* outgoing state: slide up & fade */
-  .logo-text span.letter.out{
-    transform: translateY(-20px) rotate(-6deg) scale(.92);
-    opacity:0;
-  }
-
-  /* morph target (tagline) */
-  .morph{
-    position:absolute;
-    left:0; top:0;
-    display:inline-block;
-    pointer-events:none;
-    color: #ffcfae;
-    font-weight:700;
-  }
-  .morph span.letter{
-    display:inline-block;
-    transform: translateY(8px) scale(.86);
-    opacity:0;
-    transition: transform .55s cubic-bezier(.2,.9,.2,1), opacity .55s ease;
-    color: #ffd9b8;
-  }
-  .morph span.letter.in{
-    transform: translateY(0) scale(1);
-    opacity:1;
-  }
-
-  /* shrink animation state */
-  .splash-shrink{
-    transition: transform .9s cubic-bezier(.2,.9,.2,1), opacity .7s ease;
-  }
-
-  /* reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .logo-text span.letter,
-    .morph span.letter { transition:none !important; transform:none !important; opacity:1 !important; }
-    .splash-shrink { transition:none !important; }
-  }
-
-  /* ========== Page header (target of the scaled splash) ========== */
-  header{
-    position:sticky; top:0;
-    z-index:800;
-    backdrop-filter: blur(6px);
-    background: linear-gradient(180deg, rgba(10,6,4,0.6), rgba(10,6,4,0.35));
-  }
-  .header-inner{max-width:var(--max-width); margin:0 auto; padding:10px 28px; display:flex; align-items:center; gap:16px;}
-  #mini-logo{
-    width:60px; height:44px; border-radius:10px;
-    background: linear-gradient(180deg,var(--accent), var(--accent-strong) 80%);
-    display:flex;align-items:center;justify-content:center;font-weight:800;color:#0a0705; font-size:16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
-  }
-  .site-title{font-weight:700;font-size:18px;color:#fff}
-
-  /* ========== Main content ========== */
-  main{padding:28px 0 120px;}
-  .hero{
-    display:flex;gap:24px;align-items:center;padding:28px;border-radius:16px;background:var(--card-glass);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.45);
-  }
-  .avatar{
-    width:96px;height:96px;border-radius:12px;background:linear-gradient(180deg,#fff2e6 0%, #fff7f0 100%); display:flex; align-items:center; justify-content:center; font-weight:700; color:#332217;
-    font-size:24px;
-  }
-  .hero h1{margin:0;font-size: clamp(22px, 5vw, 34px); color:#fff}
-  .hero p.lead{margin:6px 0 0;color:var(--muted)}
-
-  .cta{display:flex;gap:10px;margin-top:12px}
-  .btn{
-    background:var(--accent); color:#2b1206; padding:8px 12px;border-radius:10px;font-weight:700; border:none; cursor:pointer; transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;
-    box-shadow: 0 8px 22px rgba(255,138,61,0.12);
-    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-  }
-  .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(255,138,61,0.14)}
-  .btn:hover{ transform: translateY(-3px) scale(1.02); box-shadow: 0 18px 36px rgba(255,87,34,0.12); }
-  .btn:active{transform:translateY(1px)}
-
-  .grid{
-    display:grid;
-    grid-template-columns: 1fr 320px;
-    gap:20px;
-    margin-top:20px;
-  }
-
-  /* How I Work cards */
-  .cards{display:flex;flex-direction:column;gap:12px}
-  .cards .card{background:var(--card-glass-2);padding:14px;border-radius:12px}
-  .card h4{margin:0 0 6px; color: #fff}
-
-  /* Experience & details */
-  details{background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:12px; border-radius:10px; margin-bottom:10px}
-  details[open]{box-shadow: 0 10px 30px rgba(0,0,0,0.45)}
-  summary{cursor:pointer; font-weight:700; outline:none; list-style:none; color:#fff}
-
-  /* Skills */
-  .skills{display:flex;gap:8px;flex-wrap:wrap}
-  .skill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03); color:var(--muted); font-size:13px}
-
-  /* footer / contact */
-  footer{margin-top:28px; padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); display:flex;align-items:center;justify-content:space-between; gap:12px}
-  .socials{display:flex;gap:10px;align-items:center}
-
-  /* contact overlay (hash-based single-file) */
-  .contact-page{
-    position:fixed; inset:0; background:linear-gradient(180deg, rgba(4,2,1,0.45), rgba(255,255,255,0.02)); display:flex; align-items:center; justify-content:center; padding:2rem; z-index:1300;
-    visibility:hidden; opacity:0; transition:opacity 320ms ease, visibility 320ms ease;
-  }
-  .contact-page.active{ visibility:visible; opacity:1; }
-  .contact-shell{ width:100%; max-width:740px; background:linear-gradient(180deg,#1b0f07, #27120a); border-radius:12px; padding:1.25rem; box-shadow:0 18px 48px rgba(0,0,0,0.6); color:var(--muted) }
-
-  .form-row{ display:grid; gap:0.5rem; margin-bottom:0.5rem; }
-  .form-row label{ display:block; font-weight:700; margin-bottom:0.25rem; color:#fff; }
-  .form-control{ width:100%; padding:0.6rem; border-radius:8px; border:1px solid rgba(255,255,255,0.06); font-size:1rem; background:transparent; color:var(--muted) }
-
-  /* floating contact button (bottom-right) */
-  .contact-fab{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    z-index:1400;
-    width:56px;
-    height:56px;
-    border-radius:16px;
-    background:linear-gradient(180deg,var(--accent),var(--accent-strong));
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#0b0604;
-    font-weight:800;
-    box-shadow: 0 18px 36px rgba(255,87,34,0.16);
-    text-decoration:none;
-  }
-  .contact-fab:focus{ outline:3px solid rgba(255,138,61,0.16); outline-offset:4px; }
-
-  /* responsiveness */
-  @media (max-width:840px){
-    .grid{grid-template-columns: 1fr; }
-    .hero{flex-direction:column; align-items:flex-start}
-    .header-inner{padding:10px 16px}
-    .contact-fab{right:12px; bottom:12px; width:52px; height:52px}
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aron Blackburn | Fraud Operations & Support</title>
+    <meta name="description" content="Portfolio of Aron Blackburn - Fraud Operations and Risk Specialist.">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<header>
-  <div class="header-inner container">
-    <div id="mini-logo" aria-hidden="true">Home</div>
-    <div class="site-title">burnaron.com</div>
-  </div>
-</header>
-
-<!-- Splash / Startup screen (absolute) -->
-<div id="splash-wrap" aria-hidden="false">
-  <div id="splash" role="img" aria-label="Intro animation">
-    <!-- Primary text broken into letters -->
-    <div class="logo-text" aria-hidden="true">
-      <span class="word" id="brand"></span>
-      <span class="word" style="opacity:.9">.com</span>
+    <div class="signal-container" aria-hidden="true">
+        <div class="signal"></div>
     </div>
 
-    <!-- Morph target positioned on top (same size/position) -->
-    <div class="morph" id="morph-target" aria-hidden="true"></div>
-  </div>
-</div>
-
-<main class="container" id="main" aria-hidden="true" style="opacity:0; transform: translateY(8px); transition:opacity .6s ease, transform .6s ease;">
-  <section class="hero">
-    <div class="avatar" aria-hidden="true">AB</div>
-    <div>
-      <h1 tabindex="-1">Aron Blackburn</h1>
-      <p class="lead">Fraud Operations, Responsible Gambling, Technical Customer Support</p>
-      <div style="margin-top:8px;color:var(--muted);font-size:14px">
-        Malta
-      </div>
-    </div>
-  </section>
-
-  <div class="grid">
-    <div>
-      <h3 style="margin-top:18px">Work Ethic</h3>
-      <div class="cards">
-        <div class="card">
-          <h4>Owning your work</h4>
-          <div class="muted">Taking ownership of problems. If something breaks, confuses a user, or creates friction, I dont hand it off. I see it through until it's actually resolved.</div>
-        </div>
-        <div class="card">
-          <h4>Learning & Improvement</h4>
-          <div class="muted">Constantly learning and improving. Comfortable being new at something, asking the right questions, and closing the gap fast. Progress is what matters, not ego.</div>
-        </div>
-        <div class="card">
-          <h4>Reliable & Calm</h4>
-          <div class="muted">Calm under pressure and consistent over time. People tend to rely on me when things get messy. Methodical, clear in communication, and focused on outcomes.</div>
-        </div>
-        <div class="card">
-          <h4>Ethics, trust, & responsibility</h4>
-          <div class="muted">Handling sensitive data, financial systems, or customer accounts is more than just a task, it's a responsibility.</div>
-        </div>
-      </div>
-
-      <h3 id="case-studies" style="margin-top:20px">[Experience]</h3>
-      <details>
-        <summary>Experience</summary>
-        <div style="margin-top:8px;color:var(--muted);">
-          <span class="skill">Responsible Gambling Specialist</span>
-            <div class="muted">Monitored player behaviour to identify gambling risk, applied protective measures in line with regulatory requirements, and handled sensitive customer interactions with clarity and professionalism in a high-volume environment.</div>
-          <span class="skill">Fraud Operations Analyst</span>
-            <div class="muted">Investigating high-risk transactions and account activity using internal monitoring tools and data dashboards. Identified fraud patterns, escalated system-level issues, worked with engineering and dev teams, documented findings clearly to support operational improvements and incident prevention, handled escalations requiring fast, accurate decision-making under pressure.</div>
-          <span class="skill">Fraud Ringfencet</span>
-            <div class="muted">Conducted KYC reviews, handled real-time and e-mail based verification cases, and identified document abuse and fraud patterns. Escalated high-risk cases and collaborated with fraud and compliance teams to improve detection rules and verification processes.</div>
-        </div>
-      </details>
-      <details>
-        <summary>[Case study title]</summary>
-        <div style="margin-top:8px;color:var(--muted);">
-          <strong>Problem:</strong> [placeholder]<br>
-          <strong>Action:</strong> [placeholder]<br>
-          <strong>Outcome:</strong> [placeholder]
-        </div>
-      </details>
-      <details>
-        <summary>[Case study title]</summary>
-        <div style="margin-top:8px;color:var(--muted);">
-          <strong>Problem:</strong> [placeholder]<br>
-          <strong>Action:</strong> [placeholder]<br>
-          <strong>Outcome:</strong> [placeholder]
-        </div>
-      </details>
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
     </div>
 
-    <aside>
-      <h4 style="margin-top:0">Skills & Tools</h4>
-      <div class="skills" aria-hidden="true">
-        <span class="skill">Paymet & Risk Operations</span>
-          <div class="muted">Fraud detection, transaction monitoring, chargeback analsyis, responsible gambling controls, risk mitigation.</div>
-        <span class="skill">Tools & Systems</span>
-          <div class="muted">Jira, Zendesk, Salesforce, Verint, Confluence, Office 365, Threatmetrix, internal dashboards.</div>
-        <span class="skill">Technical Support</span>
-          <div class="muted">Incident investigation, log analysis, escalation handling, SLA-Driven Environments</div>
-        <span class="skill">Communication</span>
-          <div class="muted">Clear communication, technical issue translation for non-technical users.</div>
-      </div>
-    </aside>
-  </div>
-</main>
+    <main id="app">
+        
+        <section class="slide active" data-theme="theme-intro">
+            <div class="content">
+                <h1 class="hero-text">Hello.<br>I Identify Risk.</h1>
+                [cite_start]<p class="sub-text">Fraud Operations & Support Specialist[cite: 22].</p>
+                <div class="hint">(Click or tap to continue)</div>
+            </div>
+        </section>
 
-<!-- Floating single contact button (bottom-right) -->
-<a href="#contact-page" class="contact-fab" aria-label="Contact">✉️</a>
+        <section class="slide" data-theme="theme-twist">
+            <div class="content">
+                <h2>More than just compliance.</h2>
+                [cite_start]<p>I combine a background in <span class="highlight">software development</span> with operational intuition[cite: 6, 23].</p> 
+                <p>I don't just follow rules; [cite_start]I investigate complex systems to prevent fraud and protect users[cite: 17, 23].</p>
+            </div>
+        </section>
 
-<!-- Contact overlay (hash-based single-file) -->
-<section id="contact-page" class="contact-page" aria-hidden="true" role="dialog" aria-labelledby="contact-page-title">
-  <div class="contact-shell" role="document">
-    <h2 id="contact-page-title">Contact</h2>
-    <p class="muted">Please fill out the form to get in touch</p>
+        <section class="slide" data-theme="theme-mindset">
+            <div class="content">
+                <h2>Calm Under Pressure.</h2>
+                [cite_start]<p>Whether analyzing logs or navigating traffic on a motorcycle, I focus on control and risk awareness[cite: 19].</p>
+                [cite_start]<p>I thrive in high-volume environments, making accurate decisions when it counts[cite: 24, 33].</p>
+            </div>
+        </section>
 
-    <form id="contact-form" style="margin-top:1rem; display:grid; gap:0.75rem;">
-      <div class="form-row">
-        <label for="name">Your name</label>
-        <input id="name" name="name" type="text" required placeholder="Your name" class="form-control">
-      </div>
+        <section class="slide" data-theme="theme-exp">
+            <div class="content">
+                <h2>The Journey.</h2>
+                <div class="experience-grid">
+                    <div class="exp-item">
+                        <span class="exp-role">Fraud Operations</span>
+                        <span class="exp-desc">Flutter & Paddy Power Betfair. [cite_start]Investigating high-risk transactions and patterns[cite: 31, 34].</span>
+                    </div>
+                    <div class="exp-item">
+                        <span class="exp-role">Safety & Support</span>
+                        <span class="exp-desc">bet365 & Abtran. [cite_start]Responsible gambling measures and front-line support[cite: 26, 29].</span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <div class="form-row">
-        <label for="email">Your email</label>
-        <input id="email" name="email" type="email" required placeholder="you@example.com" class="form-control">
-      </div>
+        <section class="slide" data-theme="theme-skills">
+            <div class="content">
+                <h2>The Toolkit.</h2>
+                <div class="tag-cloud">
+                    [cite_start]<span>Fraud Detection [cite: 10]</span>
+                    [cite_start]<span>Risk Analysis [cite: 23]</span>
+                    [cite_start]<span>Transaction Monitoring [cite: 10]</span>
+                    [cite_start]<span>Jira & Salesforce [cite: 11, 12]</span>
+                    [cite_start]<span>Log Analysis [cite: 14]</span>
+                    [cite_start]<span>HTML/CSS/Java [cite: 8]</span>
+                    [cite_start]<span>KYC & AML [cite: 35]</span>
+                </div>
+            </div>
+        </section>
 
-      <div class="form-row">
-        <label for="subject">Subject</label>
-        <input id="subject" name="subject" type="text" placeholder="Optional subject" class="form-control">
-      </div>
+        <section class="slide" data-theme="theme-contact">
+            <div class="content">
+                <h2>Let's Talk.</h2>
+                [cite_start]<p>I’m ready to solve real-world problems for your team[cite: 24].</p>
+                <div class="links">
+                    <a href="mailto:blackburnaron@gmail.com" class="btn">Email Me</a>
+                    [cite_start]<span class="btn-text" style="cursor: default;">+356 79580956 [cite: 2]</span>
+                </div>
+                <div class="replay-btn" id="replay">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    <span>Start Over</span>
+                </div>
+            </div>
+        </section>
 
-      <div class="form-row">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" rows="6" required placeholder="Write a concise message..." class="form-control"></textarea>
-      </div>
+    </main>
 
-      <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-        <button class="btn" type="submit">Send</button>
-        <a class="btn ghost" href="#/">Close</a>
-      </div>
+    <nav class="nav-controls">
+        <button id="prev" aria-label="Previous Slide" disabled>&larr;</button>
+        <button id="next" aria-label="Next Slide">&rarr;</button>
+    </nav>
 
-      <p class="muted small" style="margin-top:0.5rem;">If mail client doesn't open, send to black@burnaron.com</p>
-    </form>
-  </div>
-</section>
-
-<script>
-/* ============================================================
-   Startup animation logic (vanilla JS)
-   - Creates letter spans for the splash brand and morph text
-   - Staggers out/in animation
-   - Computes transform to scale+move splash into header mini-logo
-   - Reveals main content and supports a hash-based contact overlay
-   ============================================================ */
-
-(function(){
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const brand = 'burnaron';
-  const morphText = 'igniting ideas...';
-
-  // Build letters in DOM
-  const brandEl = document.getElementById('brand');
-  const morphEl = document.getElementById('morph-target');
-
-  function createLetters(text, container){
-    container.innerHTML = '';
-    for (let i=0;i<text.length;i++){
-      const ch = text[i];
-      const span = document.createElement('span');
-      span.className = 'letter';
-      span.textContent = ch === ' ' ? '\u00A0' : ch;
-      container.appendChild(span);
-    }
-  }
-
-  createLetters(brand, brandEl);
-  createLetters(morphText, morphEl);
-
-  const brandLetters = Array.from(brandEl.querySelectorAll('.letter'));
-  const morphLetters = Array.from(morphEl.querySelectorAll('.letter'));
-
-  // Position morph target on top of brand
-  function alignMorph(){
-    const brandRect = brandEl.getBoundingClientRect();
-    const morphRect = morphEl.getBoundingClientRect();
-    const dx = brandRect.left - morphRect.left;
-    const dy = brandRect.top - morphRect.top;
-    morphEl.style.transform = `translate(${dx}px, ${dy}px)`;
-    morphEl.style.pointerEvents = 'none';
-  }
-  alignMorph();
-  window.addEventListener('resize', alignMorph);
-
-  // Animation timeline
-  async function runAnimation(){
-    if (prefersReduced) {
-      brandLetters.forEach(l=>l.classList.add('out'));
-      morphLetters.forEach(l=>l.classList.add('in'));8
-      await new Promise(r=>setTimeout(r,200));
-      await shrinkIntoHeader();
-      finalizeTransition();
-      return;
-    }
-
-    // Ensure visible at least MIN_VISIBLE before starting the out animation
-    const MIN_VISIBLE = 3000; // ms
-    // Wait a small baseline so page isn't jarring
-    await new Promise(r => setTimeout(r, 350));
-
-    // Start time for visible guarantee
-    const visibleStart = performance.now();
-
-    // Begin staggered out animation (letters slide up & fade)
-    for (let i=0;i<brandLetters.length;i++){
-      setTimeout(()=> brandLetters[i].classList.add('out'), i*160);
-    }
-
-    // We want morph letters to start after at least MIN_VISIBLE total visible time.
-    const elapsed = performance.now() - visibleStart;
-    const earliestMorphStart = Math.max(0, MIN_VISIBLE - elapsed);
-
-    // start morph after earliestMorphStart + a short buffer so out/in feels natural
-    const baseDelay = earliestMorphStart + brandLetters.length * 80 + 120;
-    for (let i=0;i<morphLetters.length;i++){
-      setTimeout(()=> morphLetters[i].classList.add('in'), baseDelay + i*55);
-    }
-
-    // Wait for morph to finish before shrinking
-    const total = baseDelay + morphLetters.length*55 + 380;
-    await new Promise(r=>setTimeout(r, total));
-
-    await shrinkIntoHeader();
-    finalizeTransition();
-  }
-
-  // Compute transform and apply to splash, so it scales to mini-logo
-  function shrinkIntoHeader(){
-    return new Promise(resolve=>{
-      const splash = document.getElementById('splash');
-      const mini = document.getElementById('mini-logo');
-      const spr = splash.getBoundingClientRect();
-      const mr = mini.getBoundingClientRect();
-
-      // compute scale so splash visually fits into the mini logo
-      const scale = (mr.width * 0.95) / spr.width;
-
-      // centers
-      const splashCenterX = spr.left + spr.width/2;
-      const splashCenterY = spr.top + spr.height/2;
-      const miniCenterX = mr.left + mr.width/2;
-      const miniCenterY = mr.top + mr.height/2;
-
-      const translateX = (miniCenterX - splashCenterX)/scale;
-      const translateY = (miniCenterY - splashCenterY)/scale;
-
-      splash.style.willChange = 'transform, opacity';
-      splash.classList.add('splash-shrink');
-
-      // apply transform and gentle fade
-      splash.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-      splash.style.opacity = '0.98';
-
-      setTimeout(()=> splash.style.opacity = '0.0', 700);
-
-      // finish after the transition
-      setTimeout(()=> resolve(), 1000);
-    });
-  }
-
-  function finalizeTransition(){
-    const wrap = document.getElementById('splash-wrap');
-    if (wrap){
-      wrap.style.transition = 'opacity .5s ease';
-      wrap.style.opacity = '0';
-      setTimeout(()=> wrap.remove(), 700);
-    }
-
-    const main = document.getElementById('main');
-    if (main){
-      main.setAttribute('aria-hidden','false');
-      main.style.opacity = '1';
-      main.style.transform = 'translateY(0)';
-      // focus the main heading for accessibility
-      const heading = document.querySelector('.hero h1');
-      if (heading) heading.focus();
-    }
-  }
-
-  // Kick off animation after load
-  window.addEventListener('load', ()=> {
-    runAnimation().catch(()=> finalizeTransition());
-  });
-
-  /* ========== Contact overlay (hash-based) ========== */
-  const contactPage = document.getElementById('contact-page');
-  function updateContactFromHash(){
-    const open = location.hash === '#contact-page';
-    if (open){
-      contactPage.classList.add('active');
-      contactPage.setAttribute('aria-hidden','false');
-      document.documentElement.style.overflow = 'hidden';
-      setTimeout(()=> {
-        contactPage.querySelector('input, textarea, button')?.focus();
-      }, 120);
-    } else {
-      contactPage.classList.remove('active');
-      contactPage.setAttribute('aria-hidden','true');
-      document.documentElement.style.overflow = '';
-    }
-  }
-  window.addEventListener('hashchange', updateContactFromHash);
-  updateContactFromHash();
-
-  // form -> mailto
-  const contactForm = document.getElementById('contact-form');
-  if (contactForm){
-    contactForm.addEventListener('submit', function(ev){
-      ev.preventDefault();
-      const form = ev.currentTarget;
-      const data = new FormData(form);
-      const name = data.get('name') || '';
-      const email = data.get('email') || '';
-      const subject = data.get('subject') || 'Message from website';
-      const message = data.get('message') || '';
-
-      const bodyLines = ['Name: ' + name, 'Email: ' + email, '', message];
-      const body = encodeURIComponent(bodyLines.join('\n'));
-      const to = 'black@burnaron.com';
-      const mailto = 'mailto:' + encodeURIComponent(to) + '?subject=' + encodeURIComponent(subject) + '&body=' + body;
-
-      window.location.href = mailto;
-    });
-  }
-
-  // close overlay on Escape
-  document.addEventListener('keydown', (ev)=>{
-    if (ev.key === 'Escape' && location.hash === '#contact-page'){
-      history.pushState("", document.title, window.location.pathname + window.location.search);
-      updateContactFromHash();
-    }
-  });
-
-})();
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
