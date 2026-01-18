@@ -137,7 +137,7 @@
         .exp-role { display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--accent); }
         .exp-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
 
-        /* Tags */
+        /* Tags with Hover/Tap Expansion */
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
         .tag-cloud span { 
             font-family: var(--mono-font);
@@ -147,6 +147,37 @@
             font-size: 0.75rem; 
             background: rgba(255, 255, 255, 0.03); 
             color: var(--text-secondary);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            display: inline-flex;
+            flex-direction: column;
+            max-width: fit-content;
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        .tag-cloud span .tag-desc {
+            max-height: 0;
+            opacity: 0;
+            font-size: 0.65rem;
+            margin-top: 0;
+            transition: all 0.4s ease;
+            line-height: 1.3;
+            color: var(--accent);
+            pointer-events: none;
+        }
+
+        .tag-cloud span:hover, .tag-cloud span:active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.08);
+            transform: scale(1.02);
+            z-index: 10;
+        }
+
+        .tag-cloud span:hover .tag-desc, .tag-cloud span:active .tag-desc {
+            max-height: 60px;
+            opacity: 1;
+            margin-top: 0.5rem;
         }
 
         /* Navigation Controls */
@@ -215,7 +246,7 @@
                 <span class="label">Identification</span>
                 <h1>Aron Blackburn.</h1>
                 <p>Fraud Operations Specialist & Support Specialist.</p>
-                <p style="margin-top: 1rem; font-size: 1.1rem;">Expertise in <span class="highlight">Risk Mitigation</span> and Technical Support within regulated environments.</p>
+                <p style="margin-top: 1rem; font-size: 1.1rem;">Expertise in <span class="highlight">Risk Mitigation</span> and Support within regulated environments.</p>
             </div>
         </section>
 
@@ -262,9 +293,42 @@
                 <span class="label">Capabilities</span>
                 <h2>The Toolkit.</h2>
                 <div class="tag-cloud">
-                    <span>Fraud Detection</span><span>Risk Analysis</span><span>KYC & AML</span>
-                    <span>Log Analysis</span><span>Jira & Salesforce</span><span>INCIDENT HANDLING</span>
-                    <span>Confluence</span><span>Technical Support</span><span>SLA Management</span>
+                    <span>
+                        Fraud Detection
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        Risk Analysis
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        KYC & AML
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        Log Analysis
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        Jira & Salesforce
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        INCIDENT HANDLING
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        Confluence
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        Technical Support
+                        <div class="tag-desc">placeholder</div>
+                    </span>
+                    <span>
+                        SLA Management
+                        <div class="tag-desc">placeholder</div>
+                    </span>
                 </div>
             </div>
         </section>
@@ -298,7 +362,6 @@
             const replayBtn = document.getElementById('replay');
             let currentIndex = 0;
 
-            // Generate dots dynamically based on number of slides
             slides.forEach((_, i) => {
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
@@ -309,17 +372,14 @@
             const dots = document.querySelectorAll('.dot');
 
             function updatePage() {
-                // Update Slide visibility
                 slides.forEach((slide, index) => {
                     slide.classList.toggle('active', index === currentIndex);
                     dots[index].classList.toggle('active', index === currentIndex);
                 });
 
-                // Update Theme Background
                 const currentTheme = slides[currentIndex].getAttribute('data-theme');
                 document.body.setAttribute('data-current-theme', currentTheme);
 
-                // Update UI Buttons
                 prevBtn.disabled = (currentIndex === 0);
                 nextBtn.style.visibility = (currentIndex === slides.length - 1) ? 'hidden' : 'visible';
             }
@@ -345,16 +405,14 @@
                 updatePage(); 
             });
 
-            // Tap/Click Body to Advance
             document.body.addEventListener('click', (e) => {
-                const interactive = e.target.closest('button') || e.target.closest('a') || e.target.closest('#replay');
+                const interactive = e.target.closest('button') || e.target.closest('a') || e.target.closest('#replay') || e.target.closest('.tag-cloud span');
                 if (!interactive && currentIndex < slides.length - 1) {
                     currentIndex++; 
                     updatePage();
                 }
             });
 
-            // Keyboard support
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowRight' || e.key === ' ') nextBtn.click();
                 if (e.key === 'ArrowLeft') prevBtn.click();
