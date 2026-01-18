@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aron Blackburn | Fraud Operations & Risk Specialist</title>
+    <title>Aron Blackburn | Fraud Operations & Support Specialist</title>
     <style>
         :root {
             --bg-color: #020617;
@@ -26,7 +26,7 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
             height: 100vh;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
@@ -37,19 +37,19 @@
             content: "";
             position: fixed;
             inset: 0;
-            background-image: linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px), 
-                              linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
+            background-image: linear-gradient(rgba(56, 189, 248, 0.02) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(56, 189, 248, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
             z-index: 1;
             pointer-events: none;
         }
 
-        /* Grainy Texture for Premium Feel */
+        /* Grainy texture */
         .grain {
             position: fixed;
             inset: 0;
             z-index: 2;
-            opacity: 0.4;
+            opacity: 0.12; 
             pointer-events: none;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
@@ -59,8 +59,8 @@
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            filter: blur(120px);
-            opacity: 0.5;
+            filter: blur(140px);
+            opacity: 0.45;
         }
 
         .signal {
@@ -70,10 +70,10 @@
             border-radius: 50%;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* Dynamic Theme Positioning */
+        /* Theme Colors, Consistency across devices */
         body[data-current-theme="theme-intro"] .signal { background: var(--signal-intro); transform: translate(-50%, -50%) scale(1); }
         body[data-current-theme="theme-twist"] .signal { background: var(--signal-twist); transform: translate(-10%, -20%) scale(1.1); }
         body[data-current-theme="theme-mindset"] .signal { background: var(--signal-mindset); transform: translate(-60%, -10%) scale(0.9); }
@@ -97,8 +97,8 @@
             max-width: 900px;
             opacity: 0;
             visibility: hidden;
-            transform: translateX(30px);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transform: translateX(20px);
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .slide.active {
@@ -107,57 +107,57 @@
             transform: translateX(0);
         }
 
-        .mono {
+        .label {
             font-family: var(--mono-font);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.2em;
             color: var(--accent);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             display: block;
         }
 
-        h1 { font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.04em; }
-        h2 { font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-        p { font-size: 1.25rem; color: var(--text-secondary); line-height: 1.6; max-width: 600px; }
+        h1 { font-size: clamp(2.5rem, 8vw, 4.8rem); line-height: 1.05; margin-bottom: 1.5rem; font-weight: 800; letter-spacing: -0.04em; }
+        h2 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+        p { font-size: 1.25rem; color: var(--text-secondary); line-height: 1.6; max-width: 650px; }
         
-        .highlight { color: var(--text-primary); position: relative; z-index: 1; }
-        .highlight::after { content: ""; position: absolute; bottom: 2px; left: 0; width: 100%; height: 8px; background: rgba(56, 189, 248, 0.2); z-index: -1; }
+        .highlight { color: var(--text-primary); border-bottom: 1px solid rgba(56, 189, 248, 0.4); }
 
         /* Experience Cards */
-        .experience-grid { display: grid; gap: 1rem; margin-top: 2.5rem; }
+        .experience-grid { display: grid; gap: 1rem; margin-top: 2rem; }
         .exp-item { 
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             padding: 1.5rem;
             border-radius: 12px;
-            backdrop-filter: blur(10px);
-            transition: border-color 0.3s;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
         }
-        .exp-item:hover { border-color: var(--accent); }
-        .exp-role { display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .exp-item:hover { border-color: rgba(56, 189, 248, 0.3); background: rgba(255, 255, 255, 0.04); }
+        .exp-role { display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--accent); }
         .exp-desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; }
 
         /* Tags */
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
         .tag-cloud span { 
             font-family: var(--mono-font);
-            padding: 0.4rem 0.8rem; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 0.5rem 0.9rem; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
             border-radius: 6px; 
-            font-size: 0.8rem; 
-            background: rgba(255, 255, 255, 0.05); 
+            font-size: 0.75rem; 
+            background: rgba(255, 255, 255, 0.03); 
+            color: var(--text-secondary);
         }
 
-        /* Navigation */
+        /* Navigation Controls */
         .nav-controls {
             position: fixed;
-            bottom: 3rem;
+            bottom: 3.5rem;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 2.5rem;
             z-index: 9999;
         }
 
@@ -165,8 +165,8 @@
             background: transparent;
             color: var(--text-primary);
             border: 1px solid rgba(255,255,255,0.1);
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -176,30 +176,31 @@
             backdrop-filter: blur(10px);
         }
 
-        .nav-controls button:hover:not(:disabled) { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); }
-        .nav-controls button:disabled { opacity: 0.2; cursor: not-allowed; }
+        .nav-controls button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+        .nav-controls button:disabled { opacity: 0.1; cursor: not-allowed; }
 
-        .progress-dots { display: flex; gap: 0.5rem; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s; }
-        .dot.active { background: var(--accent); transform: scale(1.5); }
+        .progress-dots { display: flex; gap: 0.75rem; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.15); transition: all 0.4s; }
+        .dot.active { background: var(--accent); transform: scale(1.4); box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
 
         .btn { 
-            background: var(--text-primary); 
+            background: var(--accent); 
             color: var(--bg-color); 
             padding: 1rem 2rem; 
             border-radius: 8px; 
             text-decoration: none; 
             font-weight: 700; 
             display: inline-block;
-            transition: transform 0.2s;
+            transition: all 0.3s;
         }
-        .btn:hover { transform: translateY(-2px); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
 
-        .replay-btn { margin-top: 2rem; cursor: pointer; color: var(--text-secondary); font-family: var(--mono-font); font-size: 0.75rem; }
+        .replay-btn { margin-top: 2.5rem; cursor: pointer; color: var(--text-secondary); font-family: var(--mono-font); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; transition: opacity 0.3s; }
+        .replay-btn:hover { opacity: 1; color: var(--accent); }
 
         @media (max-width: 640px) {
-            main { padding: 1.5rem; align-items: flex-start; padding-top: 15vh; }
-            .nav-controls { bottom: 2rem; width: 90%; justify-content: space-between; }
+            main { padding: 1.5rem; align-items: flex-start; padding-top: 12vh; }
+            .nav-controls { bottom: 2rem; width: 85%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -211,41 +212,46 @@
     <main id="app">
         <section class="slide active" data-theme="theme-intro">
             <div class="content">
-                <span class="mono">Identification / 01</span>
+                <span class="label">Identification</span>
                 <h1>Aron Blackburn.</h1>
-                <p>Fraud Operations Specialist & Software Developer.</p>
-                <p style="margin-top: 1rem; font-size: 1rem;">Focused on <span class="highlight">Identifying Risk</span> in high-volume environments.</p>
+                <p>Fraud Operations Specialist & Support Specialist.</p>
+                <p style="margin-top: 1rem; font-size: 1.1rem;">Expertise in <span class="highlight">Risk Mitigation</span> and Technical Support within regulated environments.</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-twist">
             <div class="content">
-                <span class="mono">Technical DNA / 02</span>
-                <h2>Code Meets Compliance.</h2>
-                <p>I bridge the gap between <span class="highlight">Software Engineering</span> and Risk Operations.</p>
-                <p style="margin-top: 1rem;">My background in C#, Java, and PHP allows me to look under the hood of complex systems to spot patterns others miss.</p>
+                <span class="label">Technical DNA</span>
+                <h2>Support & Technical Intuition.</h2>
+                <p>I bridge the gap between support infrastructure and operational risk.</p>
+                <p style="margin-top: 1.2rem;">I combine an <span class="highlight">Extended Diploma in Software Development</span> with operational fraud detection.</p>
+                <p style="margin-top: 1.2rem;">Alongside following rules - I investigate complex systems to prevent document abuse and fraud patterns.</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-mindset">
             <div class="content">
-                <span class="mono">The Mindset / 03</span>
-                <h2>Calculated Risk.</h2>
-                <p>Whether navigating traffic on a motorcycle or investigating logs at <span class="highlight">bet365</span>, I prioritize control and fast, accurate decision-making.</p>
+                <span class="label">The Mindset</span>
+                <h2>Pressure Management.</h2>
+                <p>Whether navigating traffic on a motorcycle or managing high-volume queues at <span class="highlight">Flutter & bet365</span>, I focus on decision-making under pressure and strict adherence to SLAs.</p>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-exp">
             <div class="content">
-                <span class="mono">Provenance / 04</span>
+                <span class="label">Provenance</span>
                 <div class="experience-grid">
                     <div class="exp-item">
                         <span class="exp-role">Flutter & Paddy Power Betfair</span>
-                        <span class="exp-desc">Investigated high-risk transactions and identified fraud rings within global gaming traffic.</span>
+                        <span class="exp-desc">Investigated high-risk transactions and identified complex fraud patterns.</span>
                     </div>
                     <div class="exp-item">
-                        <span class="exp-role">Responsible Gambling Specialist</span>
-                        <span class="exp-desc">Protecting users and ensuring regulatory compliance through behavioral analysis.</span>
+                        <span class="exp-role">HSE Live Support (Abtran)</span>
+                        <span class="exp-desc">Front-line support for healthcare services, managing sensitive data and technical support queries.</span>
+                    </div>
+                    <div class="exp-item">
+                        <span class="exp-role">Responsible Gambling Specialis: bet365</span>
+                        <span class="exp-desc">Monitored player behavior and applied protective measures.</span>
                     </div>
                 </div>
             </div>
@@ -253,26 +259,26 @@
 
         <section class="slide" data-theme="theme-skills">
             <div class="content">
-                <span class="mono">Toolkit / 05</span>
-                <h2>Capabilities.</h2>
+                <span class="label">Capabilities</span>
+                <h2>The Toolkit.</h2>
                 <div class="tag-cloud">
-                    <span>FRAUD_DETECTION</span><span>RISK_ANALYSIS</span><span>KYC_AML</span>
-                    <span>LOG_ANALYSIS</span><span>JIRA_SALESFORCE</span><span>C#</span>
-                    <span>JAVA</span><span>PHP</span><span>SQL</span>
+                    <span>Fraud Detection</span><span>Risk Analysis</span><span>KYC & AML</span>
+                    <span>Log Analysis</span><span>Jira & Salesforce</span><span>INCIDENT HANDLING</span>
+                    <span>Confluence</span><span>Technical Support</span><span>SLA Management</span>
                 </div>
             </div>
         </section>
 
         <section class="slide" data-theme="theme-contact">
             <div class="content">
-                <span class="mono">Connection / 06</span>
-                <h2>Let's talk.</h2>
-                <p>Currently open to new opportunities in Fraud and Risk Operations.</p>
-                <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
-                    <a href="mailto:blackburnaron@gmail.com" class="btn">Email Me</a>
-                    <span class="mono" style="color: white; font-size: 1rem;">+356 79580956</span>
+                <span class="label">Connection</span>
+                <h2>Contact.</h2>
+                <p>Ready to bring analytical rigour and support expertise to your operations team.</p>
+                <div style="margin-top: 2.5rem; display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+                    <a href="mailto:black@burnaron.com" class="btn">Email Me</a>
+                    <span style="font-family: var(--mono-font); color: white; font-size: 1.1rem;">black@burnaron.com</span>
                 </div>
-                <div class="replay-btn" id="replay">RESET_SESSION_01</div>
+                <div class="replay-btn" id="replay">Reset Session</div>
             </div>
         </section>
     </main>
@@ -292,7 +298,7 @@
             const replayBtn = document.getElementById('replay');
             let currentIndex = 0;
 
-            // Create dots
+            // Generate dots dynamically based on number of slides
             slides.forEach((_, i) => {
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
@@ -303,36 +309,52 @@
             const dots = document.querySelectorAll('.dot');
 
             function updatePage() {
+                // Update Slide visibility
                 slides.forEach((slide, index) => {
                     slide.classList.toggle('active', index === currentIndex);
                     dots[index].classList.toggle('active', index === currentIndex);
                 });
 
+                // Update Theme Background
                 const currentTheme = slides[currentIndex].getAttribute('data-theme');
                 document.body.setAttribute('data-current-theme', currentTheme);
 
+                // Update UI Buttons
                 prevBtn.disabled = (currentIndex === 0);
                 nextBtn.style.visibility = (currentIndex === slides.length - 1) ? 'hidden' : 'visible';
             }
 
             nextBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (currentIndex < slides.length - 1) { currentIndex++; updatePage(); }
+                if (currentIndex < slides.length - 1) { 
+                    currentIndex++; 
+                    updatePage(); 
+                }
             });
 
             prevBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (currentIndex > 0) { currentIndex--; updatePage(); }
-            });
-
-            replayBtn.addEventListener('click', () => { currentIndex = 0; updatePage(); });
-
-            document.body.addEventListener('click', (e) => {
-                if (!e.target.closest('button') && !e.target.closest('a') && currentIndex < slides.length - 1) {
-                    currentIndex++; updatePage();
+                if (currentIndex > 0) { 
+                    currentIndex--; 
+                    updatePage(); 
                 }
             });
 
+            replayBtn.addEventListener('click', () => { 
+                currentIndex = 0; 
+                updatePage(); 
+            });
+
+            // Tap/Click Body to Advance
+            document.body.addEventListener('click', (e) => {
+                const interactive = e.target.closest('button') || e.target.closest('a') || e.target.closest('#replay');
+                if (!interactive && currentIndex < slides.length - 1) {
+                    currentIndex++; 
+                    updatePage();
+                }
+            });
+
+            // Keyboard support
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowRight' || e.key === ' ') nextBtn.click();
                 if (e.key === 'ArrowLeft') prevBtn.click();
