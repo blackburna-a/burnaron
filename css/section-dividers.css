@@ -1,0 +1,21 @@
+/* Uniform section flow: no visible divider lines or duplicated section separators. */
+.section,
+.section-muted,
+.contact-section {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.section::before,
+.section::after,
+.section-muted::before,
+.section-muted::after,
+.contact-section::before,
+.contact-section::after {
+  content: none !important;
+  display: none !important;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}

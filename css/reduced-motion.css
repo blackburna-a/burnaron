@@ -1,0 +1,40 @@
+/* Clear reduced-motion handling */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .background-glow,
+  .background-glow::before,
+  .background-glow::after,
+  .background-grid,
+  body::before,
+  body::after,
+  .hero::before,
+  .hero::after {
+    animation: none !important;
+    transform: none !important;
+    rotate: 0deg !important;
+  }
+
+  .background-glow::after,
+  .hero::before {
+    opacity: 0.14 !important;
+  }
+
+  .button:hover,
+  .button:focus-visible,
+  .info-card:hover,
+  .project-card:hover,
+  .skill-group:hover {
+    transform: none !important;
+  }
+}

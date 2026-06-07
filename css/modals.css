@@ -1,0 +1,50 @@
+/* Modal action improvements */
+.cv-modal__bar {
+  align-items: center;
+}
+
+.cv-modal__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.cv-modal__actions .button {
+  min-height: 40px;
+  padding: 0.62rem 0.85rem;
+  font-size: 0.78rem;
+}
+
+.cv-modal__close {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 720px) {
+  .cv-modal__bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cv-modal__actions {
+    width: 100%;
+  }
+
+  .cv-modal__actions .button {
+    flex: 1 1 140px;
+  }
+
+  .cv-modal__close {
+    margin-left: auto;
+  }
+}
+
+/* CV modal simplified actions */
+.cv-modal__actions {
+  gap: 0.65rem;
+}
+
+.cv-modal__open {
+  white-space: nowrap;
+}
