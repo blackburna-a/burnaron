@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://burnaron.com/sitemap.xml

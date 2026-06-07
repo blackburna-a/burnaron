@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Opening email app | Aron Blackburn</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main class="section">
+    <div class="container contact-card">
+      <p class="eyebrow">Email handoff</p>
+      <h1>Opening your email app.</h1>
+      <p>
+        Your message is being prepared in your email client. Once it opens, review it and press send.
+      </p>
+      <div class="contact-actions">
+        <a class="button primary" id="manualEmailLink" href="mailto:black@burnaron.com">Open email app</a>
+        <a class="button ghost" href="https://burnaron.com/">Return to website</a>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const mailto = params.get("mailto");
+    const manualEmailLink = document.querySelector("#manualEmailLink");
+
+    if (mailto && mailto.startsWith("mailto:")) {
+      manualEmailLink.href = mailto;
+
+      window.setTimeout(() => {
+        window.location.href = mailto;
+      }, 250);
+    }
+  </script>
+</body>
+</html>
