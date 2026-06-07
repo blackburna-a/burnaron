@@ -214,16 +214,17 @@ body::after {
 
 .brand::before {
   content: "";
-  width: 0.82rem;
-  height: 0.82rem;
+  width: 1.65rem;
+  height: 1.65rem;
+  flex: 0 0 1.65rem;
   display: inline-block;
-  border: 1px solid rgba(33, 212, 255, 0.72);
-  border-radius: 3px;
-  background:
-    linear-gradient(135deg, rgba(33, 212, 255, 0.16), transparent),
-    rgba(1, 7, 18, 0.72);
-  box-shadow: 0 0 18px rgba(33, 212, 255, 0.32);
-  transform: rotate(45deg);
+  border: 1px solid rgba(94, 234, 212, 0.34);
+  border-radius: 8px;
+  background: url("../assets/favicon-32x32.png") center / cover no-repeat;
+  box-shadow:
+    0 0 18px rgba(33, 212, 255, 0.18),
+    0 0 28px rgba(94, 234, 212, 0.08);
+  transform: none;
 }
 
 .nav-links a {
