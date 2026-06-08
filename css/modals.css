@@ -1,4 +1,9 @@
-/* Modal action improvements */
+/*
+  Extra modal styling.
+  These rules sit on top of the base modal styles and focus on spacing and animation.
+*/
+
+/* Keeps the CV action buttons aligned and easy to tap. */
 .cv-modal__bar {
   align-items: center;
 }
@@ -40,11 +45,98 @@
   }
 }
 
-/* CV modal simplified actions */
+/* Prevents the CV action button text from wrapping awkwardly. */
 .cv-modal__actions {
   gap: 0.65rem;
 }
 
 .cv-modal__open {
   white-space: nowrap;
+}
+
+/* Makes the CV and contact windows slide in and out from the bottom. */
+.cv-modal,
+.email-modal {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 260ms ease,
+    visibility 260ms ease;
+}
+
+.cv-modal:not([hidden]),
+.email-modal:not([hidden]) {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.cv-modal__panel,
+.email-modal__panel {
+  transform: translateY(42px);
+  opacity: 0;
+  transition:
+    transform 340ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 260ms ease;
+  will-change: transform, opacity;
+}
+
+.cv-modal.is-open .cv-modal__panel,
+.email-modal.is-open .email-modal__panel {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.cv-modal.is-closing,
+.email-modal.is-closing {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cv-modal.is-closing .cv-modal__panel,
+.email-modal.is-closing .email-modal__panel {
+  transform: translateY(72px);
+  opacity: 0;
+}
+
+.cv-modal__backdrop,
+.email-modal__backdrop {
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+.cv-modal.is-open .cv-modal__backdrop,
+.email-modal.is-open .email-modal__backdrop {
+  opacity: 1;
+}
+
+@media (max-width: 720px) {
+  .cv-modal__panel,
+  .email-modal__panel {
+    transform: translateY(58px);
+  }
+
+  .cv-modal.is-closing .cv-modal__panel,
+  .email-modal.is-closing .email-modal__panel {
+    transform: translateY(86px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cv-modal,
+  .email-modal,
+  .cv-modal__panel,
+  .email-modal__panel,
+  .cv-modal__backdrop,
+  .email-modal__backdrop {
+    transition-duration: 0.001ms !important;
+  }
+
+  .cv-modal__panel,
+  .email-modal__panel,
+  .cv-modal.is-closing .cv-modal__panel,
+  .email-modal.is-closing .email-modal__panel {
+    transform: none !important;
+  }
 }

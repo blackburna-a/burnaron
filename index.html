@@ -66,7 +66,33 @@
   </script>
 </head>
 
-<body>
+<body class="booting">
+  <section class="boot-screen" id="bootScreen" aria-labelledby="bootTitle" aria-live="polite">
+<div class="boot-screen__panel">
+      <img class="boot-screen__mark" src="assets/favicon-32x32.png" alt="" width="32" height="32" />
+      <p class="boot-screen__eyebrow">burnaron.com</p>
+      <h1 class="boot-screen__title" id="bootTitle">INVESTIGATION PROTOCOL</h1>
+      <p class="boot-screen__subtitle">Loading operational profile...</p>
+
+      <ol class="boot-screen__steps" aria-label="Investigation protocol steps">
+        <li><span>[01]</span> Identifying signal</li>
+        <li><span>[02]</span> Reviewing context</li>
+        <li><span>[03]</span> Separating noise from risk</li>
+        <li><span>[04]</span> Documenting findings</li>
+        <li><span>[05]</span> Opening portfolio</li>
+      </ol>
+
+      <div class="boot-screen__progress" aria-hidden="true">
+        <span class="boot-screen__progress-bar"></span>
+      </div>
+
+      <p class="boot-screen__status" id="bootStatus">Initialising...</p>
+    </div>
+
+    <button class="boot-screen__skip" id="bootSkip" type="button">Skip</button>
+  </section>
+
+
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <div class="background-glow" aria-hidden="true"></div>
@@ -117,9 +143,7 @@
           <div class="hero-actions">
             <a class="button primary" href="mailto:black@burnaron.com" data-email-open aria-haspopup="dialog">Contact me</a>
             <a class="button secondary" href="assets/aron-blackburn-cv.png" data-cv-open aria-haspopup="dialog">View CV</a>
-            <!-- Replace these two URLs with your real profile links before publishing. -->
             <a class="button ghost" href="https://www.linkedin.com/in/aron-blackburn/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a class="button ghost" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub (coming soon)</a>
           </div>
         </div>
 
@@ -390,9 +414,7 @@
         <div class="contact-actions">
           <a class="button primary" href="mailto:black@burnaron.com" data-email-open aria-haspopup="dialog">black@burnaron.com</a>
           <a class="button secondary" href="assets/aron-blackburn-cv.png" data-cv-open aria-haspopup="dialog">View CV</a>
-          <!-- Replace these two URLs with your real profile links before publishing. -->
           <a class="button ghost" href="https://www.linkedin.com/in/aron-blackburn/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a class="button ghost" href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub (coming soon)</a>
         </div>
       </div>
     </section>

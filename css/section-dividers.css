@@ -1,4 +1,9 @@
-/* Uniform section flow: no visible divider lines or duplicated section separators. */
+/*
+  Section flow cleanup.
+  Earlier versions had divider lines between sections. These rules remove them.
+*/
+
+/* Removes section divider lines so the page scrolls as one smooth surface. */
 .section,
 .section-muted,
 .contact-section {

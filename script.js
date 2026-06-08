@@ -1,3 +1,73 @@
+/* Runs the short intro screen before the main portfolio is shown. */
+const bootScreen = document.querySelector("#bootScreen");
+const bootSkip = document.querySelector("#bootSkip");
+const bootStatus = document.querySelector("#bootStatus");
+
+// Finishes the boot screen. Skip uses the quick exit; normal loading uses the soft fade.
+function completeBootScreen({ immediate = false } = {}) {
+  if (!bootScreen) return;
+
+  if (bootStatus) {
+    bootStatus.textContent = "Profile ready.";
+  }
+
+  if (immediate) {
+    bootScreen.classList.add("is-complete");
+    document.body.classList.remove("booting");
+
+    window.setTimeout(() => {
+      bootScreen.remove();
+    }, 620);
+
+    return;
+  }
+
+  bootScreen.classList.add("is-fading-out");
+
+  window.setTimeout(() => {
+    bootScreen.classList.add("is-complete");
+    document.body.classList.remove("booting");
+  }, 250);
+
+  window.setTimeout(() => {
+    bootScreen.remove();
+  }, 2100);
+}
+
+if (bootScreen) {
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const bootDuration = prefersReducedMotion ? 650 : 8600;
+
+  if (bootStatus) {
+    const bootMessages = [
+      [500, "Identifying signal..."],
+      [1550, "Signal located. Reviewing context..."],
+      [2750, "Context reviewed. Separating noise from risk..."],
+      [4050, "Findings structured. Documenting decision path..."],
+      [5350, "Decision path documented. Opening portfolio..."],
+      [6300, "Profile ready."]
+    ];
+
+    bootMessages.forEach(([delay, message]) => {
+      window.setTimeout(() => {
+        if (bootScreen && !bootScreen.classList.contains("is-complete")) {
+          bootStatus.textContent = message;
+        }
+      }, prefersReducedMotion ? 0 : delay);
+    });
+  }
+
+  // Waits for the boot screen to finish unless the visitor skips it.
+  const bootTimer = window.setTimeout(completeBootScreen, bootDuration);
+
+  if (bootSkip) {
+    bootSkip.addEventListener("click", () => {
+      window.clearTimeout(bootTimer);
+      completeBootScreen({ immediate: true });
+    });
+  }
+}
+
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
 const year = document.querySelector("#year");
@@ -7,12 +77,14 @@ if (year) {
 }
 
 if (navToggle && navLinks) {
+  // Opens the mobile menu and locks the page behind it.
   navToggle.addEventListener("click", () => {
     const isOpen = navLinks.classList.toggle("is-open");
     navToggle.setAttribute("aria-expanded", String(isOpen));
     document.body.classList.toggle("menu-open", isOpen);
   });
 
+  // Closes the mobile menu after a navigation link is selected.
   navLinks.addEventListener("click", (event) => {
     if (event.target instanceof HTMLAnchorElement) {
       navLinks.classList.remove("is-open");
@@ -22,7 +94,7 @@ if (navToggle && navLinks) {
   });
 }
 
-/* Focus trapping shared by CV, email and thank-you modals. */
+/* Keeps keyboard focus inside whichever modal is currently open. */
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -34,6 +106,7 @@ const focusableSelector = [
 
 let activeModal = null;
 
+// Finds the links, buttons, and fields a keyboard user can tab to inside a modal.
 function getFocusableElements(container) {
   if (!container) return [];
 
@@ -46,6 +119,7 @@ function getFocusableElements(container) {
   });
 }
 
+// Starts the focus trap and puts focus on the first useful control.
 function activateFocusTrap(modal, preferredFocusTarget = null) {
   activeModal = modal;
 
@@ -55,13 +129,50 @@ function activateFocusTrap(modal, preferredFocusTarget = null) {
   }
 }
 
+// Clears the focus trap when a modal is closed.
 function deactivateFocusTrap(modal) {
   if (activeModal === modal) {
     activeModal = null;
   }
 }
 
-/* CV modal viewer */
+// Shows a modal and starts its slide-up animation.
+function openAnimatedModal(modal, bodyClassName) {
+  if (!modal) return;
+
+  modal.classList.remove("is-closing");
+  modal.hidden = false;
+  document.body.classList.add(bodyClassName);
+
+  requestAnimationFrame(() => {
+    modal.classList.add("is-open");
+  });
+}
+
+// Plays the slide-down animation before hiding the modal.
+function closeAnimatedModal(modal, bodyClassName, onAfterClose = null) {
+  if (!modal || modal.hidden) {
+    if (typeof onAfterClose === "function") {
+      onAfterClose();
+    }
+    return;
+  }
+
+  modal.classList.remove("is-open");
+  modal.classList.add("is-closing");
+  document.body.classList.remove(bodyClassName);
+
+  window.setTimeout(() => {
+    modal.hidden = true;
+    modal.classList.remove("is-closing");
+
+    if (typeof onAfterClose === "function") {
+      onAfterClose();
+    }
+  }, 360);
+}
+
+/* Opens the CV inside the page and lets the user open it in a separate tab. */
 const cvModal = document.querySelector("#cvModal");
 const cvImage = document.querySelector("#cvImage");
 const cvFrame = document.querySelector("#cvFrame");
@@ -72,10 +183,12 @@ const cvCloseButtons = document.querySelectorAll("[data-cv-close]");
 
 let cvLastFocusedElement = null;
 
+// Checks whether the CV should be shown as an image or inside an iframe.
 function isImageFile(url) {
   return /\.(png|jpe?g|webp|gif|svg)(\?.*)?$/i.test(url);
 }
 
+// Loads the selected CV file and opens the CV preview window.
 function openCvModal(cvUrl) {
   if (!cvModal || !cvImage || !cvFrame) return;
 
@@ -100,26 +213,27 @@ if (cvOpenLink) {
     cvImage.hidden = true;
   }
 
-  cvModal.hidden = false;
-  document.body.classList.add("cv-modal-open");
+  openAnimatedModal(cvModal, "cv-modal-open");
 
   activateFocusTrap(cvModal, cvOpenLink || cvModal.querySelector("[data-cv-close]"));
 }
 
+// Closes the CV window, clears the preview, and returns focus to the button that opened it.
 function closeCvModal() {
   if (!cvModal || !cvImage || !cvFrame) return;
 
-  cvModal.hidden = true;
-  cvImage.src = "";
-  cvFrame.src = "";
-  cvImage.hidden = true;
-  cvFrame.hidden = true;
-  document.body.classList.remove("cv-modal-open");
   deactivateFocusTrap(cvModal);
 
-  if (cvLastFocusedElement && typeof cvLastFocusedElement.focus === "function") {
-    cvLastFocusedElement.focus();
-  }
+  closeAnimatedModal(cvModal, "cv-modal-open", () => {
+    cvImage.src = "";
+    cvFrame.src = "";
+    cvImage.hidden = true;
+    cvFrame.hidden = true;
+
+    if (cvLastFocusedElement && typeof cvLastFocusedElement.focus === "function") {
+      cvLastFocusedElement.focus();
+    }
+  });
 }
 
 cvOpenButtons.forEach((button) => {
@@ -134,7 +248,7 @@ cvCloseButtons.forEach((button) => {
   button.addEventListener("click", closeCvModal);
 });
 
-/* Email compose modal with separate-window mailto handoff */
+/* Opens the contact form and prepares a pre-filled email for the visitor's email app. */
 const emailModal = document.querySelector("#emailModal");
 const emailThanksModal = document.querySelector("#emailThanksModal");
 const emailForm = document.querySelector("#emailForm");
@@ -146,12 +260,12 @@ const senderNameInput = document.querySelector("#senderName");
 
 let emailLastFocusedElement = null;
 
+// Opens the contact form and places the cursor in the first field.
 function openEmailModal() {
   if (!emailModal) return;
 
   emailLastFocusedElement = document.activeElement;
-  emailModal.hidden = false;
-  document.body.classList.add("email-modal-open");
+  openAnimatedModal(emailModal, "email-modal-open");
 
   if (emailStatus) {
     emailStatus.textContent = "";
@@ -160,22 +274,28 @@ function openEmailModal() {
   activateFocusTrap(emailModal, senderNameInput || getFocusableElements(emailModal)[0]);
 }
 
-function closeEmailModal({ restoreFocus = true } = {}) {
+// Closes the contact form and optionally returns focus to the original contact button.
+function closeEmailModal({ restoreFocus = true, afterClose = null } = {}) {
   if (!emailModal) return;
 
-  emailModal.hidden = true;
-  document.body.classList.remove("email-modal-open");
   deactivateFocusTrap(emailModal);
 
-  if (emailStatus) {
-    emailStatus.textContent = "";
-  }
+  closeAnimatedModal(emailModal, "email-modal-open", () => {
+    if (emailStatus) {
+      emailStatus.textContent = "";
+    }
 
-  if (restoreFocus && emailLastFocusedElement && typeof emailLastFocusedElement.focus === "function") {
-    emailLastFocusedElement.focus();
-  }
+    if (restoreFocus && emailLastFocusedElement && typeof emailLastFocusedElement.focus === "function") {
+      emailLastFocusedElement.focus();
+    }
+
+    if (typeof afterClose === "function") {
+      afterClose();
+    }
+  });
 }
 
+// Shows the short thank-you message after the email is prepared.
 function openEmailThanksModal() {
   if (!emailThanksModal) return;
 
@@ -185,6 +305,7 @@ function openEmailThanksModal() {
   activateFocusTrap(emailThanksModal, continueToWebsiteButton || getFocusableElements(emailThanksModal)[0]);
 }
 
+// Closes the thank-you message and returns the visitor to the website.
 function closeEmailThanksModal() {
   if (!emailThanksModal) return;
 
@@ -197,6 +318,7 @@ function closeEmailThanksModal() {
   }
 }
 
+// Turns the contact form fields into a mailto link with the subject and body filled in.
 function buildMailtoUrl(formData) {
   const senderName = String(formData.get("senderName") || "").trim();
   const senderEmail = String(formData.get("senderEmail") || "").trim();
@@ -217,6 +339,7 @@ function buildMailtoUrl(formData) {
   return `mailto:black@burnaron.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
 }
 
+// Opens a small helper page that hands the prepared message to the visitor's email app.
 function openMailtoHandoffWindow(mailtoUrl) {
   const handoffUrl = `email-handoff.html?mailto=${encodeURIComponent(mailtoUrl)}`;
   const handoffWindow = window.open(handoffUrl, "_blank", "width=720,height=720");
@@ -251,14 +374,16 @@ if (emailForm) {
 
     const mailtoUrl = buildMailtoUrl(new FormData(emailForm));
 
-    /* Review and send closes the compose form, then opens a separate thank-you modal. */
-    closeEmailModal({ restoreFocus: false });
-    openEmailThanksModal();
+    /* Close the form first, then show the thank-you message and open the email handoff. */
+    closeEmailModal({
+      restoreFocus: false,
+      afterClose: openEmailThanksModal
+    });
     openMailtoHandoffWindow(mailtoUrl);
   });
 }
 
-/* Global keyboard handling for menu and active modals. */
+/* Handles Escape and Tab so menus and modals behave properly from the keyboard. */
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     if (navLinks && navLinks.classList.contains("is-open")) {

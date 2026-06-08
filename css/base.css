@@ -1,3 +1,8 @@
+/*
+  Base styles shared across the whole site.
+  This file handles the layout, typography, cards, buttons, and the original modal styles.
+*/
+
 :root {
   --bg: #020617;
   --bg-soft: #07111f;
@@ -68,8 +73,8 @@ select {
 }
 
 /*
-  Animated aurora background.
-  This replaces the previous hard grid so the site feels calmer and avoids visible section seams.
+  Background layers used by the original site theme.
+  They sit behind all content and do not block clicks.
 */
 .background-glow,
 .background-grid {
@@ -178,8 +183,8 @@ select {
 }
 
 /*
-  Kept intentionally transparent so each section sits on the same continuous background.
-  The cards provide contrast instead of full-width horizontal bands.
+  Section backgrounds stay transparent so scrolling feels like one continuous page.
+  The cards create contrast instead of adding heavy horizontal bands.
 */
 .section-muted {
   background: transparent;
@@ -776,7 +781,7 @@ h3 {
   }
 }
 
-/* CV modal viewer */
+/* Styles for the CV preview window. */
 .cv-modal[hidden] {
   display: none;
 }
@@ -934,7 +939,7 @@ body.cv-modal-open {
   }
 }
 
-/* Email compose modal */
+/* Styles for the contact form window. */
 .email-modal[hidden] {
   display: none;
 }
@@ -1148,7 +1153,7 @@ body.email-modal-open {
   }
 }
 
-/* Separate thank-you modal after email handoff */
+/* Small confirmation window shown after the email is prepared. */
 .email-thanks-modal[hidden] {
   display: none;
 }

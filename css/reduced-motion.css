@@ -1,4 +1,9 @@
-/* Clear reduced-motion handling */
+/*
+  Motion safety.
+  If a visitor has reduced motion enabled, the site keeps the design but removes the movement.
+*/
+
+/* Respects users who prefer less motion by stopping decorative animations. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;

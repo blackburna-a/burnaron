@@ -1,7 +1,8 @@
-/* --------------------------------------------------------------------------
-   Cyber Risk Console theme
-   Visual-only layer. No site copy/content is changed.
--------------------------------------------------------------------------- */
+/*
+  Cyber Risk Console theme.
+  This is the visual layer: colours, glow, background effects, card treatment,
+  button styling, and responsive polish. It does not change the page content.
+*/
 
 :root {
   --bg: #010712;
@@ -32,7 +33,7 @@ body {
     #010712;
 }
 
-/* Main animated cyber background: grid, signal trails, scanlines, and low-glow nodes. */
+/* Fixed background effects that give the page its cyber-console feel. */
 .background-glow,
 .background-grid {
   position: fixed;
@@ -190,7 +191,7 @@ body::after {
   }
 }
 
-/* Header and navigation */
+/* Header styling, including the AB icon beside the site name. */
 .site-header {
   border-bottom-color: rgba(33, 212, 255, 0.18);
   background:
@@ -205,7 +206,7 @@ body::after {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.78rem;
   color: var(--text);
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
@@ -220,7 +221,9 @@ body::after {
   display: inline-block;
   border: 1px solid rgba(94, 234, 212, 0.34);
   border-radius: 8px;
-  background: url("../assets/favicon-32x32.png") center / cover no-repeat;
+  background:
+    linear-gradient(135deg, rgba(33, 212, 255, 0.10), rgba(54, 246, 138, 0.04)),
+    url("../assets/favicon-32x32.png") center / cover no-repeat;
   box-shadow:
     0 0 18px rgba(33, 212, 255, 0.18),
     0 0 28px rgba(94, 234, 212, 0.08);
@@ -251,7 +254,7 @@ body::after {
   right: 0;
 }
 
-/* Hero visual treatment */
+/* Extra visual depth for the hero section, including the subtle radar shape. */
 .hero {
   position: relative;
   overflow: hidden;
@@ -316,7 +319,7 @@ h1 {
   box-shadow: inset 0 1px 0 rgba(248, 250, 252, 0.04);
 }
 
-/* Buttons */
+/* Shared button styling for the main actions and links. */
 .button {
   position: relative;
   overflow: hidden;
@@ -377,7 +380,7 @@ h1 {
     0 0 26px rgba(33, 212, 255, 0.10);
 }
 
-/* Console cards */
+/* Card styling used across experience, skills, projects, contact, and modal panels. */
 .hero-card,
 .info-card,
 .skill-group,
@@ -454,7 +457,7 @@ h1 {
   opacity: 0.72;
 }
 
-/* Contact, modals, and form controls */
+/* Form and modal polish so pop-up windows match the rest of the theme. */
 .email-modal__backdrop,
 .cv-modal__backdrop,
 .email-thanks-modal__backdrop {
@@ -493,7 +496,7 @@ h1 {
   background: rgba(33, 212, 255, 0.08);
 }
 
-/* Footer */
+/* Footer treatment so the bottom of the page feels connected to the theme. */
 .site-footer {
   background:
     linear-gradient(90deg, rgba(1, 7, 18, 0.72), rgba(3, 13, 24, 0.56));
@@ -503,7 +506,7 @@ h1 {
   color: var(--accent);
 }
 
-/* Mobile tuning for the cyber layers */
+/* Tones down large background effects on smaller screens. */
 @media (max-width: 980px) {
   .hero::before {
     right: -42vw;
@@ -557,7 +560,7 @@ h1 {
   }
 }
 
-/* Requested motion cleanup: remove diagonal/vertical animated layers, keep rotating radar. */
+/* Removes the stronger animated sweeps while keeping the calmer radar effect. */
 .background-glow::before,
 body::before,
 .hero::after {
@@ -567,7 +570,7 @@ body::before,
   background: none !important;
 }
 
-/* Keep radar visible but make it calm enough to sit behind text. */
+/* Keeps the radar subtle so it adds atmosphere without fighting the text. */
 .background-glow::after {
   opacity: 0.28;
 }
@@ -576,12 +579,12 @@ body::before,
   opacity: 0.30;
 }
 
-/* Neutralize old section-muted overlay so section divider styling is consistent. */
+/* Stops older section overlay styles from creating visible seams. */
 .section-muted::before {
   pointer-events: none;
 }
 
-/* Uniform scrolling override */
+/* Final safeguard to keep section backgrounds seamless while scrolling. */
 .section-muted,
 .section-muted::before,
 .section-muted::after {
