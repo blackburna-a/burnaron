@@ -7,12 +7,16 @@
 
 .boot-screen {
   position: fixed;
-  inset: 0;
+  inset: -8vmax;
   z-index: 5000;
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: clamp(1rem, 3vw, 2rem);
+  min-width: calc(100vw + 16vmax);
+  min-height: calc(100vh + 16vmax);
+  min-height: calc(100dvh + 16vmax);
+  padding: calc(clamp(1rem, 3vw, 2rem) + 8vmax);
+  isolation: isolate;
   background:
     radial-gradient(circle at 50% 50%, rgba(25, 150, 160, 0.20), transparent 22rem),
     radial-gradient(circle at 50% 56%, rgba(72, 217, 255, 0.09), transparent 34rem),
@@ -380,8 +384,26 @@
   color: var(--text);
 }
 
+html.booting,
+html.booting body,
 body.booting {
-  overflow: hidden;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+html.booting {
+  height: 100%;
+  max-height: 100%;
+  scrollbar-gutter: stable;
+}
+
+body.booting {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  touch-action: none;
 }
 
 /*
@@ -583,7 +605,7 @@ body.booting {
 
 @media (max-width: 720px) {
   .boot-screen {
-    padding: 0.75rem;
+    padding: calc(0.75rem + 8vmax);
   }
 
   .boot-screen::after,

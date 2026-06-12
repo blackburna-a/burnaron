@@ -7,9 +7,164 @@ const bootStepText = document.querySelector("#bootStepText");
 const bootCompletedSteps = document.querySelector("#bootCompletedSteps");
 const bootProgress = document.querySelector("#bootProgress");
 const bootProgressBar = document.querySelector("#bootProgressBar");
+const bgmAudio = document.querySelector("#bgmAudio");
+const bgmToggle = document.querySelector("#bgmToggle");
+const interfaceClickAudio = new Audio("assets/audio/click.mp3");
+const interfaceCloseAudio = new Audio("assets/audio/click-close.mp3");
 
 let activeBootStep = null;
 let bootProgressTimer = null;
+
+
+interfaceClickAudio.preload = "auto";
+interfaceClickAudio.volume = 0.58;
+
+interfaceCloseAudio.preload = "auto";
+interfaceCloseAudio.volume = 0.54;
+
+let bgmAwaitingGesture = false;
+let bgmMuted = false;
+
+try {
+  bgmMuted = localStorage.getItem("burnaronBgmMuted") === "true";
+} catch {
+  bgmMuted = false;
+}
+
+if (bgmAudio) {
+  bgmAudio.preload = "auto";
+  bgmAudio.loop = true;
+  bgmAudio.volume = 0.08;
+  bgmAudio.muted = bgmMuted;
+}
+
+// Sets the background audio button label and pressed state.
+function updateBgmToggle(labelOverride = "") {
+  if (!bgmToggle) return;
+
+  bgmToggle.textContent = labelOverride || (bgmMuted ? "Unmute BGM" : "Mute BGM");
+  bgmToggle.setAttribute("aria-pressed", String(bgmMuted));
+}
+
+// Stores and applies the background audio mute state.
+function setBgmMuted(isMuted) {
+  bgmMuted = isMuted;
+
+  if (bgmAudio) {
+    bgmAudio.muted = bgmMuted;
+  }
+
+  try {
+    localStorage.setItem("burnaronBgmMuted", String(bgmMuted));
+  } catch {}
+
+  bgmAwaitingGesture = false;
+  updateBgmToggle();
+}
+
+// Starts the background audio loop when playback is permitted.
+function startBgmAudio() {
+  if (!bgmAudio || bgmMuted) {
+    updateBgmToggle();
+    return;
+  }
+
+  const playback = bgmAudio.play();
+
+  if (playback && typeof playback.catch === "function") {
+    playback
+      .then(() => {
+        bgmAwaitingGesture = false;
+        updateBgmToggle();
+      })
+      .catch(() => {
+        bgmAwaitingGesture = true;
+        updateBgmToggle("Play BGM");
+      });
+  }
+}
+
+// Starts the background audio from the first available user gesture.
+function startBgmAudioFromGesture(event) {
+  if (event?.target?.closest?.("#bgmToggle")) return;
+  if (!bgmAudio || bgmMuted || !bgmAwaitingGesture) return;
+
+  bgmAwaitingGesture = false;
+  startBgmAudio();
+}
+
+// Toggles background audio without resetting the loop position.
+function toggleBgmAudio() {
+  if (!bgmAudio) return;
+
+  if (bgmMuted) {
+    setBgmMuted(false);
+    startBgmAudio();
+    return;
+  }
+
+  if (bgmAwaitingGesture || bgmAudio.paused) {
+    bgmAwaitingGesture = false;
+    startBgmAudio();
+    return;
+  }
+
+  setBgmMuted(true);
+}
+
+updateBgmToggle();
+
+// Plays one of the supplied click sounds.
+function playInterfaceClickSound(soundType = "default") {
+  const sourceAudio = soundType === "close" ? interfaceCloseAudio : interfaceClickAudio;
+  const audio = sourceAudio.cloneNode();
+
+  audio.volume = sourceAudio.volume;
+
+  const playback = audio.play();
+
+  if (playback && typeof playback.catch === "function") {
+    playback.catch(() => {});
+  }
+}
+
+const bootScrollKeys = new Set([
+  "ArrowDown",
+  "ArrowUp",
+  "End",
+  "Home",
+  "PageDown",
+  "PageUp",
+  " "
+]);
+
+// Checks whether the startup screen is still controlling the page.
+function isBootActive() {
+  return document.documentElement.classList.contains("booting") || document.body.classList.contains("booting");
+}
+
+// Prevents wheel, touch, and keyboard scrolling while the startup screen is active.
+function preventBootScroll(event) {
+  if (isBootActive()) {
+    event.preventDefault();
+  }
+}
+
+// Prevents keyboard scroll shortcuts while leaving normal keyboard navigation available.
+function preventBootKeyScroll(event) {
+  if (isBootActive() && bootScrollKeys.has(event.key)) {
+    event.preventDefault();
+  }
+}
+
+// Enables page scrolling after the startup screen has finished.
+function unlockBootScroll() {
+  document.documentElement.classList.remove("booting");
+  document.body.classList.remove("booting");
+  window.removeEventListener("wheel", preventBootScroll);
+  window.removeEventListener("touchmove", preventBootScroll);
+  window.removeEventListener("keydown", preventBootKeyScroll);
+}
 
 // Sets the progress bar width and the centered percentage label.
 function setBootProgress(value) {
@@ -127,7 +282,7 @@ function completeBootScreen({ immediate = false } = {}) {
 
   if (immediate) {
     bootScreen.classList.add("is-complete");
-    document.body.classList.remove("booting");
+    unlockBootScroll();
 
     window.setTimeout(() => {
       bootScreen.remove();
@@ -140,17 +295,23 @@ function completeBootScreen({ immediate = false } = {}) {
 
   window.setTimeout(() => {
     bootScreen.classList.add("is-complete");
-    document.body.classList.remove("booting");
-  }, 240);
+  }, 1000);
 
   window.setTimeout(() => {
+    unlockBootScroll();
     bootScreen.remove();
-  }, 2100);
+  }, 1300);
 }
 
 if (bootScreen) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const bootDuration = prefersReducedMotion ? 650 : 8600;
+
+  window.addEventListener("wheel", preventBootScroll, { passive: false });
+  window.addEventListener("touchmove", preventBootScroll, { passive: false });
+  window.addEventListener("keydown", preventBootKeyScroll);
+  window.addEventListener("pointerdown", startBgmAudioFromGesture, { capture: true });
+  window.addEventListener("keydown", startBgmAudioFromGesture, { capture: true });
 
   const bootSteps = [
     { delay: 1400, duration: 760, step: 1, text: "Identifying signal", status: "Identifying signal..." },
@@ -168,6 +329,7 @@ if (bootScreen) {
     bootCycle.textContent = "01";
   }
 
+  startBgmAudio();
   startBootProgress(bootDuration);
 
   bootSteps.forEach(({ delay, duration, step, text, status }) => {
@@ -200,6 +362,32 @@ if (bootScreen) {
     });
   }
 }
+
+
+
+if (bgmToggle) {
+  bgmToggle.addEventListener("click", toggleBgmAudio);
+}
+
+// Assigns the supplied click sounds to selected portfolio controls.
+document.addEventListener("click", (event) => {
+  const closeControl = event.target.closest(
+    "[data-email-close], [data-cv-close], .email-modal__close, .cv-modal__close, #emailModal button[type='button']"
+  );
+
+  if (closeControl && !closeControl.matches(":disabled, [aria-disabled='true']")) {
+    playInterfaceClickSound("close");
+    return;
+  }
+
+  const standardControl = event.target.closest(
+    "#bootSkip, [data-email-open], [data-cv-open], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+  );
+
+  if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
+
+  playInterfaceClickSound();
+});
 
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="booting">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -156,8 +156,10 @@
     <button class="boot-screen__skip" id="bootSkip" type="button">Skip</button>
   </section>
 
+  <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Mute BGM</button>
+  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
 
-  <a class="skip-link" href="#main">Skip to main content</a>
+<a class="skip-link" href="#main">Skip to main content</a>
 
   <div class="background-glow" aria-hidden="true"></div>
   <div class="background-grid" aria-hidden="true"></div>
@@ -165,7 +167,7 @@
 
   <header class="site-header">
     <nav class="nav container" aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="Aron Blackburn home">Aron Blackburn</a>
+<a class="brand" href="#top" aria-label="Aron Blackburn home">Aron Blackburn</a>
 
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
         <span class="sr-only">Toggle navigation</span>
