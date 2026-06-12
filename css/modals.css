@@ -140,3 +140,23 @@
     transform: none !important;
   }
 }
+
+/*
+  Modal surface overrides.
+  These rules keep modal panels, backdrops, and animated states consistent with the page panels.
+*/
+.cv-modal__panel,
+.email-modal__panel,
+.email-thanks-modal__panel {
+  border-color: rgba(45, 185, 231, 0.24);
+  background:
+    linear-gradient(180deg, rgba(14, 44, 63, 0.86), rgba(6, 18, 27, 0.82));
+}
+
+.cv-modal__backdrop,
+.email-modal__backdrop,
+.email-thanks-modal__backdrop {
+  background:
+    radial-gradient(circle at 50% 36%, rgba(72, 217, 255, 0.12), transparent 30rem),
+    rgba(5, 11, 17, 0.86);
+}

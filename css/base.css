@@ -1,6 +1,6 @@
 /*
   Base styles shared across the whole site.
-  This file handles the layout, typography, cards, buttons, and the original modal styles.
+  This file handles the layout, typography, cards, buttons, and the baseline modal styles.
 */
 
 :root {
@@ -73,7 +73,7 @@ select {
 }
 
 /*
-  Background layers used by the original site theme.
+  Background layers used behind the page content.
   They sit behind all content and do not block clicks.
 */
 .background-glow,
@@ -183,8 +183,8 @@ select {
 }
 
 /*
-  Section backgrounds stay transparent so scrolling feels like one continuous page.
-  The cards create contrast instead of adding heavy horizontal bands.
+  Section backgrounds remain transparent so scrolling feels like one continuous page.
+  The cards provide contrast within the shared page surface.
 */
 .section-muted {
   background: transparent;

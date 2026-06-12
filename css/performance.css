@@ -1,0 +1,55 @@
+/*
+  Performance safeguards.
+  These rules reduce expensive visual effects on smaller or touch-based devices.
+*/
+
+.boot-screen__rings,
+.boot-screen__energy,
+.background-radar,
+.background-radar::before,
+.background-radar::after {
+  backface-visibility: hidden;
+  transform-style: flat;
+}
+
+@media (max-width: 980px), (hover: none) {
+  .hero-card,
+  .info-card,
+  .skill-group,
+  .project-card,
+  .contact-card,
+  .cv-modal__panel,
+  .email-modal__panel,
+  .email-thanks-modal__panel {
+    backdrop-filter: none !important;
+  }
+
+  .background-grid {
+    opacity: 0.42;
+  }
+
+  .background-radar {
+    opacity: 0.18;
+  }
+
+  .background-radar::before,
+  .background-radar::after {
+    animation: none !important;
+  }
+
+  body::before,
+  body::after {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .background-radar {
+    display: none;
+  }
+
+  .background-glow::before,
+  .background-glow::after {
+    animation: none !important;
+  }
+}

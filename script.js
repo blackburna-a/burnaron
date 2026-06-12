@@ -2,13 +2,127 @@
 const bootScreen = document.querySelector("#bootScreen");
 const bootSkip = document.querySelector("#bootSkip");
 const bootStatus = document.querySelector("#bootStatus");
+const bootCycle = document.querySelector("#bootCycle");
+const bootStepText = document.querySelector("#bootStepText");
+const bootCompletedSteps = document.querySelector("#bootCompletedSteps");
+const bootProgress = document.querySelector("#bootProgress");
+const bootProgressBar = document.querySelector("#bootProgressBar");
 
-// Finishes the boot screen. Skip uses the quick exit; normal loading uses the soft fade.
+let activeBootStep = null;
+let bootProgressTimer = null;
+
+// Sets the progress bar width and the centered percentage label.
+function setBootProgress(value) {
+  const progressValue = Math.max(0, Math.min(100, Math.round(value)));
+
+  if (bootProgress) {
+    bootProgress.textContent = `${progressValue}%`;
+  }
+
+  if (bootProgressBar) {
+    bootProgressBar.style.width = `${progressValue}%`;
+  }
+}
+
+// Runs small timed progress updates during the startup screen.
+function startBootProgress(duration) {
+  const startedAt = window.performance.now();
+
+  setBootProgress(0);
+
+  bootProgressTimer = window.setInterval(() => {
+    const elapsed = window.performance.now() - startedAt;
+    const progressValue = Math.min(100, (elapsed / duration) * 100);
+
+    setBootProgress(progressValue);
+
+    if (progressValue >= 100) {
+      window.clearInterval(bootProgressTimer);
+      bootProgressTimer = null;
+    }
+  }, 120);
+}
+
+// Sets the step counter and shows one protocol step at a time.
+function showBootStep(stepNumber, stepText, statusText = "") {
+  activeBootStep = { stepNumber, stepText };
+
+  if (bootCycle) {
+    bootCycle.textContent = String(stepNumber).padStart(2, "0");
+  }
+
+  if (bootStatus && statusText) {
+    bootStatus.textContent = statusText;
+  }
+
+  if (!bootStepText) return;
+
+  bootStepText.classList.remove("is-visible", "is-exiting");
+  bootStepText.textContent = stepText;
+
+  window.requestAnimationFrame(() => {
+    bootStepText.classList.add("is-visible");
+  });
+}
+
+// Adds a completed protocol step to the compact rolling log.
+function addCompletedBootStep(stepNumber, stepText) {
+  if (!bootCompletedSteps) return;
+
+  const item = document.createElement("li");
+  item.className = "is-entering";
+  item.innerHTML = `<span>[${String(stepNumber).padStart(2, "0")}]</span> ${stepText}`;
+
+  bootCompletedSteps.appendChild(item);
+
+  const items = Array.from(bootCompletedSteps.children);
+
+  if (items.length > 3) {
+    const oldestItem = items[0];
+
+    oldestItem.classList.add("is-removing");
+
+    window.setTimeout(() => {
+      oldestItem.remove();
+    }, 210);
+  }
+
+  window.setTimeout(() => {
+    item.classList.remove("is-entering");
+  }, 320);
+}
+
+// Hides the current protocol step and moves it into the completed-step log.
+function hideBootStep() {
+  if (!bootStepText || !activeBootStep) return;
+
+  bootStepText.classList.remove("is-visible");
+  bootStepText.classList.add("is-exiting");
+  addCompletedBootStep(activeBootStep.stepNumber, activeBootStep.stepText);
+  activeBootStep = null;
+}
+
+// Finishes the startup screen and reveals the main page.
 function completeBootScreen({ immediate = false } = {}) {
   if (!bootScreen) return;
 
+  if (bootProgressTimer) {
+    window.clearInterval(bootProgressTimer);
+    bootProgressTimer = null;
+  }
+
+  setBootProgress(100);
+
+  if (bootCycle) {
+    bootCycle.textContent = "05";
+  }
+
   if (bootStatus) {
     bootStatus.textContent = "Profile ready.";
+  }
+
+  if (bootStepText) {
+    bootStepText.classList.remove("is-visible", "is-exiting");
   }
 
   if (immediate) {
@@ -27,7 +141,7 @@ function completeBootScreen({ immediate = false } = {}) {
   window.setTimeout(() => {
     bootScreen.classList.add("is-complete");
     document.body.classList.remove("booting");
-  }, 250);
+  }, 240);
 
   window.setTimeout(() => {
     bootScreen.remove();
@@ -38,26 +152,45 @@ if (bootScreen) {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const bootDuration = prefersReducedMotion ? 650 : 8600;
 
-  if (bootStatus) {
-    const bootMessages = [
-      [500, "Identifying signal..."],
-      [1550, "Signal located. Reviewing context..."],
-      [2750, "Context reviewed. Separating noise from risk..."],
-      [4050, "Findings structured. Documenting decision path..."],
-      [5350, "Decision path documented. Opening portfolio..."],
-      [6300, "Profile ready."]
-    ];
+  const bootSteps = [
+    { delay: 1400, duration: 760, step: 1, text: "Identifying signal", status: "Identifying signal..." },
+    { delay: 2480, duration: 760, step: 2, text: "Reviewing context", status: "Reviewing context..." },
+    { delay: 3560, duration: 900, step: 3, text: "Separating noise from risk", status: "Separating noise from risk..." },
+    { delay: 4920, duration: 780, step: 4, text: "Documenting findings", status: "Documenting findings..." },
+    { delay: 6080, duration: 780, step: 5, text: "Opening portfolio", status: "Opening portfolio..." }
+  ];
 
-    bootMessages.forEach(([delay, message]) => {
-      window.setTimeout(() => {
-        if (bootScreen && !bootScreen.classList.contains("is-complete")) {
-          bootStatus.textContent = message;
-        }
-      }, prefersReducedMotion ? 0 : delay);
-    });
+  if (bootStatus) {
+    bootStatus.textContent = "Initialising...";
   }
 
-  // Waits for the boot screen to finish unless the visitor skips it.
+  if (bootCycle) {
+    bootCycle.textContent = "01";
+  }
+
+  startBootProgress(bootDuration);
+
+  bootSteps.forEach(({ delay, duration, step, text, status }) => {
+    window.setTimeout(() => {
+      if (bootScreen && !bootScreen.classList.contains("is-complete")) {
+        showBootStep(step, text, status);
+      }
+    }, prefersReducedMotion ? 0 : delay);
+
+    window.setTimeout(() => {
+      if (bootScreen && !bootScreen.classList.contains("is-complete")) {
+        hideBootStep();
+      }
+    }, prefersReducedMotion ? 0 : delay + duration);
+  });
+
+  window.setTimeout(() => {
+    if (bootScreen && !bootScreen.classList.contains("is-complete") && bootStatus) {
+      bootStatus.textContent = "Profile ready.";
+    }
+  }, prefersReducedMotion ? 0 : 7350);
+
+  // Waits for the startup screen to finish unless the visitor skips it.
   const bootTimer = window.setTimeout(completeBootScreen, bootDuration);
 
   if (bootSkip) {

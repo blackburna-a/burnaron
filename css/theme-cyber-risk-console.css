@@ -1,39 +1,41 @@
 /*
-  Cyber Risk Console theme.
-  This is the visual layer: colours, glow, background effects, card treatment,
-  button styling, and responsive polish. It does not change the page content.
+  Theme variables and page-level visual rules.
+  These values control the dark interface, panel colours, borders, shadows, and accent glows.
 */
 
 :root {
-  --bg: #010712;
-  --bg-soft: #04111d;
-  --surface: rgba(3, 13, 24, 0.82);
-  --surface-strong: rgba(5, 18, 32, 0.96);
-  --border: rgba(56, 189, 248, 0.22);
-  --border-strong: rgba(56, 189, 248, 0.56);
-  --text: #f8fafc;
-  --text-muted: #7f95aa;
-  --text-soft: #c7d2df;
-  --accent: #21d4ff;
-  --accent-strong: #00a8e8;
-  --accent-green: #36f68a;
-  --warning: #f59e0b;
-  --shadow: 0 22px 70px rgba(0, 0, 0, 0.48), 0 0 48px rgba(33, 212, 255, 0.07);
+  --bg: #050b11;
+  --bg-soft: #081620;
+  --surface: rgba(8, 25, 36, 0.78);
+  --surface-strong: rgba(10, 32, 46, 0.94);
+  --border: rgba(45, 185, 231, 0.24);
+  --border-strong: rgba(70, 216, 255, 0.58);
+  --text: #e9fbff;
+  --text-muted: #8aa7b5;
+  --text-soft: #c5e3eb;
+  --accent: #48d9ff;
+  --accent-strong: #1aa6e8;
+  --accent-green: #34d399;
+  --accent-gold: #f3c96a;
+  --shadow: 0 22px 70px rgba(0, 0, 0, 0.48), 0 0 42px rgba(72, 217, 255, 0.05);
 }
 
 html {
-  background: #010712;
+  background: var(--bg);
 }
 
 body {
   background:
-    radial-gradient(circle at 20% 8%, rgba(33, 212, 255, 0.13), transparent 34rem),
-    radial-gradient(circle at 78% 18%, rgba(54, 246, 138, 0.075), transparent 30rem),
-    radial-gradient(circle at 50% 115%, rgba(14, 165, 233, 0.11), transparent 36rem),
-    #010712;
+    radial-gradient(circle at 50% 36%, rgba(32, 119, 166, 0.12), transparent 22rem),
+    radial-gradient(circle at 15% 18%, rgba(72, 217, 255, 0.08), transparent 28rem),
+    radial-gradient(circle at 86% 12%, rgba(51, 211, 153, 0.055), transparent 24rem),
+    linear-gradient(180deg, #071017 0%, #050b11 58%, #03070b 100%);
 }
 
-/* Fixed background effects that give the page its cyber-console feel. */
+/*
+  Background layers.
+  They create the low-contrast grid, scanline texture, and subtle system glow behind the content.
+*/
 .background-glow,
 .background-grid {
   position: fixed;
@@ -43,60 +45,60 @@ body {
 
 .background-glow {
   z-index: -4;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(33, 212, 255, 0.18), transparent 24rem),
-    radial-gradient(circle at 78% 22%, rgba(54, 246, 138, 0.10), transparent 28rem),
-    radial-gradient(circle at 65% 76%, rgba(14, 165, 233, 0.09), transparent 32rem),
-    conic-gradient(from 112deg at 73% 31%, transparent 0 72deg, rgba(54, 246, 138, 0.10) 76deg, transparent 92deg 360deg);
-  filter: none;
   opacity: 1;
-  animation: cyber-console-glow 18s ease-in-out infinite alternate;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(72, 217, 255, 0.13), transparent 18rem),
+    radial-gradient(circle at 20% 70%, rgba(72, 217, 255, 0.06), transparent 22rem),
+    radial-gradient(circle at 82% 78%, rgba(51, 211, 153, 0.06), transparent 28rem);
 }
 
 .background-glow::before,
 .background-glow::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 0;
-  filter: none;
-  opacity: 1;
-  transform: none;
+  pointer-events: none;
+  border-radius: 999px;
 }
 
 .background-glow::before {
+  top: 24%;
+  left: 50%;
+  width: min(34vw, 520px);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  opacity: 0.30;
   background:
-    linear-gradient(115deg, transparent 0 38%, rgba(33, 212, 255, 0.10) 42%, transparent 48% 100%),
-    linear-gradient(65deg, transparent 0 54%, rgba(54, 246, 138, 0.07) 57%, transparent 63% 100%);
-  background-size: 160% 160%, 180% 180%;
-  animation: cyber-data-sweep 12s linear infinite;
+    repeating-radial-gradient(circle, rgba(72, 217, 255, 0.28) 0 1px, transparent 1px 42px),
+    conic-gradient(from 0deg, transparent 0 268deg, rgba(72, 217, 255, 0.42) 280deg, transparent 298deg 360deg);
+  mask-image: radial-gradient(circle, transparent 0 20%, black 21% 70%, transparent 74%);
+  animation: interface-ring-spin 28s linear infinite;
 }
 
 .background-glow::after {
-  inset: auto auto 10% 50%;
-  width: min(54vw, 720px);
+  top: 31%;
+  left: 50%;
+  width: min(18vw, 250px);
   aspect-ratio: 1;
-  translate: -5% 0;
-  border-radius: 999px;
-  opacity: 0.35;
+  translate: -50% 0;
+  opacity: 0.44;
   background:
-    repeating-radial-gradient(circle, rgba(33, 212, 255, 0.28) 0 1px, transparent 1px 54px),
-    conic-gradient(from 0deg, transparent 0 292deg, rgba(54, 246, 138, 0.32) 300deg, transparent 318deg 360deg);
-  mask-image: radial-gradient(circle, transparent 0 14%, black 15% 62%, transparent 72%);
-  animation: cyber-radar-rotate 14s linear infinite;
+    radial-gradient(circle, rgba(72, 217, 255, 0.28), rgba(72, 217, 255, 0.12) 44%, transparent 68%),
+    repeating-radial-gradient(circle, rgba(233, 251, 255, 0.18) 0 1px, transparent 1px 22px);
+  box-shadow:
+    0 0 34px rgba(72, 217, 255, 0.16),
+    inset 0 0 40px rgba(72, 217, 255, 0.18);
+  animation: interface-core-pulse 3.8s ease-in-out infinite alternate;
 }
 
 .background-grid {
   z-index: -3;
-  opacity: 0.82;
+  opacity: 0.72;
   background:
-    linear-gradient(rgba(33, 212, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(33, 212, 255, 0.04) 1px, transparent 1px),
-    radial-gradient(circle at center, rgba(54, 246, 138, 0.08) 1px, transparent 1.6px),
-    repeating-linear-gradient(180deg, rgba(248, 250, 252, 0.025) 0 1px, transparent 1px 4px),
-    radial-gradient(circle at 50% 28%, transparent 0, rgba(1, 7, 18, 0.28) 46%, rgba(1, 7, 18, 0.92) 100%);
-  background-size: 64px 64px, 64px 64px, 96px 96px, 100% 4px, 100% 100%;
-  animation: cyber-grid-drift 34s linear infinite;
+    linear-gradient(rgba(72, 217, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(72, 217, 255, 0.032) 1px, transparent 1px),
+    repeating-linear-gradient(180deg, rgba(233, 251, 255, 0.024) 0 1px, transparent 1px 5px),
+    radial-gradient(circle at 50% 42%, transparent 0, rgba(5, 11, 17, 0.28) 44%, rgba(5, 11, 17, 0.92) 100%);
+  background-size: 64px 64px, 64px 64px, 100% 5px, 100% 100%;
 }
 
 body::before,
@@ -109,155 +111,149 @@ body::after {
 }
 
 body::before {
+  opacity: 0.24;
   background:
-    linear-gradient(90deg, transparent 0 10%, rgba(33, 212, 255, 0.11) 12%, transparent 15% 100%),
-    linear-gradient(90deg, transparent 0 74%, rgba(54, 246, 138, 0.07) 76%, transparent 80% 100%);
-  background-size: 280% 100%, 340% 100%;
-  opacity: 0.55;
-  animation: cyber-scan-columns 16s ease-in-out infinite;
+    linear-gradient(90deg, transparent 0 18%, rgba(72, 217, 255, 0.08) 19%, transparent 22% 100%),
+    linear-gradient(90deg, transparent 0 78%, rgba(72, 217, 255, 0.06) 79%, transparent 82% 100%);
+  background-size: 300% 100%, 360% 100%;
+  animation: interface-scan 18s ease-in-out infinite;
 }
 
 body::after {
+  opacity: 0.18;
   background:
-    radial-gradient(circle at 12% 22%, rgba(33, 212, 255, 0.10) 0 1px, transparent 2px),
-    radial-gradient(circle at 86% 32%, rgba(54, 246, 138, 0.10) 0 1px, transparent 2px),
-    radial-gradient(circle at 58% 76%, rgba(33, 212, 255, 0.08) 0 1px, transparent 2px);
-  background-size: 140px 140px, 180px 180px, 220px 220px;
-  opacity: 0.52;
-  animation: cyber-node-pulse 5s ease-in-out infinite alternate;
+    radial-gradient(circle at 14% 26%, rgba(72, 217, 255, 0.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 42%, rgba(72, 217, 255, 0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 56% 72%, rgba(51, 211, 153, 0.62) 0 1px, transparent 2px);
+  background-size: 180px 180px, 240px 240px, 300px 300px;
+  animation: interface-node-pulse 5s ease-in-out infinite alternate;
 }
 
-@keyframes cyber-console-glow {
-  0% {
-    filter: hue-rotate(0deg) saturate(108%);
-    transform: scale(1);
+@keyframes interface-ring-spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes interface-core-pulse {
+  from {
+    opacity: 0.34;
+    transform: scale(0.98);
   }
 
-  100% {
-    filter: hue-rotate(-8deg) saturate(128%);
+  to {
+    opacity: 0.56;
     transform: scale(1.03);
   }
 }
 
-@keyframes cyber-data-sweep {
-  from {
-    background-position: 120% 0, -90% 0;
-  }
-
-  to {
-    background-position: -80% 0, 110% 0;
-  }
-}
-
-@keyframes cyber-radar-rotate {
-  from {
-    rotate: 0deg;
-  }
-
-  to {
-    rotate: 360deg;
-  }
-}
-
-@keyframes cyber-grid-drift {
-  from {
-    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
-  }
-
-  to {
-    background-position: 64px 64px, 64px 64px, 96px 96px, 0 24px, 0 0;
-  }
-}
-
-@keyframes cyber-scan-columns {
+@keyframes interface-scan {
   0%, 100% {
-    background-position: 160% 0, -90% 0;
-    opacity: 0.35;
+    background-position: 150% 0, -120% 0;
   }
 
   50% {
-    background-position: -60% 0, 130% 0;
-    opacity: 0.64;
+    background-position: -80% 0, 140% 0;
   }
 }
 
-@keyframes cyber-node-pulse {
-  from {
-    opacity: 0.24;
-  }
-
-  to {
-    opacity: 0.58;
-  }
+@keyframes interface-node-pulse {
+  from { opacity: 0.10; }
+  to { opacity: 0.26; }
 }
 
-/* Header styling, including the AB icon beside the site name. */
+/*
+  Header and navigation.
+  The header works like a compact status bar while keeping the normal navigation links usable.
+*/
 .site-header {
-  border-bottom-color: rgba(33, 212, 255, 0.18);
+  border-bottom: 1px solid rgba(45, 185, 231, 0.18);
   background:
-    linear-gradient(90deg, rgba(1, 7, 18, 0.88), rgba(3, 13, 24, 0.78)),
-    rgba(1, 7, 18, 0.86);
+    linear-gradient(180deg, rgba(7, 16, 23, 0.94), rgba(7, 16, 23, 0.82));
   box-shadow:
-    0 1px 0 rgba(33, 212, 255, 0.08),
-    0 18px 60px rgba(0, 0, 0, 0.28);
+    0 1px 0 rgba(72, 217, 255, 0.06),
+    0 18px 54px rgba(0, 0, 0, 0.32);
+}
+
+.nav {
+  min-height: 74px;
 }
 
 .brand {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.78rem;
-  color: var(--text);
+  gap: 0.84rem;
+  color: var(--accent);
   font-family: var(--font-mono);
-  letter-spacing: 0.04em;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
+  text-shadow: 0 0 16px rgba(72, 217, 255, 0.24);
 }
 
 .brand::before {
   content: "";
-  width: 1.65rem;
-  height: 1.65rem;
-  flex: 0 0 1.65rem;
+  width: 1.68rem;
+  height: 1.68rem;
+  flex: 0 0 1.68rem;
   display: inline-block;
-  border: 1px solid rgba(94, 234, 212, 0.34);
-  border-radius: 8px;
+  border: 1px solid rgba(72, 217, 255, 0.36);
+  border-radius: 10px;
   background:
-    linear-gradient(135deg, rgba(33, 212, 255, 0.10), rgba(54, 246, 138, 0.04)),
+    linear-gradient(135deg, rgba(72, 217, 255, 0.12), rgba(51, 211, 153, 0.04)),
     url("../assets/favicon-32x32.png") center / cover no-repeat;
   box-shadow:
-    0 0 18px rgba(33, 212, 255, 0.18),
-    0 0 28px rgba(94, 234, 212, 0.08);
-  transform: none;
+    0 0 18px rgba(72, 217, 255, 0.22),
+    inset 0 0 18px rgba(72, 217, 255, 0.08);
+}
+
+.brand::after {
+  content: "● Online";
+  margin-left: 0.2rem;
+  border-radius: 999px;
+  background: rgba(19, 83, 63, 0.38);
+  color: #8fffd5;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.26rem 0.58rem;
+  text-transform: none;
+  text-shadow: none;
+}
+
+.nav-links {
+  gap: 0.48rem;
 }
 
 .nav-links a {
-  position: relative;
+  border: 1px solid rgba(72, 217, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(8, 25, 36, 0.46);
+  color: rgba(197, 227, 235, 0.84);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.52rem 0.78rem;
   text-transform: uppercase;
 }
 
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 100%;
-  bottom: -0.45rem;
-  height: 1px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-  transition: right 160ms ease;
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  border-color: rgba(72, 217, 255, 0.42);
+  background: rgba(14, 44, 63, 0.74);
+  color: #f4fdff;
 }
 
-.nav-links a:hover::after,
-.nav-links a:focus-visible::after {
-  right: 0;
-}
-
-/* Extra visual depth for the hero section, including the subtle radar shape. */
+/*
+  Hero section.
+  These rules set the spacing, alignment, and text treatment for the hero area.
+*/
 .hero {
   position: relative;
   overflow: hidden;
+  min-height: calc(100vh - 74px);
 }
 
 .hero > .container {
@@ -265,68 +261,110 @@ body::after {
   z-index: 1;
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  right: max(-14vw, -180px);
-  top: 7rem;
-  width: min(54vw, 720px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  opacity: 0.36;
-  pointer-events: none;
-  background:
-    repeating-radial-gradient(circle, rgba(33, 212, 255, 0.36) 0 1px, transparent 1px 48px),
-    linear-gradient(90deg, transparent calc(50% - 1px), rgba(33, 212, 255, 0.34) 50%, transparent calc(50% + 1px)),
-    linear-gradient(0deg, transparent calc(50% - 1px), rgba(33, 212, 255, 0.22) 50%, transparent calc(50% + 1px)),
-    conic-gradient(from 0deg, transparent 0 288deg, rgba(54, 246, 138, 0.34) 300deg, transparent 322deg 360deg);
-  mask-image: radial-gradient(circle, transparent 0 9%, black 10% 69%, transparent 74%);
-  animation: cyber-radar-rotate 16s linear infinite;
+.hero-grid {
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
 }
 
-.hero::after {
+.hero-copy {
+  position: relative;
+  text-align: center;
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.hero-copy::before {
   content: "";
-  position: absolute;
-  inset: 20% -20%;
-  pointer-events: none;
-  opacity: 0.32;
+  display: block;
+  width: clamp(170px, 24vw, 270px);
+  aspect-ratio: 1;
+  margin: 0 auto 2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(72, 217, 255, 0.28);
   background:
-    linear-gradient(100deg, transparent 0 34%, rgba(33, 212, 255, 0.16) 37%, transparent 42% 100%);
-  animation: cyber-data-sweep 10s linear infinite;
+    radial-gradient(circle at center, rgba(72, 217, 255, 0.34) 0 24%, rgba(72, 217, 255, 0.12) 25% 42%, transparent 43%),
+    repeating-radial-gradient(circle, rgba(72, 217, 255, 0.32) 0 1px, transparent 1px 24px),
+    conic-gradient(from 0deg, transparent 0 260deg, rgba(72, 217, 255, 0.42) 276deg, transparent 292deg 360deg);
+  box-shadow:
+    0 0 0 12px rgba(72, 217, 255, 0.028),
+    0 0 38px rgba(72, 217, 255, 0.18),
+    inset 0 0 34px rgba(72, 217, 255, 0.14);
+  animation: interface-ring-spin 24s linear infinite;
+}
+
+.hero-copy::after {
+  content: "Listening for profile request...";
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+  border: 1px solid rgba(72, 217, 255, 0.18);
+  border-radius: 14px;
+  background: rgba(8, 25, 36, 0.72);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 0.58rem 0.82rem;
+  box-shadow: 0 0 24px rgba(72, 217, 255, 0.06);
 }
 
 .eyebrow,
 .card-kicker {
   color: var(--accent);
-  text-shadow: 0 0 16px rgba(33, 212, 255, 0.18);
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-shadow: 0 0 18px rgba(72, 217, 255, 0.20);
 }
 
 h1 {
+  color: #eafbff;
+  font-size: clamp(3.2rem, 8vw, 7.4rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   text-shadow:
-    0 0 36px rgba(33, 212, 255, 0.16),
-    0 0 80px rgba(54, 246, 138, 0.06);
+    0 0 22px rgba(72, 217, 255, 0.16),
+    0 0 56px rgba(72, 217, 255, 0.07);
 }
 
 .hero-subtitle {
-  color: #eaf7ff;
+  color: #daf7ff;
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+}
+
+.hero-text,
+.section-heading p,
+.prose p,
+.contact-card p,
+.hero-card p {
+  color: rgba(197, 227, 235, 0.90);
+}
+
+.proof-points,
+.tag-row {
+  justify-content: center;
 }
 
 .proof-points span,
 .tag-row span {
-  border-color: rgba(33, 212, 255, 0.18);
-  background:
-    linear-gradient(180deg, rgba(3, 13, 24, 0.88), rgba(5, 18, 32, 0.58));
-  box-shadow: inset 0 1px 0 rgba(248, 250, 252, 0.04);
+  border: 1px solid rgba(72, 217, 255, 0.17);
+  background: rgba(8, 25, 36, 0.58);
+  color: rgba(218, 247, 255, 0.92);
+  box-shadow: inset 0 1px 0 rgba(233, 251, 255, 0.04);
 }
 
-/* Shared button styling for the main actions and links. */
+/*
+  Buttons and links.
+  These rules keep the call-to-action buttons clear while matching the console-style interface.
+*/
 .button {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 14px;
   font-family: var(--font-mono);
-  font-size: 0.88rem;
-  letter-spacing: 0.035em;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.045em;
   text-transform: uppercase;
 }
 
@@ -334,53 +372,46 @@ h1 {
   content: "";
   position: absolute;
   inset: 0;
-  translate: -110% 0;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent);
-  transition: translate 480ms ease;
+  translate: -115% 0;
+  background: linear-gradient(100deg, transparent, rgba(233, 251, 255, 0.25), transparent);
+  transition: translate 520ms ease;
 }
 
 .button:hover::before,
 .button:focus-visible::before {
-  translate: 110% 0;
+  translate: 115% 0;
 }
 
 .button.primary {
-  background:
-    linear-gradient(135deg, #21d4ff, #37f58a);
-  color: #001018;
+  border-color: rgba(72, 217, 255, 0.40);
+  background: linear-gradient(135deg, #48d9ff, #7ce8ff);
+  color: #041019;
   box-shadow:
-    0 0 0 1px rgba(33, 212, 255, 0.26),
-    0 18px 42px rgba(33, 212, 255, 0.16),
-    0 0 38px rgba(54, 246, 138, 0.09);
-}
-
-.button.primary:hover,
-.button.primary:focus-visible {
-  background:
-    linear-gradient(135deg, #67e8f9, #86efac);
+    0 16px 38px rgba(72, 217, 255, 0.16),
+    0 0 34px rgba(72, 217, 255, 0.12);
 }
 
 .button.secondary,
 .button.ghost {
-  border-color: rgba(33, 212, 255, 0.34);
-  background:
-    linear-gradient(180deg, rgba(3, 13, 24, 0.88), rgba(3, 13, 24, 0.52));
+  border-color: rgba(72, 217, 255, 0.25);
+  background: rgba(8, 25, 36, 0.66);
   color: #dff8ff;
-  box-shadow: inset 0 1px 0 rgba(248, 250, 252, 0.05);
+  box-shadow: inset 0 1px 0 rgba(233, 251, 255, 0.05);
 }
 
 .button.secondary:hover,
 .button.secondary:focus-visible,
 .button.ghost:hover,
 .button.ghost:focus-visible {
-  border-color: rgba(54, 246, 138, 0.58);
-  color: var(--text);
-  box-shadow:
-    inset 0 1px 0 rgba(248, 250, 252, 0.07),
-    0 0 26px rgba(33, 212, 255, 0.10);
+  border-color: rgba(72, 217, 255, 0.52);
+  background: rgba(13, 47, 68, 0.78);
+  color: #ffffff;
 }
 
-/* Card styling used across experience, skills, projects, contact, and modal panels. */
+/*
+  Cards and panels.
+  Shared card styles make every content block look like part of the same dashboard.
+*/
 .hero-card,
 .info-card,
 .skill-group,
@@ -390,15 +421,21 @@ h1 {
 .email-modal__panel,
 .email-thanks-modal__panel {
   position: relative;
-  border: 1px solid rgba(33, 212, 255, 0.22);
+  border: 1px solid rgba(45, 185, 231, 0.22);
   border-radius: 18px;
   background:
-    linear-gradient(180deg, rgba(4, 16, 28, 0.94), rgba(3, 11, 22, 0.78)),
-    rgba(4, 16, 28, 0.82);
+    linear-gradient(180deg, rgba(14, 44, 63, 0.78), rgba(6, 18, 27, 0.72));
   box-shadow:
-    inset 0 1px 0 rgba(248, 250, 252, 0.045),
-    0 24px 70px rgba(0, 0, 0, 0.40),
-    0 0 42px rgba(33, 212, 255, 0.045);
+    inset 0 1px 0 rgba(233, 251, 255, 0.05),
+    0 22px 72px rgba(0, 0, 0, 0.42),
+    0 0 34px rgba(72, 217, 255, 0.045);
+  backdrop-filter: blur(14px) saturate(118%);
+}
+
+.hero-card {
+  text-align: left;
+  max-width: 430px;
+  margin-inline: auto;
 }
 
 .hero-card::before,
@@ -415,180 +452,272 @@ h1 {
   pointer-events: none;
   border-radius: inherit;
   background:
-    linear-gradient(90deg, var(--accent), transparent 22%) top left / 42% 1px no-repeat,
-    linear-gradient(180deg, var(--accent), transparent 22%) top left / 1px 42% no-repeat,
-    linear-gradient(270deg, rgba(54, 246, 138, 0.72), transparent 22%) bottom right / 42% 1px no-repeat,
-    linear-gradient(0deg, rgba(54, 246, 138, 0.72), transparent 22%) bottom right / 1px 42% no-repeat;
-  opacity: 0.68;
+    linear-gradient(90deg, rgba(72, 217, 255, 0.72), transparent 24%) top left / 38% 1px no-repeat,
+    linear-gradient(180deg, rgba(72, 217, 255, 0.72), transparent 24%) top left / 1px 38% no-repeat,
+    linear-gradient(270deg, rgba(72, 217, 255, 0.36), transparent 24%) bottom right / 38% 1px no-repeat,
+    linear-gradient(0deg, rgba(72, 217, 255, 0.36), transparent 24%) bottom right / 1px 38% no-repeat;
+  opacity: 0.74;
 }
 
 .info-card:hover,
 .project-card:hover,
 .skill-group:hover {
   transform: translateY(-4px);
-  border-color: rgba(54, 246, 138, 0.42);
+  border-color: rgba(72, 217, 255, 0.46);
   box-shadow:
-    inset 0 1px 0 rgba(248, 250, 252, 0.055),
-    0 26px 80px rgba(0, 0, 0, 0.48),
-    0 0 38px rgba(33, 212, 255, 0.09);
+    inset 0 1px 0 rgba(233, 251, 255, 0.06),
+    0 28px 86px rgba(0, 0, 0, 0.46),
+    0 0 34px rgba(72, 217, 255, 0.09);
 }
 
 .quick-facts div,
-.project-card,
 .skill-group li + li,
 .site-footer,
 .email-modal__bar,
 .cv-modal__bar {
-  border-color: rgba(33, 212, 255, 0.14);
+  border-color: rgba(45, 185, 231, 0.16);
 }
 
-.section-muted {
+.quick-facts dd {
+  color: var(--accent);
+}
+
+.section,
+.section-muted,
+.contact-section {
   position: relative;
-  border-block: 1px solid rgba(33, 212, 255, 0.10);
+  background: transparent !important;
 }
 
-.section-muted::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, transparent, rgba(33, 212, 255, 0.045), transparent);
-  opacity: 0.72;
+.section-heading {
+  text-align: center;
 }
 
-/* Form and modal polish so pop-up windows match the rest of the theme. */
+.section-heading h2 {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.timeline,
+.skills-grid,
+.projects-grid,
+.contact-grid {
+  position: relative;
+}
+
+/*
+  Forms and modal overlays.
+  These styles keep pop-up windows visually connected to the rest of the interface.
+*/
 .email-modal__backdrop,
 .cv-modal__backdrop,
 .email-thanks-modal__backdrop {
   background:
-    radial-gradient(circle at 50% 35%, rgba(33, 212, 255, 0.12), transparent 34rem),
-    rgba(1, 7, 18, 0.86);
+    radial-gradient(circle at 50% 36%, rgba(72, 217, 255, 0.12), transparent 30rem),
+    rgba(5, 11, 17, 0.86);
 }
 
 .email-modal__field input,
 .email-modal__field textarea {
-  border-color: rgba(33, 212, 255, 0.22);
-  background:
-    linear-gradient(180deg, rgba(1, 7, 18, 0.82), rgba(3, 13, 24, 0.72));
+  border-color: rgba(72, 217, 255, 0.22);
+  background: rgba(5, 14, 22, 0.82);
   color: var(--text);
 }
 
 .email-modal__field input:focus,
 .email-modal__field textarea:focus {
-  border-color: rgba(54, 246, 138, 0.72);
-  box-shadow: 0 0 0 4px rgba(54, 246, 138, 0.08), 0 0 28px rgba(33, 212, 255, 0.10);
+  border-color: rgba(72, 217, 255, 0.58);
+  box-shadow:
+    0 0 0 4px rgba(72, 217, 255, 0.08),
+    0 0 24px rgba(72, 217, 255, 0.10);
 }
 
 .cv-modal__close,
 .email-modal__close,
 .nav-toggle {
-  border-color: rgba(33, 212, 255, 0.26);
-  background: rgba(1, 7, 18, 0.74);
-  box-shadow: inset 0 1px 0 rgba(248, 250, 252, 0.05);
+  border-color: rgba(72, 217, 255, 0.24);
+  background: rgba(8, 25, 36, 0.74);
 }
 
 .cv-modal__close:hover,
 .cv-modal__close:focus-visible,
 .email-modal__close:hover,
 .email-modal__close:focus-visible {
-  border-color: rgba(54, 246, 138, 0.52);
-  background: rgba(33, 212, 255, 0.08);
+  border-color: rgba(72, 217, 255, 0.52);
+  background: rgba(13, 47, 68, 0.84);
 }
 
-/* Footer treatment so the bottom of the page feels connected to the theme. */
 .site-footer {
-  background:
-    linear-gradient(90deg, rgba(1, 7, 18, 0.72), rgba(3, 13, 24, 0.56));
+  background: rgba(5, 11, 17, 0.62);
 }
 
 .footer-inner a {
   color: var(--accent);
 }
 
-/* Tones down large background effects on smaller screens. */
+/*
+  Smaller-screen tuning.
+  The layout remains readable by reducing large decorative elements on mobile.
+*/
 @media (max-width: 980px) {
-  .hero::before {
-    right: -42vw;
-    top: 18rem;
-    width: 92vw;
-    opacity: 0.2;
+  .hero {
+    min-height: auto;
   }
 
-  .background-glow::after {
-    width: 92vw;
-    left: 42%;
-    bottom: 24%;
-    opacity: 0.2;
+  .hero-copy::before {
+    width: 170px;
+  }
+
+  h1 {
+    letter-spacing: 0.045em;
+  }
+
+  .brand {
+    letter-spacing: 0.18em;
+  }
+
+  .brand::after {
+    display: none;
   }
 }
 
 @media (max-width: 720px) {
+  .site-header {
+    background: rgba(5, 11, 17, 0.94);
+  }
+
   .nav-links {
-    border-color: rgba(33, 212, 255, 0.22);
-    background:
-      linear-gradient(180deg, rgba(1, 7, 18, 0.98), rgba(3, 13, 24, 0.96));
+    border-color: rgba(72, 217, 255, 0.20);
+    background: rgba(5, 11, 17, 0.96);
   }
 
-  .button {
-    border-radius: 14px;
+  .nav-links a {
+    width: 100%;
   }
 
-  .hero::before {
-    display: none;
+  .hero-copy {
+    text-align: left;
   }
 
-  body::before {
+  .hero-copy::before,
+  .hero-copy::after {
+    margin-inline: 0;
+  }
+
+  .proof-points,
+  .tag-row {
+    justify-content: flex-start;
+  }
+
+  .hero-card {
+    max-width: none;
+  }
+}
+
+/*
+  Motion fallback.
+  Decorative animations stop when the visitor has reduced motion enabled.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .background-glow::before,
+  .background-glow::after,
+  body::before,
+  body::after,
+  .hero-copy::before {
+    animation: none !important;
+  }
+}
+
+
+/*
+  Right-side radar backdrop.
+  This element draws the large semi-circular interface art behind the page content.
+*/
+.background-radar {
+  position: fixed;
+  z-index: -2;
+  top: 50%;
+  right: -55vw;
+  width: 110vw;
+  aspect-ratio: 1;
+  translate: 0 -50%;
+  border-radius: 999px;
+  pointer-events: none;
+  opacity: 0.34;
+  background:
+    radial-gradient(circle at center, rgba(72, 217, 255, 0.11) 0 12%, transparent 13%),
+    repeating-radial-gradient(circle, rgba(72, 217, 255, 0.18) 0 1px, transparent 1px 78px),
+    conic-gradient(from 0deg, transparent 0 242deg, rgba(72, 217, 255, 0.38) 260deg, rgba(72, 255, 234, 0.24) 278deg, transparent 300deg 360deg);
+  mask-image: radial-gradient(circle, transparent 0 13%, black 14% 72%, transparent 78%);
+  animation: interface-ring-spin 46s linear infinite;
+}
+
+.background-radar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    repeating-radial-gradient(circle, rgba(72, 255, 234, 0.12) 0 1px, transparent 1px 42px),
+    conic-gradient(from 90deg, transparent 0 276deg, rgba(72, 255, 234, 0.22) 288deg, transparent 310deg 360deg);
+  mask-image: radial-gradient(circle, transparent 0 34%, black 35% 56%, transparent 62%);
+  opacity: 0.56;
+  animation: interface-ring-spin 32s linear reverse infinite;
+}
+
+.background-radar::after {
+  content: "";
+  position: absolute;
+  inset: 37%;
+  border: 1px solid rgba(72, 217, 255, 0.18);
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(72, 217, 255, 0.14), transparent 62%);
+  opacity: 0.52;
+}
+
+.hero::before,
+.hero::after,
+.hero-copy::before,
+.hero-copy::after {
+  content: none !important;
+  display: none !important;
+}
+
+.hero-copy,
+.hero-card,
+.section,
+.section-muted,
+.contact-section {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 980px) {
+  .background-radar {
+    right: -70vw;
+    width: 140vw;
     opacity: 0.18;
+  }
+
+  .background-radar::before,
+  .background-radar::after {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .background-radar {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .background-glow,
-  .background-glow::before,
-  .background-glow::after,
-  .background-grid,
-  body::before,
-  body::after,
-  .hero::before,
-  .hero::after {
+  .background-radar,
+  .background-radar::before,
+  .background-radar::after {
     animation: none !important;
   }
-
-  .background-glow {
-    transform: none !important;
-  }
 }
 
-/* Removes the stronger animated sweeps while keeping the calmer radar effect. */
-.background-glow::before,
-body::before,
-.hero::after {
-  content: none !important;
-  display: none !important;
-  animation: none !important;
-  background: none !important;
-}
-
-/* Keeps the radar subtle so it adds atmosphere without fighting the text. */
-.background-glow::after {
-  opacity: 0.28;
-}
-
-.hero::before {
-  opacity: 0.30;
-}
-
-/* Stops older section overlay styles from creating visible seams. */
-.section-muted::before {
-  pointer-events: none;
-}
-
-/* Final safeguard to keep section backgrounds seamless while scrolling. */
-.section-muted,
-.section-muted::before,
-.section-muted::after {
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-}

@@ -1,6 +1,6 @@
 /*
   Section flow cleanup.
-  Earlier versions had divider lines between sections. These rules remove them.
+  These rules remove divider lines so each section blends into the same page surface.
 */
 
 /* Removes section divider lines so the page scrolls as one smooth surface. */
