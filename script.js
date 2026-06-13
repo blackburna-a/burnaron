@@ -22,7 +22,7 @@ interfaceClickAudio.volume = 0.58;
 interfaceCloseAudio.preload = "auto";
 interfaceCloseAudio.volume = 0.54;
 
-let bgmAwaitingGesture = false;
+let bgmNeedsUserStart = false;
 let bgmMuted = false;
 
 try {
@@ -39,10 +39,12 @@ if (bgmAudio) {
 }
 
 // Sets the background audio button label and pressed state.
-function updateBgmToggle(labelOverride = "") {
+function updateBgmToggle() {
   if (!bgmToggle) return;
 
-  bgmToggle.textContent = labelOverride || (bgmMuted ? "Unmute BGM" : "Mute BGM");
+  const needsPlay = !bgmMuted && (!bgmAudio || bgmNeedsUserStart || bgmAudio.paused);
+
+  bgmToggle.textContent = bgmMuted ? "Unmute BGM" : needsPlay ? "Play BGM" : "Mute BGM";
   bgmToggle.setAttribute("aria-pressed", String(bgmMuted));
 }
 
@@ -58,7 +60,10 @@ function setBgmMuted(isMuted) {
     localStorage.setItem("burnaronBgmMuted", String(bgmMuted));
   } catch {}
 
-  bgmAwaitingGesture = false;
+  if (bgmMuted) {
+    bgmNeedsUserStart = false;
+  }
+
   updateBgmToggle();
 }
 
@@ -71,26 +76,22 @@ function startBgmAudio() {
 
   const playback = bgmAudio.play();
 
-  if (playback && typeof playback.catch === "function") {
+  if (playback && typeof playback.then === "function") {
     playback
       .then(() => {
-        bgmAwaitingGesture = false;
+        bgmNeedsUserStart = false;
         updateBgmToggle();
       })
       .catch(() => {
-        bgmAwaitingGesture = true;
-        updateBgmToggle("Play BGM");
+        bgmNeedsUserStart = true;
+        updateBgmToggle();
       });
+
+    return;
   }
-}
 
-// Starts the background audio from the first available user gesture.
-function startBgmAudioFromGesture(event) {
-  if (event?.target?.closest?.("#bgmToggle")) return;
-  if (!bgmAudio || bgmMuted || !bgmAwaitingGesture) return;
-
-  bgmAwaitingGesture = false;
-  startBgmAudio();
+  bgmNeedsUserStart = false;
+  updateBgmToggle();
 }
 
 // Toggles background audio without resetting the loop position.
@@ -103,13 +104,22 @@ function toggleBgmAudio() {
     return;
   }
 
-  if (bgmAwaitingGesture || bgmAudio.paused) {
-    bgmAwaitingGesture = false;
+  if (bgmNeedsUserStart || bgmAudio.paused) {
+    bgmNeedsUserStart = false;
     startBgmAudio();
     return;
   }
 
   setBgmMuted(true);
+}
+
+if (bgmAudio) {
+  bgmAudio.addEventListener("play", () => {
+    bgmNeedsUserStart = false;
+    updateBgmToggle();
+  });
+
+  bgmAudio.addEventListener("pause", updateBgmToggle);
 }
 
 updateBgmToggle();
@@ -295,7 +305,7 @@ function completeBootScreen({ immediate = false } = {}) {
 
   window.setTimeout(() => {
     bootScreen.classList.add("is-complete");
-  }, 1000);
+  }, 1040);
 
   window.setTimeout(() => {
     unlockBootScroll();
@@ -310,8 +320,6 @@ if (bootScreen) {
   window.addEventListener("wheel", preventBootScroll, { passive: false });
   window.addEventListener("touchmove", preventBootScroll, { passive: false });
   window.addEventListener("keydown", preventBootKeyScroll);
-  window.addEventListener("pointerdown", startBgmAudioFromGesture, { capture: true });
-  window.addEventListener("keydown", startBgmAudioFromGesture, { capture: true });
 
   const bootSteps = [
     { delay: 1400, duration: 760, step: 1, text: "Identifying signal", status: "Identifying signal..." },
@@ -398,22 +406,94 @@ if (year) {
 }
 
 if (navToggle && navLinks) {
-  // Opens the mobile menu and locks the page behind it.
-  navToggle.addEventListener("click", () => {
+  function closeNavMenu() {
+    navLinks.classList.remove("is-open");
+    navToggle.setAttribute("aria-expanded", "false");
+  }
+
+  function isNavMenuOpen() {
+    return navLinks.classList.contains("is-open");
+  }
+
+  // Opens and closes the navigation menu without locking page scroll.
+  navToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
+
     const isOpen = navLinks.classList.toggle("is-open");
     navToggle.setAttribute("aria-expanded", String(isOpen));
-    document.body.classList.toggle("menu-open", isOpen);
   });
 
-  // Closes the mobile menu after a navigation link is selected.
+  // Closes the menu after a navigation link is selected.
   navLinks.addEventListener("click", (event) => {
     if (event.target instanceof HTMLAnchorElement) {
-      navLinks.classList.remove("is-open");
-      navToggle.setAttribute("aria-expanded", "false");
-      document.body.classList.remove("menu-open");
+      closeNavMenu();
+    }
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!isNavMenuOpen()) return;
+
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest(".nav-toggle") || target.closest("#site-menu")) return;
+
+    closeNavMenu();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isNavMenuOpen()) {
+      closeNavMenu();
+      navToggle.focus();
     }
   });
 }
+
+
+
+
+function runCardRevealSequence(cards) {
+  cards.forEach((card, index) => {
+    window.setTimeout(() => {
+      card.classList.add("is-logo-hinting");
+
+      window.setTimeout(() => {
+        card.classList.remove("is-logo-hinting");
+      }, 1200);
+    }, index * 900);
+  });
+}
+
+function setupCardReveal(sectionSelector, cardSelector) {
+  const section = document.querySelector(sectionSelector);
+  const cards = Array.from(document.querySelectorAll(cardSelector));
+  let hasRun = false;
+
+  if (!section || cards.length === 0) return;
+
+  const runOnce = () => {
+    if (hasRun) return;
+
+    hasRun = true;
+    runCardRevealSequence(cards);
+  };
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver((entries, activeObserver) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+
+      runOnce();
+      activeObserver.disconnect();
+    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.18 });
+
+    observer.observe(section);
+  } else {
+    window.setTimeout(runOnce, 1200);
+  }
+}
+
+setupCardReveal("#experience", "#experience .experience-brand");
+setupCardReveal("#skills", "#skills .reveal-card");
+setupCardReveal("#projects", "#projects .reveal-card");
 
 /* Keeps keyboard focus inside whichever modal is currently open. */
 const focusableSelector = [
@@ -710,7 +790,6 @@ document.addEventListener("keydown", (event) => {
     if (navLinks && navLinks.classList.contains("is-open")) {
       navLinks.classList.remove("is-open");
       navToggle.setAttribute("aria-expanded", "false");
-      document.body.classList.remove("menu-open");
       navToggle.focus();
       return;
     }

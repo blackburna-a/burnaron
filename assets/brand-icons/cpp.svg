@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img">
+  <defs>
+    <linearGradient id="cyan" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#9fefff"/>
+      <stop offset="1" stop-color="#48d9ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <circle cx="80" cy="80" r="62" fill="none" stroke="url(#cyan)" stroke-width="8" opacity="0.95" filter="url(#glow)"/>
+  <path d="M80 24 130 52v56l-50 28-50-28V52z" fill="rgba(72,217,255,0.10)" stroke="#9fefff" stroke-width="5"/>
+  <text x="80" y="92" text-anchor="middle" fill="#eafbff" font-family="Inter, Arial, sans-serif" font-size="37" font-weight="900">C++</text>
+
+</svg>

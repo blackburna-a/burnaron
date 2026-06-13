@@ -155,9 +155,7 @@
 
     <button class="boot-screen__skip" id="bootSkip" type="button">Skip</button>
   </section>
-
-  <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Mute BGM</button>
-  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
+<audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
 
 <a class="skip-link" href="#main">Skip to main content</a>
 
@@ -167,7 +165,10 @@
 
   <header class="site-header">
     <nav class="nav container" aria-label="Main navigation">
-<a class="brand" href="#top" aria-label="Aron Blackburn home">Aron Blackburn</a>
+      <div class="nav-identity">
+        <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Mute BGM</button>
+        <a class="brand" href="#top" aria-label="Aron Blackburn home">Aron Blackburn</a>
+      </div>
 
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
         <span class="sr-only">Toggle navigation</span>
@@ -260,7 +261,7 @@
             processes more effectively.
           </p>
         </div>
-      </div>
+</div>
     </section>
 
     <section class="section section-muted" id="experience">
@@ -276,7 +277,10 @@
         </div>
 
         <div class="card-grid">
-          <article class="info-card">
+          <article class="info-card reveal-card experience-brand experience-brand--flutter">
+            <div class="brand-backdrop" aria-hidden="true">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Flutter_Entertainment_logo.svg" alt="" decoding="async" referrerpolicy="no-referrer">
+            </div>
             <p class="card-kicker">Fraud & risk operations</p>
             <h3>Flutter / Paddy Power Betfair</h3>
             <p>
@@ -286,7 +290,10 @@
             </p>
           </article>
 
-          <article class="info-card">
+          <article class="info-card reveal-card experience-brand experience-brand--bet365">
+            <div class="brand-backdrop" aria-hidden="true">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Bet365_Logo.svg" alt="" decoding="async" referrerpolicy="no-referrer">
+            </div>
             <p class="card-kicker">Responsible gambling</p>
             <h3>bet365</h3>
             <p>
@@ -295,7 +302,11 @@
             </p>
           </article>
 
-          <article class="info-card">
+          <article class="info-card reveal-card experience-brand experience-brand--hse-abtran">
+            <div class="brand-backdrop brand-backdrop--pair" aria-hidden="true">
+              <img src="https://images.seeklogo.com/logo-png/64/1/health-service-executive-hse-logo-png_seeklogo-642546.png" alt="" decoding="async" referrerpolicy="no-referrer">
+              <img src="https://logo.clearbit.com/abtran.com" alt="" decoding="async" referrerpolicy="no-referrer">
+            </div>
             <p class="card-kicker">Customer & technical support</p>
             <h3>HSE Live / Abtran</h3>
             <p>
@@ -304,7 +315,13 @@
             </p>
           </article>
 
-          <article class="info-card">
+          <article class="info-card reveal-card experience-brand experience-brand--technical">
+            <div class="brand-backdrop brand-backdrop--icons" aria-hidden="true">
+              <img src="assets/brand-icons/cpp.svg" alt="" decoding="async">
+              <img src="assets/brand-icons/html.svg" alt="" decoding="async">
+              <img src="assets/brand-icons/java.svg" alt="" decoding="async">
+              <img src="assets/brand-icons/python.svg" alt="" decoding="async">
+            </div>
             <p class="card-kicker">Technical foundation</p>
             <h3>Software development background</h3>
             <p>
@@ -313,6 +330,21 @@
             </p>
           </article>
         </div>
+
+        <article class="info-card experience-tools reveal-card experience-brand experience-brand--tools" aria-label="Operational tools and collaboration stack">
+          <div class="brand-backdrop brand-backdrop--tools brand-backdrop--tools-composite" aria-hidden="true">
+            <img src="assets/brand-icons/tools-stack-supplied.png" alt="" decoding="async">
+          </div>
+          <p class="card-kicker">Operational tools &amp; collaboration stack</p>
+          <p>
+            Utilized a plethora of tools in regulated support, risk and operations environments,
+            including Slack, Microsoft Teams, Jira, Confluence, Office 365 and Google Sheets. Used
+            these platforms for case coordination, escalation notes, internal documentation,
+            cross-team communication, tracking operational issues, and keeping
+            investigation/support work organized and audit-friendly.
+          </p>
+        </article>
+
       </div>
     </section>
 
@@ -324,7 +356,7 @@
         </div>
 
         <div class="skills-layout">
-          <article class="skill-group">
+          <article class="skill-group reveal-card">
             <h3>Risk & investigations</h3>
             <ul>
               <li>Fraud pattern identification</li>
@@ -334,7 +366,7 @@
             </ul>
           </article>
 
-          <article class="skill-group">
+          <article class="skill-group reveal-card">
             <h3>Customer support</h3>
             <ul>
               <li>Clear written and verbal communication</li>
@@ -344,7 +376,7 @@
             </ul>
           </article>
 
-          <article class="skill-group">
+          <article class="skill-group reveal-card">
             <h3>Technical support mindset</h3>
             <ul>
               <li>Structured troubleshooting</li>
@@ -354,7 +386,7 @@
             </ul>
           </article>
 
-          <article class="skill-group">
+          <article class="skill-group reveal-card">
             <h3>Tools & collaboration</h3>
             <ul>
               <li>Jira and Salesforce exposure</li>
@@ -375,7 +407,10 @@
         </div>
 
         <div class="project-list">
-          <article class="project-card">
+          <article class="project-card reveal-card project-card--portfolio">
+            <div class="brand-backdrop project-backdrop" aria-hidden="true">
+              <img src="assets/og-image.png" alt="" decoding="async">
+            </div>
             <div>
               <p class="card-kicker">Static website</p>
               <h3>burnaron.com</h3>
@@ -393,7 +428,10 @@
             </div>
           </article>
 
-          <article class="project-card">
+          <article class="project-card reveal-card project-card--deepseek">
+            <div class="brand-backdrop project-backdrop" aria-hidden="true">
+              <img src="assets/brand-icons/deepseek-original.png" alt="" decoding="async">
+            </div>
             <div>
               <p class="card-kicker">Local privacy lab</p>
               <h3>Self-hosted search and AI experiments</h3>
@@ -411,7 +449,10 @@
             </div>
           </article>
 
-          <article class="project-card">
+          <article class="project-card reveal-card project-card--hyperv">
+            <div class="brand-backdrop project-backdrop" aria-hidden="true">
+              <img src="assets/brand-icons/hyperv-original.png" alt="" decoding="async">
+            </div>
             <div>
               <p class="card-kicker">Systems practice</p>
               <h3>Home-lab style troubleshooting</h3>
