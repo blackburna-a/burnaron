@@ -533,6 +533,7 @@ const copyEmailButtons = document.querySelectorAll("[data-copy-email]");
 const copyEmailToast = document.querySelector("#copyEmailToast");
 const copyEmailValue = "black@burnaron.com";
 let copyEmailToastTimer = null;
+let emailCopiedToClipboard = false;
 
 function copyTextFallback(text) {
   const temporaryField = document.createElement("textarea");
@@ -575,6 +576,11 @@ function showCopyEmailToast(message, isError = false) {
 }
 
 async function copyEmail() {
+  if (emailCopiedToClipboard) {
+    showCopyEmailToast("E-mail already copied to clipboard");
+    return;
+  }
+
   let copied = false;
 
   try {
@@ -586,6 +592,10 @@ async function copyEmail() {
     }
   } catch {
     copied = copyTextFallback(copyEmailValue);
+  }
+
+  if (copied) {
+    emailCopiedToClipboard = true;
   }
 
   showCopyEmailToast(copied ? "Email copied to clipboard" : "Could not copy email", !copied);
