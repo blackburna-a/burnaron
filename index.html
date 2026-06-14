@@ -209,7 +209,16 @@
           </div>
 
           <div class="hero-actions">
-            <a class="button primary" href="mailto:black@burnaron.com" data-email-open aria-haspopup="dialog">Contact me</a>
+            <div class="email-action-stack">
+              <a class="button primary" href="mailto:black@burnaron.com" data-email-open aria-haspopup="dialog">Contact me</a>
+              <button
+                class="button ghost copy-email-button"
+                type="button"
+                data-copy-email
+              >
+                Copy email
+              </button>
+            </div>
             <a class="button secondary" href="assets/aron-blackburn-cv.png" data-cv-open aria-haspopup="dialog">View CV</a>
             <a class="button ghost" href="https://www.linkedin.com/in/aron-blackburn/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
@@ -279,7 +288,7 @@
         <div class="card-grid">
           <article class="info-card reveal-card experience-brand experience-brand--flutter">
             <div class="brand-backdrop" aria-hidden="true">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Flutter_Entertainment_logo.svg" alt="" decoding="async" referrerpolicy="no-referrer">
+              <img src="assets/company-logos/flutter-entertainment.svg" alt="" decoding="async">
             </div>
             <p class="card-kicker">Fraud & risk operations</p>
             <h3>Flutter / Paddy Power Betfair</h3>
@@ -292,7 +301,7 @@
 
           <article class="info-card reveal-card experience-brand experience-brand--bet365">
             <div class="brand-backdrop" aria-hidden="true">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Bet365_Logo.svg" alt="" decoding="async" referrerpolicy="no-referrer">
+              <img src="assets/company-logos/bet365.svg" alt="" decoding="async">
             </div>
             <p class="card-kicker">Responsible gambling</p>
             <h3>bet365</h3>
@@ -304,8 +313,8 @@
 
           <article class="info-card reveal-card experience-brand experience-brand--hse-abtran">
             <div class="brand-backdrop brand-backdrop--pair" aria-hidden="true">
-              <img src="https://images.seeklogo.com/logo-png/64/1/health-service-executive-hse-logo-png_seeklogo-642546.png" alt="" decoding="async" referrerpolicy="no-referrer">
-              <img src="https://logo.clearbit.com/abtran.com" alt="" decoding="async" referrerpolicy="no-referrer">
+              <img src="assets/company-logos/hse.png" alt="" decoding="async">
+              <img src="assets/company-logos/abtran.png" alt="" decoding="async">
             </div>
             <p class="card-kicker">Customer & technical support</p>
             <h3>HSE Live / Abtran</h3>
@@ -546,7 +555,16 @@
         </p>
 
         <div class="contact-actions">
-          <a class="button primary" href="mailto:black@burnaron.com" data-email-open aria-haspopup="dialog">black@burnaron.com</a>
+          <div class="email-action-stack">
+            <a class="button primary" href="mailto:black@burnaron.com" data-email-open aria-haspopup="dialog">black@burnaron.com</a>
+            <button
+              class="button ghost copy-email-button"
+              type="button"
+              data-copy-email
+            >
+              Copy email
+            </button>
+          </div>
           <a class="button secondary" href="assets/aron-blackburn-cv.png" data-cv-open aria-haspopup="dialog">View CV</a>
           <a class="button ghost" href="https://www.linkedin.com/in/aron-blackburn/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         </div>
@@ -648,6 +666,8 @@
       <a href="#top">Back to top</a>
     </div>
   </footer>
+
+  <div class="copy-email-toast" id="copyEmailToast" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <script src="script.js"></script>
 </body>

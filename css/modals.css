@@ -46,10 +46,6 @@
 }
 
 /* Prevents the CV action button text from wrapping awkwardly. */
-.cv-modal__actions {
-  gap: 0.65rem;
-}
-
 .cv-modal__open {
   white-space: nowrap;
 }

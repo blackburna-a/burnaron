@@ -414,7 +414,7 @@ document.addEventListener("click", (event) => {
   }
 
   const standardControl = event.target.closest(
-    "#bootSkip, [data-email-open], [data-cv-open], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
@@ -528,6 +528,73 @@ setupCardReveal("#experience", "#experience .experience-brand");
 setupCardReveal("#skills", "#skills .reveal-card");
 setupCardReveal("#projects", "#projects .reveal-card");
 
+/* Copies the contact address and confirms the result in a temporary toast. */
+const copyEmailButtons = document.querySelectorAll("[data-copy-email]");
+const copyEmailToast = document.querySelector("#copyEmailToast");
+const copyEmailValue = "black@burnaron.com";
+let copyEmailToastTimer = null;
+
+function copyTextFallback(text) {
+  const temporaryField = document.createElement("textarea");
+
+  temporaryField.value = text;
+  temporaryField.setAttribute("readonly", "");
+  temporaryField.style.position = "fixed";
+  temporaryField.style.left = "-9999px";
+  temporaryField.style.top = "-9999px";
+  document.body.appendChild(temporaryField);
+  temporaryField.select();
+
+  let copied = false;
+
+  try {
+    copied = document.execCommand("copy");
+  } catch {
+    copied = false;
+  }
+
+  temporaryField.remove();
+  return copied;
+}
+
+function showCopyEmailToast(message, isError = false) {
+  if (!copyEmailToast) return;
+
+  window.clearTimeout(copyEmailToastTimer);
+  copyEmailToast.classList.remove("is-visible");
+
+  requestAnimationFrame(() => {
+    copyEmailToast.textContent = message;
+    copyEmailToast.classList.toggle("is-error", isError);
+    copyEmailToast.classList.add("is-visible");
+  });
+
+  copyEmailToastTimer = window.setTimeout(() => {
+    copyEmailToast.classList.remove("is-visible");
+  }, 2200);
+}
+
+async function copyEmail() {
+  let copied = false;
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(copyEmailValue);
+      copied = true;
+    } else {
+      copied = copyTextFallback(copyEmailValue);
+    }
+  } catch {
+    copied = copyTextFallback(copyEmailValue);
+  }
+
+  showCopyEmailToast(copied ? "Email copied to clipboard" : "Could not copy email", !copied);
+}
+
+copyEmailButtons.forEach((button) => {
+  button.addEventListener("click", copyEmail);
+});
+
 /* Keeps keyboard focus inside whichever modal is currently open. */
 const focusableSelector = [
   "a[href]",
@@ -610,7 +677,6 @@ function closeAnimatedModal(modal, bodyClassName, onAfterClose = null) {
 const cvModal = document.querySelector("#cvModal");
 const cvImage = document.querySelector("#cvImage");
 const cvFrame = document.querySelector("#cvFrame");
-const cvFallbackLink = document.querySelector("#cvFallbackLink");
 const cvOpenLink = document.querySelector("#cvOpenLink");
 const cvOpenButtons = document.querySelectorAll("[data-cv-open]");
 const cvCloseButtons = document.querySelectorAll("[data-cv-close]");
@@ -628,10 +694,7 @@ function openCvModal(cvUrl) {
 
   cvLastFocusedElement = document.activeElement;
 
-  if (cvFallbackLink) {
-    cvFallbackLink.href = cvUrl;
-  }
-if (cvOpenLink) {
+  if (cvOpenLink) {
     cvOpenLink.href = cvUrl;
   }
 
