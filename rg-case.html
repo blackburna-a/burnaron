@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>RG Case | Aron Blackburn</title>
+  <meta
+    name="description"
+    content="A fictional responsible-gambling case walkthrough demonstrating behavioural-risk review, calm customer interaction, protective action and clear documentation."
+  />
+  <meta name="author" content="Aron Blackburn" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://burnaron.com/rg-case.html" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#050b11" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="RG Case | Aron Blackburn" />
+  <meta
+    property="og:description"
+    content="Responsible gambling thinking shown through a fictional customer-protection case."
+  />
+  <meta property="og:url" content="https://burnaron.com/rg-case.html" />
+  <meta property="og:site_name" content="burnaron.com" />
+  <meta property="og:image" content="https://burnaron.com/assets/og-image.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="case-page-body rg-case-page">
+  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
+
+  <a class="skip-link" href="#main">Skip to responsible gambling case walkthrough</a>
+
+  <div class="background-glow" aria-hidden="true"></div>
+  <div class="background-grid" aria-hidden="true"></div>
+  <div class="background-radar" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Case navigation">
+      <div class="nav-identity">
+        <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Play BGM</button>
+        <a class="brand" href="index.html" aria-label="Aron Blackburn home">
+          <span class="brand-label">Aron Blackburn</span>
+        </a>
+      </div>
+
+      <div class="nav-actions">
+        <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
+        <a class="button secondary nav-utility nav-utility--rg is-current" href="rg-case.html" aria-current="page">RG Case</a>
+        <a class="button secondary nav-utility nav-utility--home" href="index.html">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="case-page rg-case section" id="top" data-rg-case>
+      <div class="container">
+        <header class="case-page__hero">
+          <p class="eyebrow">RG Case / Player Protection</p>
+          <h1>Responsible gambling thinking, shown through a fictional case.</h1>
+          <p class="case-page__subtitle">
+            A simplified, anonymized walkthrough of how I would handle a customer protection
+            concern: from deposit-risk signal, to account restriction, to customer conversation and
+            safer-gambling intervention.
+          </p>
+          <p class="case-page__disclaimer">
+            <strong>Portfolio scenario:</strong> Fictional scenario for portfolio demonstration only.
+            No real customer, employer data, platform process or internal system is represented.
+          </p>
+        </header>
+
+        <article class="case-page__scenario" aria-labelledby="rg-case-scenario-title">
+          <div class="case-page__scenario-heading">
+            <div>
+              <p class="card-kicker">Fictional customer-protection interaction</p>
+              <h2 id="rg-case-scenario-title">RG Case 017 &mdash; Sudden high-value deposit escalation</h2>
+            </div>
+            <span class="case-page__status-badge">Interaction required</span>
+          </div>
+          <p>
+            A customer who normally deposits at a modest level suddenly makes multiple high-value
+            deposits in a short period. Responsible gambling signals are identified, the account is
+            suspended pending interaction, an email is sent, and the customer calls. During the
+            conversation, the agent identifies concerns around loss chasing, emotional gambling,
+            increased spend, reduced control and resistance to taking a break. The agent remains
+            calm, empathetic and policy-led, and supports the customer toward a self-exclusion or
+            cooling-off outcome.
+          </p>
+        </article>
+
+        <div class="case-page__experience">
+          <nav class="case-page__timeline rg-case__timeline" aria-label="Responsible gambling case steps">
+            <ol>
+              <li>
+                <button class="case-page__step rg-case__step is-active" type="button" data-rg-step="0" aria-current="step">
+                  <span class="case-page__step-number">01</span>
+                  <span>
+                    <strong>Deposit escalation detected</strong>
+                    <small>Behavioural change and initial risk</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step rg-case__step" type="button" data-rg-step="1">
+                  <span class="case-page__step-number">02</span>
+                  <span>
+                    <strong>Account suspended</strong>
+                    <small>Protective restriction pending contact</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step rg-case__step" type="button" data-rg-step="2">
+                  <span class="case-page__step-number">03</span>
+                  <span>
+                    <strong>Email sent</strong>
+                    <small>Neutral request for interaction</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step rg-case__step" type="button" data-rg-step="3">
+                  <span class="case-page__step-number">04</span>
+                  <span>
+                    <strong>Customer calls</strong>
+                    <small>Pushback, listening and open questions</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step rg-case__step" type="button" data-rg-step="4">
+                  <span class="case-page__step-number">05</span>
+                  <span>
+                    <strong>Concerns identified</strong>
+                    <small>Loss chasing and reduced control</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step rg-case__step" type="button" data-rg-step="5">
+                  <span class="case-page__step-number">06</span>
+                  <span>
+                    <strong>Protective action agreed</strong>
+                    <small>Break applied and interaction recorded</small>
+                  </span>
+                </button>
+              </li>
+            </ol>
+          </nav>
+
+          <div class="case-page__active-step">
+            <article class="case-page__panel rg-case__panel" aria-labelledby="rg-case-active-title" aria-live="polite">
+              <div class="case-page__panel-heading">
+                <div>
+                  <p class="card-kicker" id="rgCasePosition">Step 01 / 06</p>
+                  <h2 id="rg-case-active-title" data-rg-title>Deposit escalation detected</h2>
+                </div>
+                <span class="case-page__panel-state" data-rg-state>Behavioural review</span>
+              </div>
+
+              <p class="case-page__short-detail" data-rg-short>
+                A customer who normally deposits at a modest level suddenly makes multiple high-value deposits in a short period.
+              </p>
+
+              <dl class="case-page__detail-grid">
+                <div class="case-page__detail case-page__detail--signal">
+                  <dt>Customer protection signal</dt>
+                  <dd data-rg-signal>A clear change from normal deposit behaviour: higher value, higher frequency, and compressed timing.</dd>
+                </div>
+
+                <div class="case-page__detail">
+                  <dt>What I check</dt>
+                  <dd>
+                    <ul data-rg-checks>
+                      <li>previous deposit pattern</li>
+                      <li>recent deposit size and frequency</li>
+                      <li>failed deposit attempts</li>
+                      <li>session length</li>
+                      <li>recent losses or rapid stake increases</li>
+                      <li>withdrawal/cancellation behaviour</li>
+                      <li>previous RG markers or limits</li>
+                      <li>account notes and previous interactions</li>
+                    </ul>
+                  </dd>
+                </div>
+
+                <div class="case-page__detail">
+                  <dt>RG reasoning</dt>
+                  <dd data-rg-reasoning>
+                    The concern is not simply that the customer deposited. The concern is the change
+                    in behaviour and whether it suggests loss chasing, reduced control, financial
+                    pressure or emotional gambling.
+                  </dd>
+                </div>
+
+                <div class="case-page__detail">
+                  <dt>Action authority</dt>
+                  <dd data-rg-authority>Apply or maintain a temporary account restriction pending customer interaction where policy supports it.</dd>
+                </div>
+
+                <div class="case-page__detail case-page__detail--output">
+                  <dt>Operational output</dt>
+                  <dd data-rg-output>RG signal identified and account queued for customer interaction.</dd>
+                </div>
+              </dl>
+            </article>
+
+            <section class="rg-case__interaction" aria-label="Fictional responsible gambling interaction workspace" data-rg-interaction>
+              <div class="rg-case__interaction-bar">
+                <div class="case-page__window-lights" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <p>Player protection workspace / RG Case 017</p>
+                <span>Protected interaction</span>
+              </div>
+
+              <div class="rg-case__workspace">
+                <article class="rg-case__window rg-case__window--profile is-active" data-rg-panel="profile">
+                  <header><span>Customer profile / RG alert</span><span data-rg-risk-level>Elevated</span></header>
+                  <dl class="rg-case__profile-facts">
+                    <div><dt>Normal pattern</dt><dd data-rg-baseline>Modest / occasional</dd></div>
+                    <div><dt>Recent deposits</dt><dd data-rg-recent>Multiple high-value</dd></div>
+                    <div><dt>Account</dt><dd data-rg-account-status>Active / review queued</dd></div>
+                    <div><dt>Interaction</dt><dd data-rg-interaction-status>Required</dd></div>
+                  </dl>
+                </article>
+
+                <article class="rg-case__window rg-case__window--email" data-rg-panel="email">
+                  <header><span>Customer email</span><span data-rg-email-status>Draft pending</span></header>
+                  <div class="rg-case__email">
+                    <p><span>Subject</span><strong data-rg-email-subject>Account interaction required</strong></p>
+                    <div data-rg-email-body>
+                      We need to speak with you about recent account activity before access can continue.
+                    </div>
+                    <span class="rg-case__sent-mark" data-rg-sent-mark>Not sent</span>
+                  </div>
+                </article>
+
+                <article class="rg-case__window rg-case__window--chat" data-rg-panel="chat">
+                  <header><span>Written interaction</span><span>Representative transcript</span></header>
+                  <div class="rg-case__messages" data-rg-messages>
+                    <p class="rg-case__message rg-case__message--system">No customer messages yet.</p>
+                  </div>
+                </article>
+
+                <article class="rg-case__window rg-case__window--phone" data-rg-panel="phone">
+                  <header><span>Phone interaction</span><span data-rg-call-status>Not connected</span></header>
+                  <div class="rg-case__phone">
+                    <div class="rg-case__caller">
+                      <span class="rg-case__phone-icon" aria-hidden="true"></span>
+                      <div>
+                        <strong>Customer / Case 017</strong>
+                        <small data-rg-call-timer>00:00</small>
+                      </div>
+                      <span class="rg-case__tone" data-rg-tone>Awaiting contact</span>
+                    </div>
+                    <div class="rg-case__subtitles" aria-live="polite">
+                      <p><strong data-rg-subtitle-speaker>System</strong><span data-rg-subtitle>Customer interaction has not started.</span></p>
+                      <p data-rg-subtitle-secondary hidden></p>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="rg-case__window rg-case__window--concerns" data-rg-panel="concerns">
+                  <header><span>Customer protection indicators</span><span>Conversation-led</span></header>
+                  <div class="rg-case__concerns">
+                    <p data-rg-concern="change"><span>Behavioural change</span><strong>Detected</strong></p>
+                    <p data-rg-concern="chasing"><span>Loss chasing</span><strong>Unconfirmed</strong></p>
+                    <p data-rg-concern="emotion"><span>Emotional gambling</span><strong>Unconfirmed</strong></p>
+                    <p data-rg-concern="control"><span>Reduced control</span><strong>Unconfirmed</strong></p>
+                    <p data-rg-concern="affordability"><span>Affordability concern</span><strong>Review</strong></p>
+                  </div>
+                </article>
+
+                <article class="rg-case__window rg-case__window--action" data-rg-panel="action">
+                  <header><span>Agent notes / RG action</span><span>Audit record</span></header>
+                  <p class="rg-case__note" data-rg-note>Behavioural change identified. Review and customer interaction required.</p>
+                  <div class="rg-case__action-status" data-rg-action-status>Review queued</div>
+                  <p class="rg-case__support-note" data-rg-support-note>Protective options will be discussed if concerns are supported.</p>
+                </article>
+              </div>
+            </section>
+
+            <div class="case-page__controls rg-case__controls" aria-label="Responsible gambling walkthrough controls">
+              <button class="button secondary" type="button" data-rg-previous disabled>Previous</button>
+              <p class="case-page__control-status" aria-live="polite">
+                <span data-rg-control-position>Step 1 of 6</span>
+                <small data-rg-control-label>Behavioural signal review</small>
+              </p>
+              <button class="button primary" type="button" data-rg-next>Next step</button>
+              <button class="button ghost" type="button" data-rg-replay>Replay flow</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="case-page__outcomes rg-case__outcomes" aria-labelledby="rg-case-outcomes-title">
+          <div class="section-heading">
+            <p class="eyebrow">Customer-protection outcomes</p>
+            <h2 id="rg-case-outcomes-title">The intervention should match the concern.</h2>
+            <p>
+              The appropriate outcome depends on what the customer explains, the behavioural signals,
+              the level of control and affordability concern, and the protective action supported by policy.
+            </p>
+          </div>
+
+          <div class="case-page__outcome-grid">
+            <article class="case-page__outcome rg-case__outcome rg-case__outcome--monitor">
+              <span>01</span>
+              <h3>No further action / monitor</h3>
+              <p>The customer provides a reasonable explanation and no wider concern is identified. Account may be restored with monitoring where policy permits.</p>
+            </article>
+            <article class="case-page__outcome rg-case__outcome rg-case__outcome--tools">
+              <span>02</span>
+              <h3>Safer gambling tools</h3>
+              <p>The customer accepts lower-level tools such as deposit limits, reality checks, time-outs or other available controls.</p>
+            </article>
+            <article class="case-page__outcome rg-case__outcome rg-case__outcome--restrict">
+              <span>03</span>
+              <h3>Temporary restriction maintained</h3>
+              <p>Concerns remain unresolved. The restriction stays in place until further review or interaction is completed.</p>
+            </article>
+            <article class="case-page__outcome rg-case__outcome rg-case__outcome--exclude">
+              <span>04</span>
+              <h3>Self-exclusion / cooling-off</h3>
+              <p>The customer agrees to take a break or self-exclude after concerns are explained clearly and respectfully.</p>
+            </article>
+            <article class="case-page__outcome rg-case__outcome rg-case__outcome--escalate">
+              <span>05</span>
+              <h3>Escalation</h3>
+              <p>The interaction reveals significant risk or safeguarding concerns requiring escalation, further review or additional support information.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="case-page__summary rg-case__summary" aria-labelledby="rg-case-summary-title">
+          <p class="eyebrow">Player-protection approach</p>
+          <h2 id="rg-case-summary-title">What this walkthrough demonstrates</h2>
+          <p>
+            This is the thinking pattern I aim to bring into responsible gambling work: identify
+            behavioural change, slow down the interaction, listen for risk language, stay calm under
+            pushback, explain concerns clearly, act proportionately and document the outcome properly.
+          </p>
+          <div class="tag-row" aria-label="Responsible gambling capabilities">
+            <span>Behavioural signal review</span>
+            <span>Calm customer interaction</span>
+            <span>Empathy under pushback</span>
+            <span>Protective account action</span>
+            <span>Clear RG documentation</span>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year"></span> Aron Blackburn. Fictional portfolio case demonstration.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

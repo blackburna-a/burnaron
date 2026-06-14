@@ -551,6 +551,32 @@ body.booting .scroll-reveal-guide {
   gap: 0.85rem;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 0.65rem;
+}
+
+.nav-utility {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.9rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-utility.is-current {
+  border-color: rgba(52, 211, 153, 0.44);
+  background: rgba(11, 72, 55, 0.42);
+  color: #a7f3d0;
+  box-shadow:
+    inset 0 1px 0 rgba(233, 251, 255, 0.05),
+    0 0 22px rgba(52, 211, 153, 0.08);
+}
+
 .bgm-toggle {
   position: static;
   z-index: 1;
@@ -600,6 +626,7 @@ body.booting .site-header {
 }
 
 body.booting .brand,
+body.booting .nav-utility,
 body.booting .nav-toggle,
 body.booting .nav-links {
   visibility: hidden;
@@ -1301,6 +1328,16 @@ h3 {
     gap: 0.58rem;
   }
 
+  .nav-actions {
+    gap: 0.45rem;
+  }
+
+  .nav-utility {
+    min-height: 36px;
+    font-size: 0.68rem;
+    padding-inline: 0.72rem;
+  }
+
   .nav-links {
     top: 64px;
     right: 16px;
@@ -1802,6 +1839,73 @@ body.email-thanks-modal-open {
   }
 }
 
+@media (max-width: 760px) {
+  .brand-label {
+    display: none;
+  }
+
+  .brand {
+    gap: 0;
+  }
+}
+
+@media (max-width: 580px) {
+  .nav {
+    gap: 0.45rem;
+  }
+
+  .nav-actions {
+    gap: 0.28rem;
+  }
+
+  .nav-utility {
+    min-height: 38px;
+    padding-inline: 0.52rem;
+    font-size: 0.58rem;
+    line-height: 1.08;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .nav-utility--fraud {
+    width: 78px;
+  }
+
+  .nav-utility--rg {
+    width: 54px;
+  }
+
+  .nav-utility--home {
+    width: 50px;
+  }
+}
+
+@media (max-width: 380px) {
+  .nav-utility--fraud {
+    width: 62px;
+  }
+
+  .nav-utility--rg,
+  .nav-utility--home {
+    width: 44px;
+  }
+
+  .nav-utility {
+    padding-inline: 0.3rem;
+    font-size: 0.54rem;
+    line-height: 1.05;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .nav-identity {
+    gap: 0.42rem;
+  }
+
+  .bgm-toggle {
+    padding-inline: 0.54rem;
+  }
+}
 
 
 @media (max-width: 720px) {

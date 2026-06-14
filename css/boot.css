@@ -29,6 +29,17 @@
     visibility 1200ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+html.boot-seen .boot-screen {
+  display: none;
+}
+
+html.boot-seen,
+html.boot-seen body.booting {
+  overflow: auto;
+  overscroll-behavior: auto;
+  touch-action: auto;
+}
+
 .boot-screen::before,
 .boot-screen::after {
   content: "";

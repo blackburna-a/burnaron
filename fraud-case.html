@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Fraud/AML Case | Aron Blackburn</title>
+  <meta
+    name="description"
+    content="A fictional fraud-analysis case walkthrough demonstrating alert validation, evidence review, account action and AML-aware escalation judgement."
+  />
+  <meta name="author" content="Aron Blackburn" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://burnaron.com/fraud-case.html" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#050b11" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Fraud/AML Case | Aron Blackburn" />
+  <meta
+    property="og:description"
+    content="Fraud analyst thinking shown through a fictional suspicious-activity case."
+  />
+  <meta property="og:url" content="https://burnaron.com/fraud-case.html" />
+  <meta property="og:site_name" content="burnaron.com" />
+  <meta property="og:image" content="https://burnaron.com/assets/og-image.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="case-page-body fraud-case-page">
+  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
+
+  <a class="skip-link" href="#main">Skip to case walkthrough</a>
+
+  <div class="background-glow" aria-hidden="true"></div>
+  <div class="background-grid" aria-hidden="true"></div>
+  <div class="background-radar" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Case navigation">
+      <div class="nav-identity">
+        <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Play BGM</button>
+        <a class="brand" href="index.html" aria-label="Aron Blackburn home">
+          <span class="brand-label">Aron Blackburn</span>
+        </a>
+      </div>
+
+      <div class="nav-actions">
+        <a class="button secondary nav-utility nav-utility--fraud is-current" href="fraud-case.html" aria-current="page">Fraud/AML Case</a>
+        <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
+        <a class="button secondary nav-utility nav-utility--home" href="index.html">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="case-page fraud-case section" id="top" data-fraud-case>
+      <div class="container">
+        <header class="case-page__hero">
+          <p class="eyebrow">Fraud/AML Case / Fraud Operations</p>
+          <h1>Fraud analyst thinking, shown through a fictional case.</h1>
+          <p class="case-page__subtitle">
+            A simplified, anonymized walkthrough of how I would assess suspicious account activity:
+            from alert review, to evidence validation, to account action and escalation decision.
+          </p>
+          <p class="case-page__disclaimer">
+            <strong>Portfolio scenario:</strong> Fictional scenario for portfolio demonstration only.
+            No real customer, employer data, platform process or internal system is represented.
+          </p>
+        </header>
+
+        <article class="case-page__scenario" aria-labelledby="fraud-case-scenario-title">
+          <div class="case-page__scenario-heading">
+            <div>
+              <p class="card-kicker">Fictional investigation</p>
+              <h2 id="fraud-case-scenario-title">Fraud Case 042 &mdash; Suspicious funding and rapid value movement</h2>
+            </div>
+            <span class="case-page__status-badge">Review active</span>
+          </div>
+          <p>
+            A newly created account receives funds, attempts rapid value movement through a secondary
+            route, triggers risk controls, and is suspended for fraud review. As the Fraud Analyst, I
+            review account, payment, device, behavioural and verification signals before deciding
+            whether to maintain restrictions, release the account, request further verification,
+            close the account, or escalate for AML/fraud review.
+          </p>
+        </article>
+
+        <div class="case-page__experience">
+          <nav class="case-page__timeline" aria-label="Fraud investigation steps">
+            <ol>
+              <li>
+                <button class="case-page__step is-active" type="button" data-fraud-step="0" aria-current="step">
+                  <span class="case-page__step-number">01</span>
+                  <span>
+                    <strong>Alert enters queue</strong>
+                    <small>Rule trigger and initial restriction</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step" type="button" data-fraud-step="1">
+                  <span class="case-page__step-number">02</span>
+                  <span>
+                    <strong>Account review</strong>
+                    <small>Identity, device and linked signals</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step" type="button" data-fraud-step="2">
+                  <span class="case-page__step-number">03</span>
+                  <span>
+                    <strong>Funding review</strong>
+                    <small>Ownership and payment behaviour</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step" type="button" data-fraud-step="3">
+                  <span class="case-page__step-number">04</span>
+                  <span>
+                    <strong>Movement attempt</strong>
+                    <small>Timing, route and genuine usage</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step" type="button" data-fraud-step="4">
+                  <span class="case-page__step-number">05</span>
+                  <span>
+                    <strong>Evidence decision</strong>
+                    <small>Facts, suspicion and authority</small>
+                  </span>
+                </button>
+              </li>
+              <li>
+                <button class="case-page__step" type="button" data-fraud-step="5">
+                  <span class="case-page__step-number">06</span>
+                  <span>
+                    <strong>Action and handoff</strong>
+                    <small>Outcome, notes and escalation</small>
+                  </span>
+                </button>
+              </li>
+            </ol>
+          </nav>
+
+          <div class="case-page__active-step">
+            <article class="case-page__panel" aria-labelledby="fraud-case-active-title" aria-live="polite">
+              <div class="case-page__panel-heading">
+                <div>
+                  <p class="card-kicker" id="fraudCasePosition">Step 01 / 06</p>
+                  <h2 id="fraud-case-active-title" data-fraud-title>Alert enters queue</h2>
+                </div>
+                <span class="case-page__panel-state" data-fraud-state>Alert triage</span>
+              </div>
+
+              <p class="case-page__short-detail" data-fraud-short>
+                A backend rule flags a newly created account after early funding and unusual movement behaviour.
+              </p>
+
+              <dl class="case-page__detail-grid">
+                <div class="case-page__detail case-page__detail--signal">
+                  <dt>Case signal</dt>
+                  <dd data-fraud-signal>New account with limited history triggers a risk alert after rapid activity.</dd>
+                </div>
+
+                <div class="case-page__detail">
+                  <dt>What I check</dt>
+                  <dd>
+                    <ul data-fraud-checks>
+                      <li>alert type</li>
+                      <li>rule trigger</li>
+                      <li>account age</li>
+                      <li>current restriction status</li>
+                      <li>activity timestamp</li>
+                      <li>first-look risk score</li>
+                    </ul>
+                  </dd>
+                </div>
+
+                <div class="case-page__detail">
+                  <dt>Fraud analyst reasoning</dt>
+                  <dd data-fraud-reasoning>
+                    The alert starts the review, but it is not proof by itself. My first task is to
+                    understand what triggered the alert and whether the account needs to remain
+                    restricted while I validate the evidence.
+                  </dd>
+                </div>
+
+                <div class="case-page__detail">
+                  <dt>Decision authority</dt>
+                  <dd data-fraud-authority>Maintain temporary restriction while the review begins.</dd>
+                </div>
+
+                <div class="case-page__detail case-page__detail--output">
+                  <dt>Operational output</dt>
+                  <dd data-fraud-output>Case opened from alert queue and initial risk context recorded.</dd>
+                </div>
+              </dl>
+            </article>
+
+            <section class="fraud-case__desktop" aria-label="Fictional fraud investigation workstation" data-fraud-desktop>
+              <div class="fraud-case__desktop-bar">
+                <div class="case-page__window-lights" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <p>Investigation workspace / Case 042</p>
+                <span class="fraud-case__desktop-clock">Secure session</span>
+              </div>
+
+              <div class="fraud-case__workspace">
+                <article class="fraud-case__window fraud-case__window--queue is-active" data-fraud-scene-panel="queue">
+                  <header>
+                    <span>Risk alert queue</span>
+                    <span class="fraud-case__window-count">03</span>
+                  </header>
+                  <div class="fraud-case__alert-row is-highlighted" data-fraud-scene-row="alert">
+                    <span>042</span>
+                    <strong>Rapid value movement</strong>
+                    <small>High</small>
+                  </div>
+                  <div class="fraud-case__alert-row">
+                    <span>041</span>
+                    <strong>Device velocity</strong>
+                    <small>Medium</small>
+                  </div>
+                  <div class="fraud-case__alert-row">
+                    <span>040</span>
+                    <strong>Payment mismatch</strong>
+                    <small>Review</small>
+                  </div>
+                </article>
+
+                <article class="fraud-case__window fraud-case__window--account" data-fraud-scene-panel="account">
+                  <header><span>Account overview</span><span>AC-0042</span></header>
+                  <dl class="fraud-case__scene-facts">
+                    <div><dt>Age</dt><dd data-fraud-scene-age>18 minutes</dd></div>
+                    <div><dt>Status</dt><dd data-fraud-scene-account-status>Restricted</dd></div>
+                    <div><dt>Risk</dt><dd data-fraud-scene-risk>72 / 100</dd></div>
+                    <div><dt>History</dt><dd data-fraud-scene-history>Limited</dd></div>
+                  </dl>
+                </article>
+
+                <article class="fraud-case__window fraud-case__window--identity" data-fraud-scene-panel="identity">
+                  <header><span>Identity / device risk</span><span>Representative</span></header>
+                  <div class="fraud-case__signal-list">
+                    <p data-fraud-scene-signal="device"><span>Device trust</span><strong>Unresolved</strong></p>
+                    <p data-fraud-scene-signal="network"><span>Network route</span><strong>Review</strong></p>
+                    <p data-fraud-scene-signal="links"><span>Linked accounts</span><strong>Searching</strong></p>
+                  </div>
+                </article>
+
+                <article class="fraud-case__window fraud-case__window--query" data-fraud-scene-panel="query">
+                  <header><span>Transaction lookup</span><span>Query console</span></header>
+                  <pre><code><span class="fraud-case__query-prompt">&gt;</span> <span data-fraud-scene-query>SELECT event_time, event_type
+FROM account_events
+WHERE case_id = '042';</span><span class="fraud-case__typing-caret" aria-hidden="true"></span></code></pre>
+                  <div class="fraud-case__query-result" data-fraud-scene-query-result>Awaiting analyst query</div>
+                </article>
+
+                <article class="fraud-case__window fraud-case__window--payment" data-fraud-scene-panel="payment">
+                  <header><span>Payment method review</span><span data-fraud-scene-payment-state>Pending</span></header>
+                  <div class="fraud-case__payment-route">
+                    <span>Funding</span>
+                    <i aria-hidden="true"></i>
+                    <span>Account</span>
+                    <i aria-hidden="true"></i>
+                    <span>Movement</span>
+                  </div>
+                  <p data-fraud-scene-payment-detail>Ownership and timing checks not yet completed.</p>
+                </article>
+
+                <article class="fraud-case__window fraud-case__window--notes" data-fraud-scene-panel="notes">
+                  <header><span>Decision log</span><span>Audit note</span></header>
+                  <p data-fraud-scene-note>Case opened. Temporary restriction maintained pending evidence review.</p>
+                  <div class="fraud-case__decision-status" data-fraud-scene-outcome>Review in progress</div>
+                </article>
+              </div>
+
+              <div class="fraud-case__cursor" aria-hidden="true" data-fraud-cursor>
+                <svg viewBox="0 0 24 30" role="presentation">
+                  <path d="M2 2v22l6-6 4 9 4-2-4-9h8z"></path>
+                </svg>
+                <span></span>
+              </div>
+            </section>
+
+            <div class="case-page__controls" aria-label="Fraud case walkthrough controls">
+              <button class="button secondary" type="button" data-fraud-previous disabled>Previous</button>
+              <p class="case-page__control-status" aria-live="polite">
+                <span data-fraud-control-position>Step 1 of 6</span>
+                <small data-fraud-control-label>Alert validation</small>
+              </p>
+              <button class="button primary" type="button" data-fraud-next>Next step</button>
+              <button class="button ghost" type="button" data-fraud-replay>Replay flow</button>
+            </div>
+          </div>
+        </div>
+
+        <section class="case-page__outcomes" aria-labelledby="fraud-case-outcomes-title">
+          <div class="section-heading">
+            <p class="eyebrow">Decision outcomes</p>
+            <h2 id="fraud-case-outcomes-title">The evidence determines the action.</h2>
+            <p>
+              A fraud alert does not have one automatic answer. The account outcome should reflect
+              the facts, the strength of the risk indicators and the analyst's authority under policy.
+            </p>
+          </div>
+
+          <div class="case-page__outcome-grid">
+            <article class="case-page__outcome case-page__outcome--release">
+              <span>01</span>
+              <h3>False positive / release</h3>
+              <p>Evidence does not support fraud concern. Restrictions may be lifted and the account can continue under normal monitoring.</p>
+            </article>
+            <article class="case-page__outcome case-page__outcome--verify">
+              <span>02</span>
+              <h3>Further verification required</h3>
+              <p>Signals remain unresolved. Additional verification or ownership checks are required before access or movement can continue.</p>
+            </article>
+            <article class="case-page__outcome case-page__outcome--restrict">
+              <span>03</span>
+              <h3>Maintain restriction</h3>
+              <p>Risk indicators are strong enough to keep the account restricted while the case remains under review.</p>
+            </article>
+            <article class="case-page__outcome case-page__outcome--close">
+              <span>04</span>
+              <h3>Close / block where policy permits</h3>
+              <p>Evidence supports account misuse or fraud concern. Account action is applied according to policy and internal authority.</p>
+            </article>
+            <article class="case-page__outcome case-page__outcome--escalate">
+              <span>05</span>
+              <h3>Escalate AML / Compliance</h3>
+              <p>The activity may require AML or compliance review. The case is escalated with a clear timeline, evidence summary and rationale.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="case-page__summary" aria-labelledby="fraud-case-summary-title">
+          <p class="eyebrow">Analyst approach</p>
+          <h2 id="fraud-case-summary-title">What this walkthrough demonstrates</h2>
+          <p>
+            This is the thinking pattern I aim to bring into fraud operations: validate alerts, build
+            a timeline, compare signals, separate fact from assumption, act proportionately and leave
+            the case easier for the next team or reviewer to understand.
+          </p>
+          <div class="tag-row" aria-label="Walkthrough capabilities">
+            <span>Alert validation</span>
+            <span>Evidence-first review</span>
+            <span>Account action authority</span>
+            <span>AML-aware escalation</span>
+            <span>Audit-ready notes</span>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year"></span> Aron Blackburn. Fictional portfolio case demonstration.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

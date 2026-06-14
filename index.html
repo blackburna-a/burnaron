@@ -42,6 +42,14 @@
   <meta name="twitter:image:alt" content="Aron Blackburn — burnaron.com portfolio preview" />
   <meta name="twitter:image" content="https://burnaron.com/assets/og-image.png" />
 
+  <script>
+    try {
+      if (sessionStorage.getItem("burnaronSiteEntered") === "true") {
+        document.documentElement.classList.add("boot-seen");
+      }
+    } catch {}
+  </script>
+
   <link rel="stylesheet" href="styles.css" />
 
   <script type="application/ld+json">
@@ -167,15 +175,21 @@
     <nav class="nav container" aria-label="Main navigation">
       <div class="nav-identity">
         <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Mute BGM</button>
-        <a class="brand" href="#top" aria-label="Aron Blackburn home">Aron Blackburn</a>
+        <a class="brand" href="#top" aria-label="Aron Blackburn home">
+          <span class="brand-label">Aron Blackburn</span>
+        </a>
       </div>
 
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-        <span class="sr-only">Toggle navigation</span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+      <div class="nav-actions">
+        <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
+        <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+          <span class="sr-only">Toggle navigation</span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
 
       <div class="nav-links" id="site-menu">
         <a href="#about">About</a>
@@ -357,9 +371,8 @@
           </div>
           <p class="card-kicker">Operational tools &amp; collaboration stack</p>
           <p>
-            Used a range of operational, documentation and collaboration tools across regulated support, 
-            risk and operations environments, including Slack, Microsoft Teams, Jira, Confluence, 
-            Office 365 and Google Sheets. Used
+            Utilized a plethora of tools in regulated support, risk and operations environments,
+            including Slack, Microsoft Teams, Jira, Confluence, Office 365 and Google Sheets. Used
             these platforms for case coordination, escalation notes, internal documentation,
             cross-team communication, tracking operational issues, and keeping
             investigation/support work organized and audit-friendly.

@@ -22,9 +22,9 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 ## Features
 
-- Responsive single-page portfolio
+- Responsive portfolio with a single-page homepage and dedicated case walkthroughs
 - Animated cyber and HUD-inspired interface
-- Skippable introductory boot sequence with temporary scroll locking
+- Skippable introductory boot sequence that runs once per browser-tab visit, with temporary scroll locking
 - Progressive section reveals triggered by downward wheel, touch, or keyboard input
 - Fast slide-up transitions with input locking while each section is revealed
 - Direct navigation links that reveal hidden destination sections when required
@@ -45,6 +45,16 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Smooth first-view card animations using viewport observation
 - Mobile hamburger navigation with outside-click closing
 - Reduced-motion support for visitors who prefer less animation
+- Dedicated fictional Fraud/AML Case page
+- Six-step alert-to-action walkthrough with clickable timeline and keyboard navigation
+- Animated representative investigation workstation with queue, account, device, query, payment, notes, and outcome panels
+- Previous, Next, and timed Replay Flow controls
+- Evidence-based outcome cards covering release, verification, restriction, closure, and AML/Compliance escalation
+- Dedicated fictional Responsible Gambling Case page
+- Six-step player-protection walkthrough covering deposit escalation, restriction, contact, conversation, concern identification, and protective action
+- Animated customer profile, email, chat, phone, concern-indicator, case-note, and account-action panels
+- Subtle interaction sound cues with reduced-motion support
+- Cross-page Fraud/AML Case, RG Case, and Home navigation
 - Custom favicon, Open Graph image, and web manifest
 
 ## Project Sections
@@ -59,6 +69,10 @@ The site includes:
 - Development direction
 - Personal edge
 - Contact and CV access
+- Fraud/AML Case walkthrough
+- Fictional investigation workstation and decision outcomes
+- Responsible Gambling Case walkthrough
+- Fictional customer interaction and protective-action outcomes
 
 ## Tech Stack
 
@@ -89,16 +103,20 @@ No build system or framework is required. The site is intentionally static, ligh
 |-- css/
 |   |-- base.css
 |   |-- boot.css
+|   |-- case-pages.css
 |   |-- modals.css
 |   |-- performance.css
 |   |-- reduced-motion.css
+|   |-- rg-case.css
 |   |-- section-dividers.css
 |   `-- theme-cyber-risk-console.css
 |-- 404.html
 |-- CNAME
+|-- fraud-case.html
 |-- email-handoff.html
 |-- favicon.ico
 |-- index.html
+|-- rg-case.html
 |-- README.md
 |-- robots.txt
 |-- script.js
