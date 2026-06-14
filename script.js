@@ -11,6 +11,7 @@ const bgmAudio = document.querySelector("#bgmAudio");
 const bgmToggle = document.querySelector("#bgmToggle");
 const interfaceClickAudio = new Audio("assets/audio/click.mp3");
 const interfaceCloseAudio = new Audio("assets/audio/click-close.mp3");
+const interfaceWarningAudio = new Audio("assets/audio/beep_warning.mp3");
 
 let activeBootStep = null;
 let bootProgressTimer = null;
@@ -21,6 +22,9 @@ interfaceClickAudio.volume = 0.58;
 
 interfaceCloseAudio.preload = "auto";
 interfaceCloseAudio.volume = 0.54;
+
+interfaceWarningAudio.preload = "auto";
+interfaceWarningAudio.volume = 0.64;
 
 let bgmNeedsUserStart = false;
 let bgmMuted = false;
@@ -132,6 +136,27 @@ function playInterfaceClickSound(soundType = "default") {
   audio.volume = sourceAudio.volume;
 
   const playback = audio.play();
+
+  if (playback && typeof playback.catch === "function") {
+    playback.catch(() => {});
+  }
+}
+
+let lastWarningSoundAt = 0;
+
+function playInterfaceWarningSound() {
+  const now = Date.now();
+
+  if (now - lastWarningSoundAt < 260) return;
+
+  lastWarningSoundAt = now;
+
+  try {
+    interfaceWarningAudio.pause();
+    interfaceWarningAudio.currentTime = 0;
+  } catch {}
+
+  const playback = interfaceWarningAudio.play();
 
   if (playback && typeof playback.catch === "function") {
     playback.catch(() => {});
@@ -393,6 +418,14 @@ document.addEventListener("click", (event) => {
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
+
+  if (
+    standardControl.matches("#emailModal button[type='submit']") &&
+    emailForm &&
+    !emailForm.checkValidity()
+  ) {
+    return;
+  }
 
   playInterfaceClickSound();
 });
@@ -765,11 +798,47 @@ if (continueToWebsiteButton) {
   continueToWebsiteButton.addEventListener("click", closeEmailThanksModal);
 }
 
+function handleInvalidEmailSubmit() {
+  playInterfaceWarningSound();
+
+  if (emailStatus) {
+    emailStatus.textContent = "Please complete the required fields before preparing the email.";
+  }
+
+  window.setTimeout(() => {
+    const invalidField = emailForm?.querySelector(":invalid");
+
+    if (invalidField && typeof invalidField.focus === "function") {
+      invalidField.focus();
+    }
+
+    emailForm?.reportValidity();
+  }, 120);
+}
+
 if (emailForm) {
+  const emailSubmitButton = emailForm.querySelector("button[type='submit']");
+
+  if (emailSubmitButton) {
+    emailSubmitButton.addEventListener("pointerdown", () => {
+      if (!emailForm.checkValidity()) {
+        playInterfaceWarningSound();
+      }
+    });
+
+    emailSubmitButton.addEventListener("click", (event) => {
+      if (emailForm.checkValidity()) return;
+
+      event.preventDefault();
+      handleInvalidEmailSubmit();
+    });
+  }
+
   emailForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    if (!emailForm.reportValidity()) {
+    if (!emailForm.checkValidity()) {
+      handleInvalidEmailSubmit();
       return;
     }
 
