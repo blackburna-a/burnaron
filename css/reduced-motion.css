@@ -42,4 +42,14 @@
   .skill-group:hover {
     transform: none !important;
   }
+
+  .progressive-section--revealing,
+  .progressive-footer--revealing {
+    animation: none !important;
+  }
+
+  .scroll-reveal-guide::before,
+  .scroll-reveal-guide__arrows span {
+    animation: none !important;
+  }
 }

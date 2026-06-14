@@ -24,15 +24,27 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 - Responsive single-page portfolio
 - Animated cyber and HUD-inspired interface
-- Introductory boot sequence
-- Background audio toggle
-- Contact modal with email handoff
+- Skippable introductory boot sequence with temporary scroll locking
+- Progressive section reveals triggered by downward wheel, touch, or keyboard input
+- Fast slide-up transitions with input locking while each section is revealed
+- Direct navigation links that reveal hidden destination sections when required
+- Animated right-edge progress rail with one dot per section and downward chevrons
+- Responsive edge-tab treatment for phones, tablets, and short landscape screens
+- Clickable progress rail as an alternative way to reveal the next section
+- Progress rail dismissal once the Contact section and footer are available
+- Background audio toggle with remembered mute preference
+- Interface click, close, and validation sounds
+- Contact composer modal with native email-client handoff
+- Return confirmation after the visitor is handed off to their email application
 - Missing-field warning sound for email validation
-- Copy-email buttons with clipboard confirmation
-- CV viewer modal
-- Project cards with expandable operational context
-- Smooth first-view card animations
+- Copy-email buttons that check the current clipboard before writing
+- Bottom-screen clipboard confirmation toast, including an already-copied state
+- Animated CV viewer with image and document support plus a new-tab fallback
+- Keyboard focus trapping and Escape-key closing for modal dialogs
+- Project cards with dedicated operational-context panels
+- Smooth first-view card animations using viewport observation
 - Mobile hamburger navigation with outside-click closing
+- Reduced-motion support for visitors who prefer less animation
 - Custom favicon, Open Graph image, and web manifest
 
 ## Project Sections
@@ -66,7 +78,13 @@ No build system or framework is required. The site is intentionally static, ligh
 |   |-- audio/
 |   |-- brand-icons/
 |   |-- company-logos/
+|   |-- android-chrome-192x192.png
+|   |-- android-chrome-512x512.png
+|   |-- apple-touch-icon.png
 |   |-- aron-blackburn-cv.png
+|   |-- favicon-16x16.png
+|   |-- favicon-32x32.png
+|   |-- favicon-48x48.png
 |   `-- og-image.png
 |-- css/
 |   |-- base.css

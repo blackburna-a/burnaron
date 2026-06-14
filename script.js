@@ -481,6 +481,317 @@ if (navToggle && navLinks) {
   });
 }
 
+/* Reveals one new page section after a fresh downward scroll at the current boundary. */
+const progressiveSections = Array.from(document.querySelectorAll("#main > .section"));
+const progressiveFooter = document.querySelector(".site-footer");
+const progressiveHeader = document.querySelector(".site-header");
+const scrollRevealGuide = document.querySelector("#scrollRevealGuide");
+const scrollRevealMarkers = document.querySelector("#scrollRevealMarkers");
+const progressiveReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const progressiveScrollKeys = new Set([
+  "ArrowDown",
+  "ArrowUp",
+  "End",
+  "Home",
+  "PageDown",
+  "PageUp",
+  " "
+]);
+
+let progressiveLastRevealedIndex = 0;
+let progressiveRevealLocked = false;
+let progressiveWheelLastAt = 0;
+let progressiveTouchStartY = null;
+let progressiveTouchStartedAtBoundary = false;
+let progressiveRevealTimer = null;
+let progressiveGuideHideTimer = null;
+
+const progressiveSectionLabels = {
+  top: "Profile",
+  about: "About",
+  experience: "Experience",
+  skills: "Core strengths",
+  projects: "Projects",
+  learning: "Development",
+  "personal-edge": "Personal edge",
+  contact: "Contact"
+};
+
+function hasPendingProgressiveSection() {
+  return progressiveLastRevealedIndex < progressiveSections.length - 1;
+}
+
+function updateProgressiveGuide() {
+  if (!scrollRevealGuide || progressiveSections.length < 2) return;
+
+  const nextSection = progressiveSections[progressiveLastRevealedIndex + 1];
+
+  scrollRevealGuide.setAttribute("aria-label", nextSection
+    ? `Scroll down or activate this control to reveal ${progressiveSectionLabels[nextSection.id] || nextSection.id}`
+    : "All portfolio sections revealed");
+
+  Array.from(scrollRevealMarkers?.children || []).forEach((marker, index) => {
+    marker.classList.toggle("is-revealed", index <= progressiveLastRevealedIndex);
+    marker.classList.toggle("is-next", index === progressiveLastRevealedIndex + 1);
+  });
+
+  scrollRevealGuide.classList.toggle("is-revealing", progressiveRevealLocked);
+
+  if (!nextSection) {
+    window.clearTimeout(progressiveGuideHideTimer);
+    scrollRevealGuide.classList.add("is-complete");
+    progressiveGuideHideTimer = window.setTimeout(() => {
+      scrollRevealGuide.hidden = true;
+    }, progressiveReducedMotion ? 20 : 320);
+  }
+}
+
+function initializeProgressiveGuide() {
+  if (!scrollRevealGuide || !scrollRevealMarkers) return;
+
+  const markerFragment = document.createDocumentFragment();
+
+  progressiveSections.forEach((section, index) => {
+    const marker = document.createElement("span");
+    const label = progressiveSectionLabels[section.id] || section.id;
+
+    marker.className = "scroll-reveal-guide__marker";
+    marker.title = `${index + 1}. ${label}`;
+    markerFragment.appendChild(marker);
+  });
+
+  scrollRevealMarkers.replaceChildren(markerFragment);
+  scrollRevealGuide.hidden = false;
+  scrollRevealGuide.addEventListener("click", revealNextProgressiveSection);
+  updateProgressiveGuide();
+}
+
+function isProgressiveInteractionBlocked() {
+  return isBootActive() ||
+    document.body.classList.contains("cv-modal-open") ||
+    document.body.classList.contains("email-modal-open") ||
+    document.body.classList.contains("email-thanks-modal-open");
+}
+
+function isAtProgressiveBoundary() {
+  if (progressiveLastRevealedIndex === 0) return true;
+
+  const lastSection = progressiveSections[progressiveLastRevealedIndex];
+  const lastSectionBottom = lastSection.getBoundingClientRect().bottom;
+  const pageBottom = window.scrollY + window.innerHeight;
+  const documentBottom = document.documentElement.scrollHeight;
+
+  return lastSectionBottom <= window.innerHeight + 4 || pageBottom >= documentBottom - 4;
+}
+
+function setProgressiveSectionAvailable(section, animate = true) {
+  section.classList.remove("progressive-section--pending");
+  section.removeAttribute("aria-hidden");
+  section.inert = false;
+
+  if (!animate || progressiveReducedMotion) return;
+
+  section.classList.remove("progressive-section--revealing");
+  void section.offsetWidth;
+  section.classList.add("progressive-section--revealing");
+}
+
+function revealProgressiveFooter(animate = true) {
+  if (!progressiveFooter) return;
+
+  progressiveFooter.classList.remove("progressive-footer--pending");
+  progressiveFooter.removeAttribute("aria-hidden");
+  progressiveFooter.inert = false;
+
+  if (animate && !progressiveReducedMotion) {
+    progressiveFooter.classList.add("progressive-footer--revealing");
+  }
+}
+
+function finishProgressiveReveal(section) {
+  progressiveRevealLocked = false;
+  document.documentElement.classList.remove("progressive-reveal-locked");
+  document.body.classList.remove("progressive-reveal-locked");
+  section?.classList.remove("progressive-section--revealing");
+  progressiveFooter?.classList.remove("progressive-footer--revealing");
+  updateProgressiveGuide();
+}
+
+function revealProgressiveThrough(targetIndex, { animateTarget = true, scrollToTarget = true } = {}) {
+  if (targetIndex <= progressiveLastRevealedIndex || targetIndex >= progressiveSections.length) return;
+
+  window.clearTimeout(progressiveRevealTimer);
+  progressiveRevealLocked = true;
+  document.documentElement.classList.add("progressive-reveal-locked");
+  document.body.classList.add("progressive-reveal-locked");
+
+  for (let index = progressiveLastRevealedIndex + 1; index <= targetIndex; index += 1) {
+    const isTarget = index === targetIndex;
+    setProgressiveSectionAvailable(progressiveSections[index], isTarget && animateTarget);
+  }
+
+  progressiveLastRevealedIndex = targetIndex;
+  const targetSection = progressiveSections[targetIndex];
+  updateProgressiveGuide();
+
+  if (!hasPendingProgressiveSection()) {
+    revealProgressiveFooter(animateTarget);
+  }
+
+  window.requestAnimationFrame(() => {
+    if (!scrollToTarget) return;
+
+    const headerHeight = progressiveHeader?.offsetHeight || 0;
+    const targetTop = Math.max(0, targetSection.offsetTop - headerHeight);
+
+    window.scrollTo({
+      top: targetTop,
+      behavior: progressiveReducedMotion ? "auto" : "smooth"
+    });
+  });
+
+  progressiveRevealTimer = window.setTimeout(
+    () => finishProgressiveReveal(targetSection),
+    progressiveReducedMotion ? 40 : 520
+  );
+}
+
+function revealNextProgressiveSection() {
+  if (!hasPendingProgressiveSection() || progressiveRevealLocked) return;
+  revealProgressiveThrough(progressiveLastRevealedIndex + 1);
+}
+
+function handleProgressiveWheel(event) {
+  if (progressiveRevealLocked) {
+    event.preventDefault();
+    return;
+  }
+
+  if (isProgressiveInteractionBlocked() || event.deltaY <= 0 || !hasPendingProgressiveSection()) return;
+
+  const now = window.performance.now();
+  const isFreshGesture = now - progressiveWheelLastAt > 180;
+  progressiveWheelLastAt = now;
+
+  if (isFreshGesture && isAtProgressiveBoundary()) {
+    event.preventDefault();
+    revealNextProgressiveSection();
+  }
+}
+
+function handleProgressiveTouchStart(event) {
+  if (progressiveRevealLocked) {
+    event.preventDefault();
+    return;
+  }
+
+  if (isProgressiveInteractionBlocked() || event.touches.length !== 1) return;
+
+  progressiveTouchStartY = event.touches[0].clientY;
+  progressiveTouchStartedAtBoundary = isAtProgressiveBoundary();
+}
+
+function handleProgressiveTouchMove(event) {
+  if (progressiveRevealLocked) {
+    event.preventDefault();
+    return;
+  }
+
+  if (
+    isProgressiveInteractionBlocked() ||
+    progressiveTouchStartY === null ||
+    !progressiveTouchStartedAtBoundary ||
+    !hasPendingProgressiveSection()
+  ) {
+    return;
+  }
+
+  const distance = progressiveTouchStartY - event.touches[0].clientY;
+
+  if (distance > 24) {
+    event.preventDefault();
+    progressiveTouchStartY = null;
+    revealNextProgressiveSection();
+  }
+}
+
+function handleProgressiveTouchEnd() {
+  progressiveTouchStartY = null;
+  progressiveTouchStartedAtBoundary = false;
+}
+
+function handleProgressiveKeydown(event) {
+  if (!progressiveScrollKeys.has(event.key)) return;
+
+  if (progressiveRevealLocked) {
+    event.preventDefault();
+    return;
+  }
+
+  if (isProgressiveInteractionBlocked() || event.repeat || !hasPendingProgressiveSection()) return;
+
+  const isDownwardKey = event.key === "ArrowDown" ||
+    event.key === "PageDown" ||
+    event.key === "End" ||
+    (event.key === " " && !event.shiftKey);
+
+  if (isDownwardKey && isAtProgressiveBoundary()) {
+    event.preventDefault();
+    revealNextProgressiveSection();
+  }
+}
+
+function initializeProgressiveSections() {
+  if (progressiveSections.length < 2) return;
+
+  document.documentElement.classList.add("progressive-sections");
+
+  progressiveSections.slice(1).forEach((section) => {
+    section.classList.add("progressive-section--pending");
+    section.setAttribute("aria-hidden", "true");
+    section.inert = true;
+  });
+
+  if (progressiveFooter) {
+    progressiveFooter.classList.add("progressive-footer--pending");
+    progressiveFooter.setAttribute("aria-hidden", "true");
+    progressiveFooter.inert = true;
+  }
+
+  initializeProgressiveGuide();
+
+  window.addEventListener("wheel", handleProgressiveWheel, { passive: false });
+  window.addEventListener("touchstart", handleProgressiveTouchStart, { passive: false });
+  window.addEventListener("touchmove", handleProgressiveTouchMove, { passive: false });
+  window.addEventListener("touchend", handleProgressiveTouchEnd);
+  window.addEventListener("touchcancel", handleProgressiveTouchEnd);
+  window.addEventListener("keydown", handleProgressiveKeydown);
+
+  document.querySelectorAll("a[href^='#']").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const targetId = link.getAttribute("href");
+      const targetIndex = progressiveSections.findIndex((section) => `#${section.id}` === targetId);
+
+      if (targetIndex <= progressiveLastRevealedIndex) return;
+
+      event.preventDefault();
+      revealProgressiveThrough(targetIndex);
+    });
+  });
+
+  const initialTargetIndex = progressiveSections.findIndex(
+    (section) => `#${section.id}` === window.location.hash
+  );
+
+  if (initialTargetIndex > 0) {
+    revealProgressiveThrough(initialTargetIndex, {
+      animateTarget: false,
+      scrollToTarget: false
+    });
+  }
+}
+
+initializeProgressiveSections();
 
 
 
