@@ -181,6 +181,7 @@
       </div>
 
       <div class="nav-actions">
+        <a class="button secondary nav-utility nav-utility--projects" href="projects.html">Projects</a>
         <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
         <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
@@ -433,102 +434,45 @@
       </div>
     </section>
 
-    <section class="section section-muted" id="projects">
+    <section class="section section-muted projects-preview" id="projects">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">Projects & practical work</p>
+          <p class="eyebrow">Projects &amp; technical work</p>
           <h2>Practical technical curiosity, kept relevant.</h2>
+          <p>
+            A short preview of practical projects that connect technical curiosity with operations,
+            support, privacy, automation and clear user-facing design.
+          </p>
         </div>
 
-        <div class="project-list">
-          <article class="project-card reveal-card project-card--portfolio" tabindex="0">
-            <div class="brand-backdrop project-backdrop" aria-hidden="true">
-              <img src="assets/og-image.png" alt="" decoding="async">
-            </div>
-            <div>
-              <p class="card-kicker">Static website</p>
-              <h3>burnaron.com</h3>
-            </div>
-            <p>
-              A personal portfolio built with clean HTML, CSS and light JavaScript, hosted through
-              GitHub Pages. The goal is simple: make my experience readable, credible and easy to
-              verify.
-            </p>
-            <div class="tag-row">
-              <span>HTML</span>
-              <span>CSS</span>
-              <span>GitHub Pages</span>
-              <span>Responsive design</span>
-            </div>
-            <article class="project-insight-card" aria-label="Why burnaron.com matters operationally">
-              <p class="card-kicker">Why it matters operationally</p>
-              <p>
-                This site is a practical exercise in structuring information clearly, reducing
-                friction for the reader and presenting complex experience in a way that is easy to
-                scan. The same thinking applies to internal documentation, case notes, escalation
-                summaries and support workflows.
-              </p>
-            </article>
+        <div class="projects-preview__grid">
+          <article class="project-card project-card--preview reveal-card">
+            <span class="project-card__chip">Portfolio design</span>
+            <h3>burnaron.com</h3>
+            <p>Static portfolio focused on clearer operational storytelling and recruiter-friendly scanning.</p>
           </article>
 
-          <article class="project-card reveal-card project-card--deepseek" tabindex="0">
-            <div class="brand-backdrop project-backdrop" aria-hidden="true">
-              <img src="assets/brand-icons/deepseek-original.png" alt="" decoding="async">
-            </div>
-            <div>
-              <p class="card-kicker">Local privacy lab</p>
-              <h3>Self-hosted search and AI experiments</h3>
-            </div>
-            <p>
-              I dabble with locally hosted and privacy-focused tools such as SearXNG and
-              DeepSeek-based local AI experiments to better understand private search, local
-              inference, service hosting and operational security trade-offs.
-            </p>
-            <div class="tag-row">
-              <span>SearXNG</span>
-              <span>DeepSeek</span>
-              <span>Privacy-focused tooling</span>
-              <span>Local hosting</span>
-            </div>
-            <article class="project-insight-card" aria-label="Why self-hosted search and AI experiments matter operationally">
-              <p class="card-kicker">Why it matters operationally</p>
-              <p>
-                Working with local and privacy-focused tools helps me better understand how systems,
-                access, hosting, search and data flow fit together. The operational value is in
-                understanding trade-offs, documenting setup decisions and thinking carefully about
-                reliability, privacy and usability.
-              </p>
-            </article>
+          <article class="project-card project-card--preview reveal-card">
+            <span class="project-card__chip">Browser extension</span>
+            <h3>Wolt Discount Finder</h3>
+            <p>Firefox extension that scans restaurant listings for visible discount offers.</p>
           </article>
 
-          <article class="project-card reveal-card project-card--hyperv" tabindex="0">
-            <div class="brand-backdrop project-backdrop" aria-hidden="true">
-              <img src="assets/brand-icons/hyperv-original.png" alt="" decoding="async">
-            </div>
-            <div>
-              <p class="card-kicker">Systems practice</p>
-              <h3>Home-lab style troubleshooting</h3>
-            </div>
-            <p>
-              Practical interest in operating systems, virtualization and local services. This
-              supports my broader aim of moving closer to technical support, systems support and
-              operational tooling roles.
-            </p>
-            <div class="tag-row">
-              <span>Virtualization</span>
-              <span>Operating systems</span>
-              <span>Troubleshooting</span>
-              <span>Documentation</span>
-            </div>
-            <article class="project-insight-card" aria-label="Why home-lab troubleshooting matters operationally">
-              <p class="card-kicker">Why it matters operationally</p>
-              <p>
-                My interest in operating systems, virtualization and local services supports how I
-                approach operational support: symptoms, root causes, reproducibility, handoff
-                quality and clear documentation.
-              </p>
-            </article>
+          <article class="project-card project-card--preview reveal-card">
+            <span class="project-card__chip">Local privacy</span>
+            <h3>SearXNG Local Search</h3>
+            <p>Local privacy-focused search setup for hosting, configuration and search behaviour practice.</p>
           </article>
+
+          <article class="project-card project-card--preview reveal-card">
+            <span class="project-card__chip">Local AI</span>
+            <h3>DeepSeek Local AI Model</h3>
+            <p>Local AI model setup for private prompting, response testing and tooling practice.</p>
+          </article>
+        </div>
+
+        <div class="projects-preview__actions">
+          <a class="button primary" href="projects.html">View all projects</a>
         </div>
       </div>
     </section>

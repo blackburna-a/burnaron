@@ -426,7 +426,7 @@ document.addEventListener("click", (event) => {
   }
 
   const standardControl = event.target.closest(
-    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
@@ -850,6 +850,36 @@ function setupCardReveal(sectionSelector, cardSelector) {
 setupCardReveal("#experience", "#experience .experience-brand");
 setupCardReveal("#skills", "#skills .reveal-card");
 setupCardReveal("#projects", "#projects .reveal-card");
+
+function initializeProjectPreviewAnimations() {
+  const projectPreviews = Array.from(document.querySelectorAll("[data-project-preview]"));
+
+  if (projectPreviews.length === 0) return;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+    projectPreviews.forEach((preview) => {
+      preview.classList.add("is-visible");
+    });
+    return;
+  }
+
+  const previewObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+
+      entry.target.classList.add("is-visible");
+      previewObserver.unobserve(entry.target);
+    });
+  }, { rootMargin: "0px 0px -16% 0px", threshold: 0.18 });
+
+  projectPreviews.forEach((preview) => {
+    previewObserver.observe(preview);
+  });
+}
+
+initializeProjectPreviewAnimations();
 
 /* Runs the fictional Fraud/AML Case page when its root element is present. */
 const fraudCaseRoot = document.querySelector("[data-fraud-case]");

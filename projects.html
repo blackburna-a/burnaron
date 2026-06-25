@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Projects | Aron Blackburn</title>
+  <meta
+    name="description"
+    content="Projects, tools and technical experiments from Aron Blackburn, covering portfolio design, browser extension logic, self-hosted search and local AI workflows."
+  />
+  <meta name="author" content="Aron Blackburn" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://burnaron.com/projects.html" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#050b11" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Projects | Aron Blackburn" />
+  <meta
+    property="og:description"
+    content="A closer look at practical projects around systems, troubleshooting, privacy, automation, documentation and user-facing clarity."
+  />
+  <meta property="og:url" content="https://burnaron.com/projects.html" />
+  <meta property="og:site_name" content="burnaron.com" />
+  <meta property="og:image" content="https://burnaron.com/assets/og-image.png" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body class="projects-page-body">
+  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
+
+  <a class="skip-link" href="#main">Skip to projects</a>
+
+  <div class="background-glow" aria-hidden="true"></div>
+  <div class="background-grid" aria-hidden="true"></div>
+  <div class="background-radar" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <nav class="nav container" aria-label="Projects navigation">
+      <div class="nav-identity">
+        <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Play BGM</button>
+        <a class="brand" href="index.html" aria-label="Aron Blackburn home">
+          <span class="brand-label">Aron Blackburn</span>
+        </a>
+      </div>
+
+      <div class="nav-actions">
+        <a class="button secondary nav-utility nav-utility--projects is-current" href="projects.html" aria-current="page">Projects</a>
+        <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
+        <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
+        <a class="button secondary nav-utility nav-utility--home" href="index.html">Home</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="projects-page section" id="top">
+      <div class="container">
+        <header class="projects-page__hero">
+          <h1>Projects, tools and technical experiments.</h1>
+          <p>
+            A closer look at practical work that supports how I think about systems,
+            troubleshooting, privacy, automation, documentation and user-facing clarity.
+          </p>
+        </header>
+
+        <div class="project-detail-list" aria-label="Project details">
+          <article class="project-detail" id="burnaron-com" data-project-preview>
+            <div class="project-detail__copy">
+              <span class="project-detail__index">01</span>
+              <h2>burnaron.com</h2>
+              <p>
+                A static personal portfolio built to present fraud operations, responsible gambling,
+                customer support and technical operations experience clearly.
+              </p>
+
+              <div class="tag-row" aria-label="burnaron.com focus areas">
+                <span>Portfolio design</span>
+                <span>Static site structure</span>
+                <span>GitHub Pages deployment</span>
+                <span>UI/UX iteration</span>
+                <span>Accessibility-minded interactions</span>
+                <span>Operational positioning</span>
+              </div>
+
+              <div class="project-detail__note">
+                <p class="card-kicker">Why it matters operationally</p>
+                <p>
+                  This project is a practical exercise in structuring information clearly, reducing
+                  friction for the reader and presenting complex experience in a way that is easy to scan.
+                </p>
+              </div>
+            </div>
+
+            <div class="project-detail__preview">
+              <div class="project-animation project-animation--portfolio" aria-label="Animated thumbnail preview of the burnaron.com homepage">
+                <div class="project-animation__screen project-animation__screen--portfolio">
+                  <div class="project-animation__bar" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="project-animation__mini-nav" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div class="project-animation__scroll-window" aria-hidden="true">
+                    <div class="project-animation__scroll-track">
+                      <div class="project-animation__mini-hero">
+                        <p>Fraud / RG / Support</p>
+                        <strong>Aron Blackburn</strong>
+                        <span>Operational judgment with technical fluency.</span>
+                      </div>
+                      <div class="project-animation__mini-cards">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <div class="project-animation__mini-section">
+                        <small>About</small>
+                        <strong>Accuracy, judgement and calm communication.</strong>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <div class="project-animation__mini-section project-animation__mini-section--muted">
+                        <small>Projects</small>
+                        <strong>Technical curiosity, kept practical.</strong>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                    <span class="project-animation__scroll-thumb"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-detail" id="wolt-discount-finder" data-project-preview>
+            <div class="project-detail__copy">
+              <span class="project-detail__index">02</span>
+              <h2>Wolt Discount Finder</h2>
+              <p>
+                A browser extension that scans Wolt restaurant listings and surfaces visible
+                discount offers in a cleaner, faster view.
+              </p>
+
+              <div class="tag-row" aria-label="Wolt Discount Finder focus areas">
+                <span>Browser extension logic</span>
+                <span>DOM scanning</span>
+                <span>Discount extraction</span>
+                <span>Filtering false positives</span>
+                <span>Popup UI</span>
+                <span>Local-only behaviour</span>
+              </div>
+
+              <div class="project-detail__note">
+                <p class="card-kicker">Why it matters operationally</p>
+                <p>
+                  This project shows practical automation thinking: identifying useful data on a live
+                  page, filtering noise, improving visibility and turning a repetitive search task
+                  into a cleaner workflow.
+                </p>
+              </div>
+
+              <a class="button primary project-detail__link" href="https://addons.mozilla.org/en-US/firefox/addon/wolt-discount-finder/" target="_blank" rel="noopener noreferrer" data-interface-sound>
+                View Firefox Add-on
+              </a>
+            </div>
+
+            <div class="project-detail__preview">
+              <figure class="project-animation project-animation--screenshot project-animation--wolt">
+                <div class="project-animation__screen">
+                  <img class="project-animation__wolt-template" src="assets/project-previews/wolt-malta-template.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                  <img class="project-animation__wolt-popup" src="assets/project-previews/wolt-discount-finder-preview.png" alt="Wolt Discount Finder extension popup showing discount results." loading="lazy" decoding="async" />
+                  <span class="project-animation__scan project-animation__scan--vertical" aria-hidden="true"></span>
+                  <span class="project-animation__badge project-animation__badge--top" aria-hidden="true">Preview scan</span>
+                  <span class="project-animation__result project-animation__result--wolt" aria-hidden="true">Discount cards highlighted</span>
+                </div>
+              </figure>
+            </div>
+          </article>
+
+          <article class="project-detail" id="searxng-local-search" data-project-preview>
+            <div class="project-detail__copy">
+              <span class="project-detail__index">03</span>
+              <h2>SearXNG Local Search</h2>
+              <p>
+                A locally hosted privacy-focused search engine experiment used to explore
+                self-hosted tooling, search behaviour, configuration and private alternatives to
+                mainstream search.
+              </p>
+
+              <div class="tag-row" aria-label="SearXNG Local Search focus areas">
+                <span>Local hosting</span>
+                <span>Privacy-focused tools</span>
+                <span>Search aggregation</span>
+                <span>Configuration</span>
+                <span>Troubleshooting</span>
+                <span>Self-hosted services</span>
+              </div>
+
+              <div class="project-detail__note">
+                <p class="card-kicker">Why it matters operationally</p>
+                <p>
+                  This supports my understanding of privacy-focused tooling, hosting,
+                  configuration, reliability and how users interact with search systems.
+                </p>
+              </div>
+            </div>
+
+            <div class="project-detail__preview">
+              <figure class="project-animation project-animation--screenshot project-animation--searxng">
+                <div class="project-animation__screen">
+                  <img src="assets/project-previews/searxng-preview.jpg" alt="Local SearXNG search results page in a desktop browser." loading="lazy" decoding="async" />
+                  <span class="project-animation__typing project-animation__typing--search" aria-hidden="true">local search</span>
+                  <span class="project-animation__badge project-animation__badge--local" aria-hidden="true">127.0.0.1 / private test</span>
+                  <span class="project-animation__scan project-animation__scan--horizontal" aria-hidden="true"></span>
+                </div>
+              </figure>
+            </div>
+          </article>
+
+          <article class="project-detail" id="deepseek-local-ai-model" data-project-preview>
+            <div class="project-detail__copy">
+              <span class="project-detail__index">04</span>
+              <h2>DeepSeek Local AI Model</h2>
+              <p>
+                A locally hosted AI model setup used to explore private AI workflows, local
+                inference, system requirements, prompts, responses and practical AI tooling.
+              </p>
+
+              <div class="tag-row" aria-label="DeepSeek Local AI Model focus areas">
+                <span>Local AI experimentation</span>
+                <span>Private workflows</span>
+                <span>Prompt testing</span>
+                <span>System resource awareness</span>
+                <span>Troubleshooting</span>
+                <span>Documentation mindset</span>
+              </div>
+
+              <div class="project-detail__note">
+                <p class="card-kicker">Why it matters operationally</p>
+                <p>
+                  This supports my understanding of private AI workflows, local tooling, system
+                  constraints and how AI can be used practically without relying entirely on
+                  external platforms.
+                </p>
+              </div>
+            </div>
+
+            <div class="project-detail__preview">
+              <figure class="project-animation project-animation--screenshot project-animation--deepseek">
+                <div class="project-animation__screen">
+                  <img src="assets/project-previews/deepseek-local-ai-preview.jpg" alt="Local DeepSeek AI model chat interface showing SQL-style response content." loading="lazy" decoding="async" />
+                  <span class="project-animation__badge project-animation__badge--local" aria-hidden="true">Local model active</span>
+                  <span class="project-animation__typing project-animation__typing--prompt" aria-hidden="true">prompt test</span>
+                  <span class="project-animation__result project-animation__result--ai" aria-hidden="true">Response drafting</span>
+                </div>
+              </figure>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; <span id="year"></span> Aron Blackburn. Built as a static GitHub Pages portfolio.</p>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6d30cd77187e40b19d858705036cf37a"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -22,7 +22,7 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 ## Features
 
-- Responsive portfolio with a single-page homepage and dedicated case walkthroughs
+- Responsive portfolio with a single-page homepage, dedicated Projects page, and dedicated case walkthroughs
 - Animated cyber and HUD-inspired interface
 - Skippable introductory boot sequence that runs once per browser-tab visit, with temporary scroll locking
 - Progressive section reveals triggered by downward wheel, touch, or keyboard input
@@ -41,6 +41,10 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Bottom-screen clipboard confirmation toast, including an already-copied state
 - Animated CV viewer with image and document support plus a new-tab fallback
 - Keyboard focus trapping and Escape-key closing for modal dialogs
+- Compact homepage project preview cards with a clear route into the full Projects page
+- Dedicated Projects page for burnaron.com, Wolt Discount Finder, SearXNG Local Search, and DeepSeek Local AI Model
+- Animated project preview frames using local screenshots and lightweight CSS/JavaScript
+- Safe external link to the Wolt Discount Finder Firefox Add-on
 - Project cards with dedicated operational-context panels
 - Smooth first-view card animations using viewport observation
 - Mobile hamburger navigation with outside-click closing
@@ -55,6 +59,8 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Animated customer profile, email, chat, phone, concern-indicator, case-note, and account-action panels
 - Subtle interaction sound cues with reduced-motion support
 - Cross-page Fraud/AML Case, RG Case, and Home navigation
+- Cross-page Projects navigation
+- Cookie-free Cloudflare Web Analytics beacon for aggregate traffic understanding
 - Custom favicon, Open Graph image, and web manifest
 
 ## Project Sections
@@ -65,7 +71,8 @@ The site includes:
 - About section
 - Relevant experience summary
 - Core strengths
-- Practical project cards
+- Compact homepage project preview
+- Dedicated projects, tools, and technical experiments page
 - Development direction
 - Personal edge
 - Contact and CV access
@@ -92,6 +99,7 @@ No build system or framework is required. The site is intentionally static, ligh
 |   |-- audio/
 |   |-- brand-icons/
 |   |-- company-logos/
+|   |-- project-previews/
 |   |-- android-chrome-192x192.png
 |   |-- android-chrome-512x512.png
 |   |-- apple-touch-icon.png
@@ -116,6 +124,7 @@ No build system or framework is required. The site is intentionally static, ligh
 |-- email-handoff.html
 |-- favicon.ico
 |-- index.html
+|-- projects.html
 |-- rg-case.html
 |-- README.md
 |-- robots.txt
