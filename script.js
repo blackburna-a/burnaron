@@ -417,7 +417,7 @@ if (bgmToggle) {
 // Assigns the supplied click sounds to selected portfolio controls.
 document.addEventListener("click", (event) => {
   const closeControl = event.target.closest(
-    "[data-email-close], [data-cv-close], .email-modal__close, .cv-modal__close, #emailModal button[type='button']"
+    "[data-email-close], [data-cv-close], [data-project-preview-close], .email-modal__close, .cv-modal__close, .project-preview-modal__close, #emailModal button[type='button']"
   );
 
   if (closeControl && !closeControl.matches(":disabled, [aria-disabled='true']")) {
@@ -426,7 +426,7 @@ document.addEventListener("click", (event) => {
   }
 
   const standardControl = event.target.closest(
-    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], [data-project-image-open], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
@@ -581,6 +581,7 @@ function initializeProgressiveGuide() {
 function isProgressiveInteractionBlocked() {
   return isBootActive() ||
     document.body.classList.contains("cv-modal-open") ||
+    document.body.classList.contains("project-preview-modal-open") ||
     document.body.classList.contains("email-modal-open") ||
     document.body.classList.contains("email-thanks-modal-open");
 }
@@ -2250,6 +2251,59 @@ cvCloseButtons.forEach((button) => {
   button.addEventListener("click", closeCvModal);
 });
 
+/* Opens project preview screenshots inside the page. */
+const projectPreviewModal = document.querySelector("#projectPreviewModal");
+const projectPreviewImage = document.querySelector("#projectPreviewImage");
+const projectPreviewTitle = document.querySelector("#projectPreviewTitle");
+const projectPreviewOpenButtons = document.querySelectorAll("[data-project-image-open]");
+const projectPreviewCloseButtons = document.querySelectorAll("[data-project-preview-close]");
+
+let projectPreviewLastFocusedElement = null;
+
+function openProjectPreviewModal({ src, title, alt }) {
+  if (!projectPreviewModal || !projectPreviewImage) return;
+
+  projectPreviewLastFocusedElement = document.activeElement;
+  projectPreviewImage.src = src;
+  projectPreviewImage.alt = alt || title || "Project preview image";
+
+  if (projectPreviewTitle) {
+    projectPreviewTitle.textContent = title || "Project preview";
+  }
+
+  openAnimatedModal(projectPreviewModal, "project-preview-modal-open");
+  activateFocusTrap(projectPreviewModal, projectPreviewModal.querySelector("[data-project-preview-close]"));
+}
+
+function closeProjectPreviewModal() {
+  if (!projectPreviewModal || !projectPreviewImage) return;
+
+  deactivateFocusTrap(projectPreviewModal);
+
+  closeAnimatedModal(projectPreviewModal, "project-preview-modal-open", () => {
+    projectPreviewImage.src = "";
+    projectPreviewImage.alt = "";
+
+    if (projectPreviewLastFocusedElement && typeof projectPreviewLastFocusedElement.focus === "function") {
+      projectPreviewLastFocusedElement.focus();
+    }
+  });
+}
+
+projectPreviewOpenButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    openProjectPreviewModal({
+      src: button.dataset.previewSrc || "",
+      title: button.dataset.previewTitle || "Project preview",
+      alt: button.dataset.previewAlt || ""
+    });
+  });
+});
+
+projectPreviewCloseButtons.forEach((button) => {
+  button.addEventListener("click", closeProjectPreviewModal);
+});
+
 /* Opens the contact form and prepares a pre-filled email for the visitor's email app. */
 const emailModal = document.querySelector("#emailModal");
 const emailThanksModal = document.querySelector("#emailThanksModal");
@@ -2433,6 +2487,11 @@ document.addEventListener("keydown", (event) => {
 
     if (cvModal && !cvModal.hidden) {
       closeCvModal();
+      return;
+    }
+
+    if (projectPreviewModal && !projectPreviewModal.hidden) {
+      closeProjectPreviewModal();
       return;
     }
 

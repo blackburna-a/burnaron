@@ -52,7 +52,8 @@
 
 /* Makes the CV and contact windows slide in and out from the bottom. */
 .cv-modal,
-.email-modal {
+.email-modal,
+.project-preview-modal {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -62,14 +63,16 @@
 }
 
 .cv-modal:not([hidden]),
-.email-modal:not([hidden]) {
+.email-modal:not([hidden]),
+.project-preview-modal:not([hidden]) {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
 
 .cv-modal__panel,
-.email-modal__panel {
+.email-modal__panel,
+.project-preview-modal__panel {
   transform: translateY(42px);
   opacity: 0;
   transition:
@@ -79,42 +82,49 @@
 }
 
 .cv-modal.is-open .cv-modal__panel,
-.email-modal.is-open .email-modal__panel {
+.email-modal.is-open .email-modal__panel,
+.project-preview-modal.is-open .project-preview-modal__panel {
   transform: translateY(0);
   opacity: 1;
 }
 
 .cv-modal.is-closing,
-.email-modal.is-closing {
+.email-modal.is-closing,
+.project-preview-modal.is-closing {
   opacity: 0;
   pointer-events: none;
 }
 
 .cv-modal.is-closing .cv-modal__panel,
-.email-modal.is-closing .email-modal__panel {
+.email-modal.is-closing .email-modal__panel,
+.project-preview-modal.is-closing .project-preview-modal__panel {
   transform: translateY(72px);
   opacity: 0;
 }
 
 .cv-modal__backdrop,
-.email-modal__backdrop {
+.email-modal__backdrop,
+.project-preview-modal__backdrop {
   opacity: 0;
   transition: opacity 260ms ease;
 }
 
 .cv-modal.is-open .cv-modal__backdrop,
-.email-modal.is-open .email-modal__backdrop {
+.email-modal.is-open .email-modal__backdrop,
+.project-preview-modal.is-open .project-preview-modal__backdrop {
   opacity: 1;
 }
 
 @media (max-width: 720px) {
   .cv-modal__panel,
-  .email-modal__panel {
+  .email-modal__panel,
+  .project-preview-modal__panel {
     transform: translateY(58px);
   }
 
   .cv-modal.is-closing .cv-modal__panel,
-  .email-modal.is-closing .email-modal__panel {
+  .email-modal.is-closing .email-modal__panel,
+  .project-preview-modal.is-closing .project-preview-modal__panel {
     transform: translateY(86px);
   }
 }
@@ -122,17 +132,22 @@
 @media (prefers-reduced-motion: reduce) {
   .cv-modal,
   .email-modal,
+  .project-preview-modal,
   .cv-modal__panel,
   .email-modal__panel,
+  .project-preview-modal__panel,
   .cv-modal__backdrop,
-  .email-modal__backdrop {
+  .email-modal__backdrop,
+  .project-preview-modal__backdrop {
     transition-duration: 0.001ms !important;
   }
 
   .cv-modal__panel,
   .email-modal__panel,
+  .project-preview-modal__panel,
   .cv-modal.is-closing .cv-modal__panel,
-  .email-modal.is-closing .email-modal__panel {
+  .email-modal.is-closing .email-modal__panel,
+  .project-preview-modal.is-closing .project-preview-modal__panel {
     transform: none !important;
   }
 }
@@ -143,6 +158,7 @@
 */
 .cv-modal__panel,
 .email-modal__panel,
+.project-preview-modal__panel,
 .email-thanks-modal__panel {
   border-color: rgba(45, 185, 231, 0.24);
   background:
@@ -151,6 +167,7 @@
 
 .cv-modal__backdrop,
 .email-modal__backdrop,
+.project-preview-modal__backdrop,
 .email-thanks-modal__backdrop {
   background:
     radial-gradient(circle at 50% 36%, rgba(72, 217, 255, 0.12), transparent 30rem),

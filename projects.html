@@ -51,7 +51,7 @@
       </div>
 
       <div class="nav-actions">
-        <a class="button secondary nav-utility nav-utility--projects is-current" href="projects.html" aria-current="page">Projects</a>
+        <a class="button secondary nav-utility nav-utility--projects is-current" href="projects.html" aria-current="page" aria-disabled="true" tabindex="-1">Projects</a>
         <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
         <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
         <a class="button secondary nav-utility nav-utility--home" href="index.html">Home</a>
@@ -176,15 +176,25 @@
             </div>
 
             <div class="project-detail__preview">
-              <figure class="project-animation project-animation--screenshot project-animation--wolt">
-                <div class="project-animation__screen">
-                  <img class="project-animation__wolt-template" src="assets/project-previews/wolt-malta-template.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-                  <img class="project-animation__wolt-popup" src="assets/project-previews/wolt-discount-finder-preview.png" alt="Wolt Discount Finder extension popup showing discount results." loading="lazy" decoding="async" />
-                  <span class="project-animation__scan project-animation__scan--vertical" aria-hidden="true"></span>
-                  <span class="project-animation__badge project-animation__badge--top" aria-hidden="true">Preview scan</span>
-                  <span class="project-animation__result project-animation__result--wolt" aria-hidden="true">Discount cards highlighted</span>
-                </div>
-              </figure>
+              <button
+                class="project-preview-trigger"
+                type="button"
+                data-project-image-open
+                data-preview-src="assets/project-previews/wolt-discount-finder-preview.png"
+                data-preview-title="Wolt Discount Finder preview"
+                data-preview-alt="Wolt Discount Finder extension popup showing discount results."
+                aria-label="Expand Wolt Discount Finder preview"
+              >
+                <figure class="project-animation project-animation--screenshot project-animation--wolt">
+                  <div class="project-animation__screen">
+                    <img class="project-animation__wolt-template" src="assets/project-previews/wolt-malta-template.png" alt="" aria-hidden="true" loading="lazy" decoding="async" />
+                    <img class="project-animation__wolt-popup" src="assets/project-previews/wolt-discount-finder-preview.png" alt="Wolt Discount Finder extension popup showing discount results." loading="lazy" decoding="async" />
+                    <span class="project-animation__scan project-animation__scan--vertical" aria-hidden="true"></span>
+                    <span class="project-animation__badge project-animation__badge--top" aria-hidden="true">Preview scan</span>
+                    <span class="project-animation__result project-animation__result--wolt" aria-hidden="true">Discount cards highlighted</span>
+                  </div>
+                </figure>
+              </button>
             </div>
           </article>
 
@@ -217,14 +227,24 @@
             </div>
 
             <div class="project-detail__preview">
-              <figure class="project-animation project-animation--screenshot project-animation--searxng">
-                <div class="project-animation__screen">
-                  <img src="assets/project-previews/searxng-preview.jpg" alt="Local SearXNG search results page in a desktop browser." loading="lazy" decoding="async" />
-                  <span class="project-animation__typing project-animation__typing--search" aria-hidden="true">local search</span>
-                  <span class="project-animation__badge project-animation__badge--local" aria-hidden="true">127.0.0.1 / private test</span>
-                  <span class="project-animation__scan project-animation__scan--horizontal" aria-hidden="true"></span>
-                </div>
-              </figure>
+              <button
+                class="project-preview-trigger"
+                type="button"
+                data-project-image-open
+                data-preview-src="assets/project-previews/searxng-preview.jpg"
+                data-preview-title="SearXNG Local Search preview"
+                data-preview-alt="Local SearXNG search results page in a desktop browser."
+                aria-label="Expand SearXNG Local Search preview"
+              >
+                <figure class="project-animation project-animation--screenshot project-animation--searxng">
+                  <div class="project-animation__screen">
+                    <img src="assets/project-previews/searxng-preview.jpg" alt="Local SearXNG search results page in a desktop browser." loading="lazy" decoding="async" />
+                    <span class="project-animation__typing project-animation__typing--search" aria-hidden="true">local search</span>
+                    <span class="project-animation__badge project-animation__badge--local" aria-hidden="true">127.0.0.1 / private test</span>
+                    <span class="project-animation__scan project-animation__scan--horizontal" aria-hidden="true"></span>
+                  </div>
+                </figure>
+              </button>
             </div>
           </article>
 
@@ -257,20 +277,51 @@
             </div>
 
             <div class="project-detail__preview">
-              <figure class="project-animation project-animation--screenshot project-animation--deepseek">
-                <div class="project-animation__screen">
-                  <img src="assets/project-previews/deepseek-local-ai-preview.jpg" alt="Local DeepSeek AI model chat interface showing SQL-style response content." loading="lazy" decoding="async" />
-                  <span class="project-animation__badge project-animation__badge--local" aria-hidden="true">Local model active</span>
-                  <span class="project-animation__typing project-animation__typing--prompt" aria-hidden="true">prompt test</span>
-                  <span class="project-animation__result project-animation__result--ai" aria-hidden="true">Response drafting</span>
-                </div>
-              </figure>
+              <button
+                class="project-preview-trigger"
+                type="button"
+                data-project-image-open
+                data-preview-src="assets/project-previews/deepseek-local-ai-preview.jpg"
+                data-preview-title="DeepSeek Local AI Model preview"
+                data-preview-alt="Local DeepSeek AI model chat interface showing SQL-style response content."
+                aria-label="Expand DeepSeek Local AI Model preview"
+              >
+                <figure class="project-animation project-animation--screenshot project-animation--deepseek">
+                  <div class="project-animation__screen">
+                    <img src="assets/project-previews/deepseek-local-ai-preview.jpg" alt="Local DeepSeek AI model chat interface showing SQL-style response content." loading="lazy" decoding="async" />
+                    <span class="project-animation__badge project-animation__badge--local" aria-hidden="true">Local model active</span>
+                    <span class="project-animation__typing project-animation__typing--prompt" aria-hidden="true">prompt test</span>
+                    <span class="project-animation__result project-animation__result--ai" aria-hidden="true">Response drafting</span>
+                  </div>
+                </figure>
+              </button>
             </div>
           </article>
         </div>
       </div>
     </section>
   </main>
+
+  <section class="project-preview-modal" id="projectPreviewModal" role="dialog" aria-modal="true" aria-labelledby="projectPreviewTitle" hidden>
+    <div class="project-preview-modal__backdrop" data-project-preview-close></div>
+
+    <div class="project-preview-modal__panel" role="document">
+      <div class="project-preview-modal__bar">
+        <div>
+          <p class="project-preview-modal__eyebrow">Image preview</p>
+          <h2 id="projectPreviewTitle">Project preview</h2>
+        </div>
+
+        <button class="project-preview-modal__close" type="button" aria-label="Close project preview" data-project-preview-close>
+          &times;
+        </button>
+      </div>
+
+      <div class="project-preview-modal__viewer">
+        <img class="project-preview-modal__image" id="projectPreviewImage" src="" alt="" />
+      </div>
+    </div>
+  </section>
 
   <footer class="site-footer">
     <div class="container footer-inner">

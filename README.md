@@ -22,64 +22,125 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 ## Features
 
-- Responsive portfolio with a single-page homepage, dedicated Projects page, and dedicated case walkthroughs
-- Animated cyber and HUD-inspired interface
-- Skippable introductory boot sequence that runs once per browser-tab visit, with temporary scroll locking
-- Progressive section reveals triggered by downward wheel, touch, or keyboard input
-- Fast slide-up transitions with input locking while each section is revealed
-- Direct navigation links that reveal hidden destination sections when required
-- Animated right-edge progress rail with one dot per section and downward chevrons
-- Responsive edge-tab treatment for phones, tablets, and short landscape screens
-- Clickable progress rail as an alternative way to reveal the next section
-- Progress rail dismissal once the Contact section and footer are available
-- Background audio toggle with remembered mute preference
-- Interface click, close, and validation sounds
-- Contact composer modal with native email-client handoff
-- Return confirmation after the visitor is handed off to their email application
-- Missing-field warning sound for email validation
-- Copy-email buttons that check the current clipboard before writing
-- Bottom-screen clipboard confirmation toast, including an already-copied state
-- Animated CV viewer with image and document support plus a new-tab fallback
-- Keyboard focus trapping and Escape-key closing for modal dialogs
-- Compact homepage project preview cards with a clear route into the full Projects page
-- Dedicated Projects page for burnaron.com, Wolt Discount Finder, SearXNG Local Search, and DeepSeek Local AI Model
-- Animated project preview frames using local screenshots and lightweight CSS/JavaScript
-- Safe external link to the Wolt Discount Finder Firefox Add-on
-- Project cards with dedicated operational-context panels
-- Smooth first-view card animations using viewport observation
-- Mobile hamburger navigation with outside-click closing
+### Portfolio Experience
+
+- Responsive static portfolio built with HTML, CSS, and JavaScript
+- Cyber/HUD-inspired visual interface with layered grid, glow, scanline, and console styling
+- Skippable intro boot sequence that runs only on first entry during a browser-tab visit
+- Scroll-locked boot and section-reveal moments so animations complete cleanly
+- Progressive section reveals triggered by wheel, touch, keyboard, or progress-rail interaction
+- Fast slide-up section transitions with smooth first-view card animations
+- Right-edge scroll/reveal progress rail with animated dots and downward chevrons
+- Progress rail support across desktop, tablet, mobile, and short landscape layouts
+- Mobile hamburger navigation with outside-click and Escape-key closing
+- Cross-page navigation for Home, Projects, Fraud/AML Case, and RG Case
+- Current-page navigation state that is greyed out, non-clickable, and marked with `aria-current`
 - Reduced-motion support for visitors who prefer less animation
-- Dedicated fictional Fraud/AML Case page
-- Six-step alert-to-action walkthrough with clickable timeline and keyboard navigation
-- Animated representative investigation workstation with queue, account, device, query, payment, notes, and outcome panels
-- Previous, Next, and timed Replay Flow controls
+- Skip links and keyboard-friendly modal/navigation behaviour
+
+### Homepage Content
+
+- Hero/profile positioning
+- About section
+- Relevant experience summary
+- Core strengths
+- Practical project preview cards
+- Development direction section
+- Personal edge section
+- Contact and CV access
+- Recruiter-friendly structure designed to be easier to scan than a traditional CV alone
+
+### Contact And CV
+
+- Contact composer modal with name, email, subject, and message fields
+- Native email-client handoff using a generated `mailto:` draft
+- Return confirmation after email handoff
+- Missing-field validation with warning sound
+- Direct copy-email buttons
+- Clipboard-aware copy logic that checks the current clipboard value before writing
+- Bottom-screen toast confirmation for copied email
+- Already-copied toast state when the email is already the latest clipboard text
+- CV viewer modal with image/document support
+- Open-in-new-tab fallback for the CV
+- Focus trapping, focus return, backdrop close, close button, and Escape-key close for modal dialogs
+
+### Audio And Interaction Cues
+
+- Background audio toggle
+- Remembered mute preference
+- Interface click sounds for primary interactions, project links, preview images, and navigation-style controls
+- Dedicated close sound for modal dismissal
+- Dedicated validation warning sound for missing email fields
+- Audio handling designed to degrade gracefully when autoplay or browser policy blocks playback
+
+### Projects Page
+
+- Dedicated Projects page for practical tools and technical experiments
+- Project cards for `burnaron.com`, Wolt Discount Finder, SearXNG Local Search, and DeepSeek Local AI Model
+- Operational context panels explaining the purpose, thinking, and practical value of each project
+- Animated burnaron.com card showing page scrolling and restart behaviour
+- Wolt Discount Finder preview using a local Wolt-style Malta background template and extension screenshot
+- Safe external link to the Wolt Discount Finder Firefox Add-on
+- SearXNG Local Search preview using a local screenshot
+- DeepSeek Local AI Model preview using a local screenshot
+- Expandable in-page image preview modal for project images from card 2 onward
+- Click/hover affordance animation showing that project images can be expanded
+- Project preview modal with title, full image view, top-right close button, backdrop close, Escape close, focus trap, and scroll lock
+- Lazy-loaded project preview images
+
+### Fraud/AML Case Page
+
+- Dedicated fictional Fraud/AML case walkthrough
+- Six-step alert-to-action flow with clickable timeline steps and keyboard-friendly controls
+- Active step panel showing signal, checks, reasoning, authority, and output
+- Animated representative investigation workstation
+- Queue, account, device/network/link, query, payment, notes, and outcome panels
+- Previous, Next, and Replay Flow controls
 - Evidence-based outcome cards covering release, verification, restriction, closure, and AML/Compliance escalation
-- Dedicated fictional Responsible Gambling Case page
-- Six-step player-protection walkthrough covering deposit escalation, restriction, contact, conversation, concern identification, and protective action
-- Animated customer profile, email, chat, phone, concern-indicator, case-note, and account-action panels
-- Subtle interaction sound cues with reduced-motion support
-- Cross-page Fraud/AML Case, RG Case, and Home navigation
-- Cross-page Projects navigation
-- Cookie-free Cloudflare Web Analytics beacon for aggregate traffic understanding
-- Custom favicon, Open Graph image, and web manifest
+- Summary section explaining the operational judgement demonstrated by the case
+
+### Responsible Gambling Case Page
+
+- Dedicated fictional Responsible Gambling case walkthrough
+- Six-step customer-protection flow covering deposit escalation, restriction, contact, conversation, concern identification, and protective action
+- Active step panel showing signal, checks, reasoning, authority, and output
+- Animated customer interaction workspace
+- Customer profile, email, chat, phone, concern-indicator, case-note, support-note, and account-action panels
+- Previous, Next, and Replay Flow controls
+- Outcome cards covering no concern identified, soft intervention, limit applied, timeout/exclusion, and escalation
+- Summary section explaining the customer-protection judgement demonstrated by the case
+
+### Technical And Deployment
+
+- No build system or framework required
+- Split CSS architecture for base layout, theme, modals, boot animation, reduced motion, performance, dividers, and case pages
+- Static GitHub Pages deployment
+- Custom domain through `CNAME`
+- Custom favicon set, Apple touch icon, Android icons, Open Graph image, web manifest, robots file, and sitemap
+- Custom local image and audio assets
+- Static company logos and brand/tool icons
+- Privacy-focused, cookie-free Cloudflare Web Analytics beacon for aggregate traffic understanding
+- Custom 404 page
+- Email handoff return page
 
 ## Project Sections
 
 The site includes:
 
 - Hero and profile positioning
-- About section
-- Relevant experience summary
+- About
+- Relevant experience
 - Core strengths
-- Compact homepage project preview
-- Dedicated projects, tools, and technical experiments page
+- Homepage project preview
+- Dedicated projects, tools, and technical experiments
 - Development direction
 - Personal edge
-- Contact and CV access
-- Fraud/AML Case walkthrough
+- Contact
+- CV viewer
+- Fraud/AML case walkthrough
 - Fictional investigation workstation and decision outcomes
-- Responsible Gambling Case walkthrough
-- Fictional customer interaction and protective-action outcomes
+- Responsible Gambling case walkthrough
+- Fictional customer interaction workspace and protective-action outcomes
 
 ## Tech Stack
 
@@ -97,17 +158,41 @@ No build system or framework is required. The site is intentionally static, ligh
 .
 |-- assets/
 |   |-- audio/
+|   |   |-- beep_warning.mp3
+|   |   |-- clean-hud-idle.wav
+|   |   |-- click.mp3
+|   |   `-- click-close.mp3
 |   |-- brand-icons/
+|   |   |-- atlassian-original.png
+|   |   |-- cpp.svg
+|   |   |-- deepseek-original.png
+|   |   |-- excel-original.png
+|   |   |-- html.svg
+|   |   |-- hyperv-original.png
+|   |   |-- java.svg
+|   |   |-- python.svg
+|   |   |-- slack-original.png
+|   |   `-- tools-stack-supplied.png
 |   |-- company-logos/
+|   |   |-- abtran.png
+|   |   |-- bet365.svg
+|   |   |-- flutter-entertainment.svg
+|   |   `-- hse.png
 |   |-- project-previews/
+|   |   |-- deepseek-local-ai-preview.jpg
+|   |   |-- searxng-preview.jpg
+|   |   |-- wolt-discount-finder-preview.png
+|   |   `-- wolt-malta-template.png
 |   |-- android-chrome-192x192.png
 |   |-- android-chrome-512x512.png
 |   |-- apple-touch-icon.png
 |   |-- aron-blackburn-cv.png
+|   |-- brand-monogram-source.png
 |   |-- favicon-16x16.png
 |   |-- favicon-32x32.png
 |   |-- favicon-48x48.png
-|   `-- og-image.png
+|   |-- og-image.png
+|   `-- og-image-source.png
 |-- css/
 |   |-- base.css
 |   |-- boot.css
@@ -120,13 +205,13 @@ No build system or framework is required. The site is intentionally static, ligh
 |   `-- theme-cyber-risk-console.css
 |-- 404.html
 |-- CNAME
-|-- fraud-case.html
 |-- email-handoff.html
 |-- favicon.ico
+|-- fraud-case.html
 |-- index.html
 |-- projects.html
-|-- rg-case.html
 |-- README.md
+|-- rg-case.html
 |-- robots.txt
 |-- script.js
 |-- sitemap.xml
