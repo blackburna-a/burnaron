@@ -27,14 +27,20 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Responsive static portfolio built with HTML, CSS, and JavaScript
 - Cyber/HUD-inspired visual interface with layered grid, glow, scanline, and console styling
 - Short logo preloader with a subtle kinetic grid that runs only on first entry during a browser-tab visit
+- Light-mode aware intro skip button with readable contrast and clear hover/focus states
 - Section-reveal moments that keep animations smooth without blocking normal browsing for long
 - Progressive section reveals triggered by wheel, touch, keyboard, or progress-rail interaction
 - Fast slide-up section transitions with smooth first-view card animations
 - Right-edge scroll/reveal progress rail with animated dots and downward chevrons
 - Progress rail support across desktop, tablet, mobile, and short landscape layouts
 - Cross-page light/dark theme toggle with saved visitor preference
-- Mobile hamburger navigation with outside-click and Escape-key closing
-- Cross-page navigation for Home, Projects, Fraud/AML Case, and RG Case
+- First-visit theme-toggle hint with a subtle diagonal light/dark split and gentle button pulse
+- Reduced-motion aware theme hint behaviour
+- Homepage section hamburger navigation with outside-click and Escape-key closing
+- Secondary mobile page-navigation menu labelled `Pages`
+- Mobile page navigation for Home, Projects, Fraud/AML Case, and RG Case
+- Desktop page navigation that stays inline on wider layouts
+- Menu state handling with `aria-expanded`, `aria-controls`, outside-click closing, Escape-key closing, and overlap prevention between menus
 - Current-page navigation state that is greyed out, non-clickable, and marked with `aria-current`
 - Reduced-motion support for visitors who prefer less animation
 - Skip links and keyboard-friendly modal/navigation behaviour
@@ -82,10 +88,11 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Operational context panels explaining the purpose, thinking, and practical value of each project
 - Animated burnaron.com card showing page scrolling and restart behaviour
 - Wolt Discount Finder preview using a local Wolt-style Malta background template and extension screenshot
-- Safe external link to the Wolt Discount Finder Firefox Add-on
+- Wolt-only external project action linking to the Wolt Discount Finder Firefox Add-on
 - SearXNG Local Search preview using a local screenshot
 - DeepSeek Local AI Model preview using a local screenshot
-- Expandable project detail modal with title, screenshot, description, focus chips, operational note, and relevant external link
+- Expandable project detail modal with title, screenshot, description, focus chips, operational note, and optional external action
+- Project detail modals without dead-end buttons for projects that do not have a live destination
 - Top-right close button, backdrop close, Escape close, focus trap, focus return, and scroll lock for the project detail modal
 - Lazy-loaded project preview images
 

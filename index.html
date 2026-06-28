@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="booting">
 <head>
   <meta charset="UTF-8" />
@@ -63,8 +63,8 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="styles.css?v=20260628c" />
-  <link rel="stylesheet" href="css/theme-light.css?v=20260628c" />
+  <link rel="stylesheet" href="styles.css?v=20260628d" />
+  <link rel="stylesheet" href="css/theme-light.css?v=20260628d" />
 
   <script type="application/ld+json">
   {
@@ -128,9 +128,19 @@
       </div>
 
       <div class="nav-actions">
-        <a class="button secondary nav-utility nav-utility--projects" href="projects.html">Projects</a>
-        <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
-        <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
+        <div class="nav-page-group">
+          <button class="nav-page-toggle" type="button" aria-expanded="false" aria-controls="page-menu" aria-label="Open page navigation">
+            <span class="nav-page-toggle__label">Pages</span>
+            <span class="nav-page-toggle__icon" aria-hidden="true"></span>
+          </button>
+
+          <div class="page-nav-links" id="page-menu" aria-label="Page navigation">
+            <a class="button secondary nav-utility nav-utility--projects" href="projects.html">Projects</a>
+            <a class="button secondary nav-utility nav-utility--fraud" href="fraud-case.html">Fraud/AML Case</a>
+            <a class="button secondary nav-utility nav-utility--rg" href="rg-case.html">RG Case</a>
+          </div>
+        </div>
+
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
           <span class="sr-only">Toggle navigation</span>
           <span></span>
@@ -585,7 +595,7 @@
 
   <div class="copy-email-toast" id="copyEmailToast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="script.js?v=20260628c"></script>
+  <script src="script.js?v=20260628d"></script>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6d30cd77187e40b19d858705036cf37a"}'></script>
   <!-- End Cloudflare Web Analytics -->

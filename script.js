@@ -198,6 +198,10 @@ function unlockBootScroll() {
   window.removeEventListener("keydown", preventBootKeyScroll);
 }
 
+function dispatchPreloaderComplete() {
+  window.dispatchEvent(new CustomEvent("burnaron:preloader-complete"));
+}
+
 function completeLogoPreloader({ immediate = false } = {}) {
   if (!bootScreen) return;
 
@@ -210,6 +214,7 @@ function completeLogoPreloader({ immediate = false } = {}) {
   window.setTimeout(() => {
     unlockBootScroll();
     bootScreen.remove();
+    dispatchPreloaderComplete();
     window.dispatchEvent(new CustomEvent("burnaron:grid-resize"));
   }, removeDelay);
 }
@@ -241,6 +246,7 @@ if (bgmToggle) {
 const gridThemeToggle = document.querySelector("#gridThemeToggle");
 const themeStorageKey = "burnaronTheme";
 const legacyGridThemeStorageKey = "burnaronGridTheme";
+const themeHintStorageKey = "burnaronThemeHintSeen";
 
 function getSavedTheme() {
   try {
@@ -287,12 +293,85 @@ function applySiteTheme(theme) {
 const initialTheme = getSavedTheme() || "dark";
 applySiteTheme(initialTheme);
 
+function hasSeenThemeHint() {
+  try {
+    return localStorage.getItem(themeHintStorageKey) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function markThemeHintSeen() {
+  try {
+    localStorage.setItem(themeHintStorageKey, "true");
+  } catch {}
+}
+
+function runThemeToggleHint() {
+  if (!gridThemeToggle || hasSeenThemeHint()) return;
+
+  markThemeHintSeen();
+
+  const prefersReducedMotion = reducedMotionPreference.matches;
+  let hintOverlay = null;
+
+  if (!prefersReducedMotion) {
+    hintOverlay = document.createElement("div");
+    hintOverlay.className = "theme-hint";
+    hintOverlay.setAttribute("aria-hidden", "true");
+    document.body.appendChild(hintOverlay);
+
+    window.requestAnimationFrame(() => {
+      hintOverlay?.classList.add("is-active");
+    });
+
+    window.setTimeout(() => {
+      hintOverlay?.remove();
+    }, 1300);
+  }
+
+  window.setTimeout(
+    () => {
+      gridThemeToggle.classList.add("theme-toggle-hinting");
+
+      window.setTimeout(() => {
+        gridThemeToggle.classList.remove("theme-toggle-hinting");
+      }, prefersReducedMotion ? 420 : 1700);
+    },
+    prefersReducedMotion ? 180 : 780
+  );
+}
+
+function scheduleThemeToggleHint() {
+  if (!gridThemeToggle || hasSeenThemeHint()) return;
+
+  const startHint = () => {
+    window.setTimeout(runThemeToggleHint, reducedMotionPreference.matches ? 220 : 520);
+  };
+
+  if (isBootActive() || (bootScreen && bootScreen.isConnected)) {
+    window.addEventListener("burnaron:preloader-complete", startHint, { once: true });
+    return;
+  }
+
+  startHint();
+}
+
 if (gridThemeToggle) {
   gridThemeToggle.addEventListener("click", () => {
+    markThemeHintSeen();
+    gridThemeToggle.classList.remove("theme-toggle-hinting");
+
     const nextTheme = document.documentElement.classList.contains("theme-light") ? "dark" : "light";
     setSavedTheme(nextTheme);
     applySiteTheme(nextTheme);
   });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", scheduleThemeToggleHint, { once: true });
+} else {
+  scheduleThemeToggleHint();
 }
 function initializeKineticGrid() {
   const gridRoots = Array.from(document.querySelectorAll("[data-kinetic-grid]"));
@@ -668,27 +747,52 @@ document.addEventListener("click", (event) => {
 
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
+const navPageToggle = document.querySelector(".nav-page-toggle");
+const pageNavLinks = document.querySelector(".page-nav-links");
 const year = document.querySelector("#year");
 
 if (year) {
   year.textContent = new Date().getFullYear();
 }
 
+function closeNavMenu({ restoreFocus = false } = {}) {
+  if (!navToggle || !navLinks) return;
+
+  navLinks.classList.remove("is-open");
+  navToggle.setAttribute("aria-expanded", "false");
+
+  if (restoreFocus) {
+    navToggle.focus();
+  }
+}
+
+function isNavMenuOpen() {
+  return Boolean(navLinks?.classList.contains("is-open"));
+}
+
+function closePageNavMenu({ restoreFocus = false } = {}) {
+  if (!navPageToggle || !pageNavLinks) return;
+
+  pageNavLinks.classList.remove("is-open");
+  navPageToggle.setAttribute("aria-expanded", "false");
+
+  if (restoreFocus) {
+    navPageToggle.focus();
+  }
+}
+
+function isPageNavMenuOpen() {
+  return Boolean(pageNavLinks?.classList.contains("is-open"));
+}
+
 if (navToggle && navLinks) {
-  function closeNavMenu() {
-    navLinks.classList.remove("is-open");
-    navToggle.setAttribute("aria-expanded", "false");
-  }
-
-  function isNavMenuOpen() {
-    return navLinks.classList.contains("is-open");
-  }
-
   // Opens and closes the navigation menu without locking page scroll.
   navToggle.addEventListener("click", (event) => {
     event.stopPropagation();
 
-    const isOpen = navLinks.classList.toggle("is-open");
+    const isOpen = !isNavMenuOpen();
+    closePageNavMenu();
+    navLinks.classList.toggle("is-open", isOpen);
     navToggle.setAttribute("aria-expanded", String(isOpen));
   });
 
@@ -698,24 +802,42 @@ if (navToggle && navLinks) {
       closeNavMenu();
     }
   });
+}
 
-  document.addEventListener("pointerdown", (event) => {
-    if (!isNavMenuOpen()) return;
+if (navPageToggle && pageNavLinks) {
+  navPageToggle.addEventListener("click", (event) => {
+    event.stopPropagation();
 
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (target.closest(".nav-toggle") || target.closest("#site-menu")) return;
-
+    const isOpen = !isPageNavMenuOpen();
     closeNavMenu();
+    pageNavLinks.classList.toggle("is-open", isOpen);
+    navPageToggle.setAttribute("aria-expanded", String(isOpen));
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && isNavMenuOpen()) {
-      closeNavMenu();
-      navToggle.focus();
+  pageNavLinks.addEventListener("click", (event) => {
+    if (event.target instanceof HTMLAnchorElement) {
+      closePageNavMenu();
     }
   });
 }
+
+document.addEventListener("pointerdown", (event) => {
+  if (!isNavMenuOpen() && !isPageNavMenuOpen()) return;
+
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  if (
+    target.closest(".nav-toggle") ||
+    target.closest("#site-menu") ||
+    target.closest(".nav-page-toggle") ||
+    target.closest("#page-menu")
+  ) {
+    return;
+  }
+
+  closeNavMenu();
+  closePageNavMenu();
+});
 
 /* Reveals one new page section after a fresh downward scroll at the current boundary. */
 const progressiveSections = Array.from(document.querySelectorAll("#main > .section"));
@@ -2569,9 +2691,12 @@ function openProjectDetailModal(projectKey, triggerElement = document.activeElem
       projectDetailModalLink.hidden = false;
       projectDetailModalLink.href = detail.link;
       projectDetailModalLink.textContent = detail.linkLabel || "Open project link";
+      projectDetailModalLink.removeAttribute("aria-hidden");
     } else {
       projectDetailModalLink.hidden = true;
+      projectDetailModalLink.textContent = "";
       projectDetailModalLink.removeAttribute("href");
+      projectDetailModalLink.setAttribute("aria-hidden", "true");
     }
   }
 
@@ -2789,10 +2914,13 @@ if (emailForm) {
 /* Handles Escape and Tab so menus and modals behave properly from the keyboard. */
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    if (pageNavLinks && pageNavLinks.classList.contains("is-open")) {
+      closePageNavMenu({ restoreFocus: true });
+      return;
+    }
+
     if (navLinks && navLinks.classList.contains("is-open")) {
-      navLinks.classList.remove("is-open");
-      navToggle.setAttribute("aria-expanded", "false");
-      navToggle.focus();
+      closeNavMenu({ restoreFocus: true });
       return;
     }
 

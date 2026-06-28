@@ -61,13 +61,41 @@ html.theme-light body {
 
 .theme-light .brand,
 .theme-light .nav-links,
+.theme-light .page-nav-links,
 .theme-light .button.secondary,
 .theme-light .bgm-toggle,
 .theme-light .grid-theme-toggle,
+.theme-light .nav-page-toggle,
 .theme-light .nav-utility {
   border-color: rgba(8, 116, 153, 0.22);
   background: rgba(244, 252, 255, 0.7);
   color: var(--text);
+}
+
+.theme-light .logo-preloader__skip,
+.theme-light .boot-screen__skip {
+  border-color: rgba(8, 116, 153, 0.42);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(219, 244, 250, 0.9)),
+    rgba(239, 250, 253, 0.94);
+  color: #082f49;
+  box-shadow:
+    0 16px 36px rgba(21, 94, 117, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.58) inset;
+}
+
+.theme-light .logo-preloader__skip:hover,
+.theme-light .logo-preloader__skip:focus-visible,
+.theme-light .boot-screen__skip:hover,
+.theme-light .boot-screen__skip:focus-visible {
+  border-color: rgba(8, 91, 122, 0.68);
+  background:
+    linear-gradient(180deg, rgba(239, 251, 255, 0.98), rgba(190, 232, 245, 0.94)),
+    rgba(225, 246, 252, 0.98);
+  color: #031522;
+  box-shadow:
+    0 18px 42px rgba(21, 94, 117, 0.22),
+    0 0 0 3px rgba(14, 116, 144, 0.12);
 }
 
 .theme-light .button.primary {
@@ -511,6 +539,7 @@ html.theme-light {
 .theme-light .project-carousel__button,
 .theme-light .project-preview-trigger,
 .theme-light .bgm-toggle,
+.theme-light .nav-page-toggle,
 .theme-light .nav-utility,
 .theme-light .nav-links a,
 .theme-light .nav-toggle,
@@ -537,6 +566,9 @@ html.theme-light {
 .theme-light .project-preview-trigger:focus-visible,
 .theme-light .bgm-toggle:hover,
 .theme-light .bgm-toggle:focus-visible,
+.theme-light .nav-page-toggle:hover,
+.theme-light .nav-page-toggle:focus-visible,
+.theme-light .nav-page-toggle[aria-expanded="true"],
 .theme-light .nav-utility:hover,
 .theme-light .nav-utility:focus-visible,
 .theme-light .nav-links a:hover,
