@@ -26,12 +26,13 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 - Responsive static portfolio built with HTML, CSS, and JavaScript
 - Cyber/HUD-inspired visual interface with layered grid, glow, scanline, and console styling
-- Skippable intro boot sequence that runs only on first entry during a browser-tab visit
-- Scroll-locked boot and section-reveal moments so animations complete cleanly
+- Short logo preloader with a subtle kinetic grid that runs only on first entry during a browser-tab visit
+- Section-reveal moments that keep animations smooth without blocking normal browsing for long
 - Progressive section reveals triggered by wheel, touch, keyboard, or progress-rail interaction
 - Fast slide-up section transitions with smooth first-view card animations
 - Right-edge scroll/reveal progress rail with animated dots and downward chevrons
 - Progress rail support across desktop, tablet, mobile, and short landscape layouts
+- Cross-page light/dark theme toggle with saved visitor preference
 - Mobile hamburger navigation with outside-click and Escape-key closing
 - Cross-page navigation for Home, Projects, Fraud/AML Case, and RG Case
 - Current-page navigation state that is greyed out, non-clickable, and marked with `aria-current`
@@ -68,7 +69,7 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 - Background audio toggle
 - Remembered mute preference
-- Interface click sounds for primary interactions, project links, preview images, and navigation-style controls
+- Interface click sounds for primary interactions, project links, project detail controls, and navigation-style controls
 - Dedicated close sound for modal dismissal
 - Dedicated validation warning sound for missing email fields
 - Audio handling designed to degrade gracefully when autoplay or browser policy blocks playback
@@ -76,16 +77,16 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 ### Projects Page
 
 - Dedicated Projects page for practical tools and technical experiments
-- Project cards for `burnaron.com`, Wolt Discount Finder, SearXNG Local Search, and DeepSeek Local AI Model
+- Project carousel for `burnaron.com`, Wolt Discount Finder, SearXNG Local Search, and DeepSeek Local AI Model
+- One selected project shown at a time with adjacent preview cards, carousel dots, Previous/Next controls, and keyboard navigation
 - Operational context panels explaining the purpose, thinking, and practical value of each project
 - Animated burnaron.com card showing page scrolling and restart behaviour
 - Wolt Discount Finder preview using a local Wolt-style Malta background template and extension screenshot
 - Safe external link to the Wolt Discount Finder Firefox Add-on
 - SearXNG Local Search preview using a local screenshot
 - DeepSeek Local AI Model preview using a local screenshot
-- Expandable in-page image preview modal for project images from card 2 onward
-- Click/hover affordance animation showing that project images can be expanded
-- Project preview modal with title, full image view, top-right close button, backdrop close, Escape close, focus trap, and scroll lock
+- Expandable project detail modal with title, screenshot, description, focus chips, operational note, and relevant external link
+- Top-right close button, backdrop close, Escape close, focus trap, focus return, and scroll lock for the project detail modal
 - Lazy-loaded project preview images
 
 ### Fraud/AML Case Page
@@ -202,6 +203,7 @@ No build system or framework is required. The site is intentionally static, ligh
 |   |-- reduced-motion.css
 |   |-- rg-case.css
 |   |-- section-dividers.css
+|   |-- theme-light.css
 |   `-- theme-cyber-risk-console.css
 |-- 404.html
 |-- CNAME

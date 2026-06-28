@@ -52,4 +52,21 @@
   .scroll-reveal-guide__arrows span {
     animation: none !important;
   }
+
+  .kinetic-grid {
+    opacity: 0.34 !important;
+    filter: none !important;
+  }
+
+  .project-carousel__track {
+    scroll-behavior: auto !important;
+  }
+
+  .project-carousel__card {
+    transform: none !important;
+  }
+
+  .logo-preloader__grid {
+    opacity: 0.16 !important;
+  }
 }

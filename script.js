@@ -1,20 +1,12 @@
-/* Runs the short intro screen before the main portfolio is shown. */
+/* Runs the short logo preloader before the main portfolio is shown. */
 const bootScreen = document.querySelector("#bootScreen");
 const bootSkip = document.querySelector("#bootSkip");
-const bootStatus = document.querySelector("#bootStatus");
-const bootCycle = document.querySelector("#bootCycle");
-const bootStepText = document.querySelector("#bootStepText");
-const bootCompletedSteps = document.querySelector("#bootCompletedSteps");
-const bootProgress = document.querySelector("#bootProgress");
-const bootProgressBar = document.querySelector("#bootProgressBar");
 const bgmAudio = document.querySelector("#bgmAudio");
 const bgmToggle = document.querySelector("#bgmToggle");
 const interfaceClickAudio = new Audio("assets/audio/click.mp3");
 const interfaceCloseAudio = new Audio("assets/audio/click-close.mp3");
 const interfaceWarningAudio = new Audio("assets/audio/beep_warning.mp3");
-
-let activeBootStep = null;
-let bootProgressTimer = null;
+const reducedMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
 const siteEntryStorageKey = "burnaronSiteEntered";
 let siteWasEnteredBeforeLoad = false;
 
@@ -79,7 +71,7 @@ function setBgmMuted(isMuted) {
   updateBgmToggle();
 }
 
-// Starts the background audio loop when playback is permitted.
+// Starts the background audio loop when playback is permitted by the visitor/browser.
 function startBgmAudio() {
   if (!bgmAudio || bgmMuted) {
     updateBgmToggle();
@@ -181,243 +173,475 @@ const bootScrollKeys = new Set([
   " "
 ]);
 
-// Checks whether the startup screen is still controlling the page.
+// Checks whether the preloader is still controlling the page.
 function isBootActive() {
   return document.documentElement.classList.contains("booting") || document.body.classList.contains("booting");
 }
 
-// Prevents wheel, touch, and keyboard scrolling while the startup screen is active.
 function preventBootScroll(event) {
   if (isBootActive()) {
     event.preventDefault();
   }
 }
 
-// Prevents keyboard scroll shortcuts while leaving normal keyboard navigation available.
 function preventBootKeyScroll(event) {
   if (isBootActive() && bootScrollKeys.has(event.key)) {
     event.preventDefault();
   }
 }
 
-// Enables page scrolling after the startup screen has finished.
 function unlockBootScroll() {
-  document.documentElement.classList.remove("booting");
-  document.body.classList.remove("booting");
+  document.documentElement.classList.remove("booting", "is-preloading");
+  document.body.classList.remove("booting", "is-preloading");
   window.removeEventListener("wheel", preventBootScroll);
   window.removeEventListener("touchmove", preventBootScroll);
   window.removeEventListener("keydown", preventBootKeyScroll);
 }
 
-// Sets the progress bar width and the centered percentage label.
-function setBootProgress(value) {
-  const progressValue = Math.max(0, Math.min(100, Math.round(value)));
-
-  if (bootProgress) {
-    bootProgress.textContent = `${progressValue}%`;
-  }
-
-  if (bootProgressBar) {
-    bootProgressBar.style.width = `${progressValue}%`;
-  }
-}
-
-// Runs small timed progress updates during the startup screen.
-function startBootProgress(duration) {
-  const startedAt = window.performance.now();
-
-  setBootProgress(0);
-
-  bootProgressTimer = window.setInterval(() => {
-    const elapsed = window.performance.now() - startedAt;
-    const progressValue = Math.min(100, (elapsed / duration) * 100);
-
-    setBootProgress(progressValue);
-
-    if (progressValue >= 100) {
-      window.clearInterval(bootProgressTimer);
-      bootProgressTimer = null;
-    }
-  }, 120);
-}
-
-// Sets the step counter and shows one protocol step at a time.
-function showBootStep(stepNumber, stepText, statusText = "") {
-  activeBootStep = { stepNumber, stepText };
-
-  if (bootCycle) {
-    bootCycle.textContent = String(stepNumber).padStart(2, "0");
-  }
-
-  if (bootStatus && statusText) {
-    bootStatus.textContent = statusText;
-  }
-
-  if (!bootStepText) return;
-
-  bootStepText.classList.remove("is-visible", "is-exiting");
-  bootStepText.textContent = stepText;
-
-  window.requestAnimationFrame(() => {
-    bootStepText.classList.add("is-visible");
-  });
-}
-
-// Adds a completed protocol step to the compact rolling log.
-function addCompletedBootStep(stepNumber, stepText) {
-  if (!bootCompletedSteps) return;
-
-  const item = document.createElement("li");
-  item.className = "is-entering";
-  item.innerHTML = `<span>[${String(stepNumber).padStart(2, "0")}]</span> ${stepText}`;
-
-  bootCompletedSteps.appendChild(item);
-
-  const items = Array.from(bootCompletedSteps.children);
-
-  if (items.length > 3) {
-    const oldestItem = items[0];
-
-    oldestItem.classList.add("is-removing");
-
-    window.setTimeout(() => {
-      oldestItem.remove();
-    }, 210);
-  }
-
-  window.setTimeout(() => {
-    item.classList.remove("is-entering");
-  }, 320);
-}
-
-// Hides the current protocol step and moves it into the completed-step log.
-function hideBootStep() {
-  if (!bootStepText || !activeBootStep) return;
-
-  bootStepText.classList.remove("is-visible");
-  bootStepText.classList.add("is-exiting");
-  addCompletedBootStep(activeBootStep.stepNumber, activeBootStep.stepText);
-  activeBootStep = null;
-}
-
-// Finishes the startup screen and reveals the main page.
-function completeBootScreen({ immediate = false } = {}) {
+function completeLogoPreloader({ immediate = false } = {}) {
   if (!bootScreen) return;
 
-  if (bootProgressTimer) {
-    window.clearInterval(bootProgressTimer);
-    bootProgressTimer = null;
-  }
+  document.documentElement.classList.add("boot-seen", "preloader-seen");
+  document.body.classList.add("is-preloader-complete");
+  bootScreen.classList.add("is-preloader-complete", "is-complete");
 
-  setBootProgress(100);
-
-  if (bootCycle) {
-    bootCycle.textContent = "05";
-  }
-
-  if (bootStatus) {
-    bootStatus.textContent = "Profile ready.";
-  }
-
-  if (bootStepText) {
-    bootStepText.classList.remove("is-visible", "is-exiting");
-  }
-
-  if (immediate) {
-    bootScreen.classList.add("is-complete");
-    unlockBootScroll();
-
-    window.setTimeout(() => {
-      bootScreen.remove();
-    }, 620);
-
-    return;
-  }
-
-  bootScreen.classList.add("is-fading-out");
-
-  window.setTimeout(() => {
-    bootScreen.classList.add("is-complete");
-  }, 1040);
+  const removeDelay = immediate || reducedMotionPreference.matches ? 80 : 620;
 
   window.setTimeout(() => {
     unlockBootScroll();
     bootScreen.remove();
-  }, 1300);
+    window.dispatchEvent(new CustomEvent("burnaron:grid-resize"));
+  }, removeDelay);
 }
 
 if (bootScreen && siteWasEnteredBeforeLoad) {
   bootScreen.remove();
   unlockBootScroll();
-  startBgmAudio();
+  document.documentElement.classList.add("boot-seen", "preloader-seen");
 } else if (bootScreen) {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const bootDuration = prefersReducedMotion ? 650 : 8600;
+  const preloaderDuration = reducedMotionPreference.matches ? 520 : 4380;
+  const preloaderTimer = window.setTimeout(completeLogoPreloader, preloaderDuration);
 
   window.addEventListener("wheel", preventBootScroll, { passive: false });
   window.addEventListener("touchmove", preventBootScroll, { passive: false });
   window.addEventListener("keydown", preventBootKeyScroll);
 
-  const bootSteps = [
-    { delay: 1400, duration: 760, step: 1, text: "Identifying signal", status: "Identifying signal..." },
-    { delay: 2480, duration: 760, step: 2, text: "Reviewing context", status: "Reviewing context..." },
-    { delay: 3560, duration: 900, step: 3, text: "Separating noise from risk", status: "Separating noise from risk..." },
-    { delay: 4920, duration: 780, step: 4, text: "Documenting findings", status: "Documenting findings..." },
-    { delay: 6080, duration: 780, step: 5, text: "Opening portfolio", status: "Opening portfolio..." }
-  ];
-
-  if (bootStatus) {
-    bootStatus.textContent = "Initialising...";
-  }
-
-  if (bootCycle) {
-    bootCycle.textContent = "01";
-  }
-
-  startBgmAudio();
-  startBootProgress(bootDuration);
-
-  bootSteps.forEach(({ delay, duration, step, text, status }) => {
-    window.setTimeout(() => {
-      if (bootScreen && !bootScreen.classList.contains("is-complete")) {
-        showBootStep(step, text, status);
-      }
-    }, prefersReducedMotion ? 0 : delay);
-
-    window.setTimeout(() => {
-      if (bootScreen && !bootScreen.classList.contains("is-complete")) {
-        hideBootStep();
-      }
-    }, prefersReducedMotion ? 0 : delay + duration);
-  });
-
-  window.setTimeout(() => {
-    if (bootScreen && !bootScreen.classList.contains("is-complete") && bootStatus) {
-      bootStatus.textContent = "Profile ready.";
-    }
-  }, prefersReducedMotion ? 0 : 7350);
-
-  // Waits for the startup screen to finish unless the visitor skips it.
-  const bootTimer = window.setTimeout(completeBootScreen, bootDuration);
-
   if (bootSkip) {
     bootSkip.addEventListener("click", () => {
-      window.clearTimeout(bootTimer);
-      completeBootScreen({ immediate: true });
+      window.clearTimeout(preloaderTimer);
+      completeLogoPreloader({ immediate: true });
     });
   }
 }
-
-
-
 if (bgmToggle) {
   bgmToggle.addEventListener("click", toggleBgmAudio);
 }
 
+/* Handles the site-wide dark/light visual mode. */
+const gridThemeToggle = document.querySelector("#gridThemeToggle");
+const themeStorageKey = "burnaronTheme";
+const legacyGridThemeStorageKey = "burnaronGridTheme";
+
+function getSavedTheme() {
+  try {
+    return localStorage.getItem(themeStorageKey) || localStorage.getItem(legacyGridThemeStorageKey);
+  } catch {
+    return null;
+  }
+}
+
+function setSavedTheme(theme) {
+  try {
+    localStorage.setItem(themeStorageKey, theme);
+    localStorage.setItem(legacyGridThemeStorageKey, theme);
+  } catch {}
+}
+
+function applySiteTheme(theme) {
+  const normalizedTheme = theme === "light" ? "light" : "dark";
+  const isLight = normalizedTheme === "light";
+
+  document.documentElement.classList.toggle("theme-light", isLight);
+  document.documentElement.classList.toggle("theme-dark", !isLight);
+  document.documentElement.classList.toggle("grid-theme-light", isLight);
+  document.documentElement.classList.toggle("grid-theme-dark", !isLight);
+
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) {
+    themeColor.setAttribute("content", isLight ? "#dff4fb" : "#050b11");
+  }
+
+  if (gridThemeToggle) {
+    gridThemeToggle.setAttribute("aria-pressed", String(isLight));
+    gridThemeToggle.setAttribute(
+      "aria-label",
+      isLight ? "Switch to dark theme" : "Switch to light theme"
+    );
+    gridThemeToggle.title = isLight ? "Use dark theme" : "Use light theme";
+  }
+
+  window.dispatchEvent(new CustomEvent("burnaron:grid-theme-change", { detail: { theme: normalizedTheme } }));
+  window.dispatchEvent(new CustomEvent("burnaron:theme-change", { detail: { theme: normalizedTheme } }));
+}
+
+const initialTheme = getSavedTheme() || "dark";
+applySiteTheme(initialTheme);
+
+if (gridThemeToggle) {
+  gridThemeToggle.addEventListener("click", () => {
+    const nextTheme = document.documentElement.classList.contains("theme-light") ? "dark" : "light";
+    setSavedTheme(nextTheme);
+    applySiteTheme(nextTheme);
+  });
+}
+function initializeKineticGrid() {
+  const gridRoots = Array.from(document.querySelectorAll("[data-kinetic-grid]"));
+  if (gridRoots.length === 0) return;
+
+  document.documentElement.classList.add("has-kinetic-grid");
+
+  const gridControllers = [];
+
+  gridRoots.forEach((gridRoot) => {
+    const canvas = gridRoot.querySelector("[data-kinetic-grid-canvas]");
+    if (!canvas) return;
+
+    const context = canvas.getContext("2d", { alpha: true });
+    if (!context) return;
+
+    const pointer = { x: -9999, y: -9999, active: false };
+    const pulses = [];
+    let width = 0;
+    let height = 0;
+    let animationFrame = null;
+    let isAnimating = false;
+    let isReducedMotion = reducedMotionPreference.matches;
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function getGridPalette() {
+      const isLight = document.documentElement.classList.contains("theme-light");
+
+      return isLight
+        ? {
+            dot: "rgba(37, 99, 123, 0.2)",
+            activeDot: "rgba(8, 116, 153, 0.62)",
+            ripple: "rgba(8, 116, 153, 0.24)"
+          }
+        : {
+            dot: "rgba(72, 217, 255, 0.18)",
+            activeDot: "rgba(93, 247, 226, 0.72)",
+            ripple: "rgba(72, 217, 255, 0.32)"
+          };
+    }
+
+    function drawGrid(timestamp = window.performance.now()) {
+      const palette = getGridPalette();
+      const spacing = width < 720 ? 38 : 44;
+      const radius = isReducedMotion ? 0 : 150;
+
+      context.clearRect(0, 0, width, height);
+
+      for (let y = spacing * 0.5; y < height + spacing; y += spacing) {
+        for (let x = spacing * 0.5; x < width + spacing; x += spacing) {
+          let renderX = x;
+          let renderY = y;
+          let strength = 0;
+
+          if (!isReducedMotion && pointer.active) {
+            const dx = x - pointer.x;
+            const dy = y - pointer.y;
+            const distance = Math.hypot(dx, dy);
+
+            if (distance < radius) {
+              strength = 1 - distance / radius;
+              const angle = Math.atan2(dy, dx);
+              const repulsion = strength * 16;
+              renderX += Math.cos(angle) * repulsion;
+              renderY += Math.sin(angle) * repulsion;
+            }
+          }
+
+          context.beginPath();
+          context.fillStyle = strength > 0.02 ? palette.activeDot : palette.dot;
+          context.arc(renderX, renderY, 1.15 + strength * 2.1, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+
+      pulses.forEach((pulse) => {
+        const age = timestamp - pulse.startedAt;
+        const progress = clamp(age / 720, 0, 1);
+
+        context.beginPath();
+        context.strokeStyle = palette.ripple;
+        context.lineWidth = 1.4 * (1 - progress);
+        context.arc(pulse.x, pulse.y, 18 + progress * 150, 0, Math.PI * 2);
+        context.stroke();
+      });
+
+      for (let index = pulses.length - 1; index >= 0; index -= 1) {
+        if (timestamp - pulses[index].startedAt > 760) {
+          pulses.splice(index, 1);
+        }
+      }
+
+      isAnimating = pulses.length > 0;
+
+      if (isAnimating) {
+        animationFrame = window.requestAnimationFrame(drawGrid);
+      } else {
+        animationFrame = null;
+      }
+    }
+
+    function requestGridDraw() {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame((timestamp) => {
+        animationFrame = null;
+        drawGrid(timestamp);
+      });
+    }
+
+    function resizeCanvas() {
+      const rect = gridRoot.getBoundingClientRect();
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+      width = Math.max(1, Math.round(rect.width));
+      height = Math.max(1, Math.round(rect.height));
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      drawGrid();
+    }
+
+    function updatePointerFromEvent(event) {
+      if (isReducedMotion) return;
+      if (!gridRoot.isConnected) return;
+
+      const rect = gridRoot.getBoundingClientRect();
+      const isInside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      if (!isInside) {
+        pointer.active = false;
+        requestGridDraw();
+        return;
+      }
+
+      pointer.x = event.clientX - rect.left;
+      pointer.y = event.clientY - rect.top;
+      pointer.active = true;
+      requestGridDraw();
+    }
+
+    function resetPointer() {
+      pointer.active = false;
+      requestGridDraw();
+    }
+
+    function addPulseFromEvent(event) {
+      if (isReducedMotion) return;
+      if (!gridRoot.isConnected) return;
+
+      const rect = gridRoot.getBoundingClientRect();
+      const isInside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      if (!isInside) return;
+
+      pulses.push({
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+        startedAt: window.performance.now()
+      });
+
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(drawGrid);
+      }
+    }
+
+    window.addEventListener("resize", resizeCanvas, { passive: true });
+    window.addEventListener("burnaron:grid-resize", resizeCanvas);
+    window.addEventListener("burnaron:grid-theme-change", () => {
+      resizeCanvas();
+      requestGridDraw();
+    });
+
+    reducedMotionPreference.addEventListener?.("change", (event) => {
+      isReducedMotion = event.matches;
+      pointer.active = false;
+      pulses.length = 0;
+      requestGridDraw();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+      } else if (!document.hidden) {
+        requestGridDraw();
+      }
+    });
+
+    resizeCanvas();
+    gridControllers.push({
+      addPulseFromEvent,
+      resetPointer,
+      resizeCanvas,
+      updatePointerFromEvent
+    });
+  });
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      gridControllers.forEach((controller) => controller.updatePointerFromEvent(event));
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "pointerdown",
+    (event) => {
+      gridControllers.forEach((controller) => controller.addPulseFromEvent(event));
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("pointerleave", () => {
+    gridControllers.forEach((controller) => controller.resetPointer());
+  });
+
+  window.addEventListener("blur", () => {
+    gridControllers.forEach((controller) => controller.resetPointer());
+  });
+
+  document.documentElement.classList.add("is-grid-ready");
+}
+
+initializeKineticGrid();
+/* Controls the non-sticky project carousel on the Projects page. */
+function initializeProjectCarousel() {
+  const carousel = document.querySelector("[data-project-carousel]");
+  if (!carousel) return;
+
+  const track = carousel.querySelector("[data-project-carousel-track]");
+  const cards = Array.from(carousel.querySelectorAll("[data-project-carousel-card]"));
+  const previousButton = carousel.querySelector("[data-project-carousel-prev]");
+  const nextButton = carousel.querySelector("[data-project-carousel-next]");
+  const indicatorsRoot = carousel.querySelector("[data-project-carousel-indicators]");
+  const prefersReducedMotion = reducedMotionPreference.matches;
+  let activeIndex = Math.max(0, cards.findIndex((card) => card.classList.contains("is-active")));
+  let indicators = [];
+
+  if (!track || cards.length === 0) return;
+
+  function clampIndex(index) {
+    return (index + cards.length) % cards.length;
+  }
+
+  function centerActiveCard(behavior = prefersReducedMotion ? "auto" : "smooth") {
+    const activeCard = cards[activeIndex];
+    if (!activeCard) return;
+
+    const targetLeft = activeCard.offsetLeft - (track.clientWidth - activeCard.clientWidth) / 2;
+    track.scrollTo({ left: Math.max(0, targetLeft), behavior });
+  }
+
+  function setActiveProject(index, { focus = false, behavior = prefersReducedMotion ? "auto" : "smooth" } = {}) {
+    activeIndex = clampIndex(index);
+
+    cards.forEach((card, cardIndex) => {
+      const isActive = cardIndex === activeIndex;
+      card.classList.toggle("is-active", isActive);
+      card.setAttribute("aria-pressed", String(isActive));
+      card.tabIndex = isActive ? 0 : -1;
+    });
+
+    indicators.forEach((indicator, indicatorIndex) => {
+      indicator.classList.toggle("is-active", indicatorIndex === activeIndex);
+      indicator.setAttribute("aria-current", indicatorIndex === activeIndex ? "true" : "false");
+    });
+
+    centerActiveCard(behavior);
+
+    if (focus) {
+      cards[activeIndex]?.focus({ preventScroll: true });
+    }
+  }
+
+  if (indicatorsRoot) {
+    const indicatorFragment = document.createDocumentFragment();
+
+    cards.forEach((card, index) => {
+      const title = card.querySelector(".project-carousel__body strong")?.textContent?.trim() || `Project ${index + 1}`;
+      const indicator = document.createElement("button");
+
+      indicator.className = "project-carousel__indicator";
+      indicator.type = "button";
+      indicator.setAttribute("aria-label", `Show ${title}`);
+      indicator.addEventListener("click", () => setActiveProject(index, { focus: true }));
+      indicatorFragment.appendChild(indicator);
+    });
+
+    indicatorsRoot.replaceChildren(indicatorFragment);
+    indicators = Array.from(indicatorsRoot.querySelectorAll(".project-carousel__indicator"));
+  }
+
+  previousButton?.addEventListener("click", () => setActiveProject(activeIndex - 1, { focus: true }));
+  nextButton?.addEventListener("click", () => setActiveProject(activeIndex + 1, { focus: true }));
+
+  cards.forEach((card, index) => {
+    card.addEventListener("click", () => {
+      if (index !== activeIndex) {
+        setActiveProject(index, { focus: true });
+        return;
+      }
+
+      openProjectDetailModal(card.dataset.projectKey, card);
+    });
+  });
+
+  carousel.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      setActiveProject(activeIndex - 1, { focus: true });
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      setActiveProject(activeIndex + 1, { focus: true });
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      setActiveProject(0, { focus: true });
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      setActiveProject(cards.length - 1, { focus: true });
+    }
+  });
+
+  window.addEventListener("resize", () => centerActiveCard("auto"), { passive: true });
+  setActiveProject(activeIndex, { behavior: "auto" });
+}
+
+initializeProjectCarousel();
 // Assigns the supplied click sounds to selected portfolio controls.
 document.addEventListener("click", (event) => {
   const closeControl = event.target.closest(
-    "[data-email-close], [data-cv-close], [data-project-preview-close], .email-modal__close, .cv-modal__close, .project-preview-modal__close, #emailModal button[type='button']"
+    "[data-email-close], [data-cv-close], [data-project-detail-close], .email-modal__close, .cv-modal__close, .project-detail-modal__close, #emailModal button[type='button']"
   );
 
   if (closeControl && !closeControl.matches(":disabled, [aria-disabled='true']")) {
@@ -426,7 +650,7 @@ document.addEventListener("click", (event) => {
   }
 
   const standardControl = event.target.closest(
-    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], [data-project-image-open], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], [data-project-detail-open], [data-project-carousel-prev], [data-project-carousel-next], [data-grid-theme-toggle], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
@@ -581,7 +805,7 @@ function initializeProgressiveGuide() {
 function isProgressiveInteractionBlocked() {
   return isBootActive() ||
     document.body.classList.contains("cv-modal-open") ||
-    document.body.classList.contains("project-preview-modal-open") ||
+    document.body.classList.contains("project-detail-modal-open") ||
     document.body.classList.contains("email-modal-open") ||
     document.body.classList.contains("email-thanks-modal-open");
 }
@@ -2251,59 +2475,146 @@ cvCloseButtons.forEach((button) => {
   button.addEventListener("click", closeCvModal);
 });
 
-/* Opens project preview screenshots inside the page. */
-const projectPreviewModal = document.querySelector("#projectPreviewModal");
-const projectPreviewImage = document.querySelector("#projectPreviewImage");
-const projectPreviewTitle = document.querySelector("#projectPreviewTitle");
-const projectPreviewOpenButtons = document.querySelectorAll("[data-project-image-open]");
-const projectPreviewCloseButtons = document.querySelectorAll("[data-project-preview-close]");
-
-let projectPreviewLastFocusedElement = null;
-
-function openProjectPreviewModal({ src, title, alt }) {
-  if (!projectPreviewModal || !projectPreviewImage) return;
-
-  projectPreviewLastFocusedElement = document.activeElement;
-  projectPreviewImage.src = src;
-  projectPreviewImage.alt = alt || title || "Project preview image";
-
-  if (projectPreviewTitle) {
-    projectPreviewTitle.textContent = title || "Project preview";
+/* Opens project detail windows inside the Projects page. */
+const projectDetails = {
+  "burnaron-com": {
+    title: "burnaron.com",
+    image: "assets/og-image.png",
+    alt: "burnaron.com portfolio preview image.",
+    description: "A personal portfolio using focused front-end interactions, static hosting and lightweight JavaScript to present fraud operations, responsible gambling, customer support and technical operations experience clearly.",
+    chips: ["Portfolio design", "Lightweight site structure", "Static hosting deployment", "UI/UX iteration", "Accessibility-minded interactions", "Operational positioning"],
+    note: "This project is a practical exercise in structuring information clearly, reducing friction for the reader and presenting complex experience in a way that is easy to scan."
+  },
+  "wolt-discount-finder": {
+    title: "Wolt Discount Finder",
+    image: "assets/project-previews/wolt-discount-finder-preview.png",
+    alt: "Wolt Discount Finder extension popup showing discount results.",
+    description: "A browser extension that scans Wolt restaurant listings and surfaces visible discount offers in a cleaner, faster view.",
+    chips: ["Browser extension logic", "DOM scanning", "Discount extraction", "Filtering false positives", "Popup UI", "Local-only behaviour"],
+    note: "This project shows practical automation thinking: identifying useful data on a live page, filtering noise, improving visibility and turning a repetitive search task into a cleaner workflow.",
+    link: "https://addons.mozilla.org/en-US/firefox/addon/wolt-discount-finder/",
+    linkLabel: "View Firefox Add-on"
+  },
+  "searxng-local-search": {
+    title: "SearXNG Local Search",
+    image: "assets/project-previews/searxng-preview.jpg",
+    alt: "Local SearXNG search results page in a desktop browser.",
+    description: "A locally hosted privacy-focused search engine experiment used to explore self-hosted tooling, search behaviour, configuration and private alternatives to mainstream search.",
+    chips: ["Local hosting", "Privacy-focused tools", "Search aggregation", "Configuration", "Troubleshooting", "Self-hosted services"],
+    note: "This supports my understanding of privacy-focused tooling, hosting, configuration, reliability and how users interact with search systems."
+  },
+  "deepseek-local-ai-model": {
+    title: "DeepSeek Local AI Model",
+    image: "assets/project-previews/deepseek-local-ai-preview.jpg",
+    alt: "Local DeepSeek AI model chat interface showing SQL-style response content.",
+    description: "A locally hosted AI model setup used to explore private AI workflows, local inference, system requirements, prompts, responses and practical AI tooling.",
+    chips: ["Local AI experimentation", "Private workflows", "Prompt testing", "System resource awareness", "Troubleshooting", "Documentation mindset"],
+    note: "This supports my understanding of private AI workflows, local tooling, system constraints and how AI can be used practically without relying entirely on external platforms."
   }
+};
 
-  openAnimatedModal(projectPreviewModal, "project-preview-modal-open");
-  activateFocusTrap(projectPreviewModal, projectPreviewModal.querySelector("[data-project-preview-close]"));
+const projectDetailModal = document.querySelector("#projectDetailModal");
+const projectDetailModalImage = document.querySelector("#projectDetailModalImage");
+const projectDetailModalTitle = document.querySelector("#projectDetailModalTitle");
+const projectDetailModalDescription = document.querySelector("#projectDetailModalDescription");
+const projectDetailModalChips = document.querySelector("#projectDetailModalChips");
+const projectDetailModalNote = document.querySelector("#projectDetailModalNote");
+const projectDetailModalLink = document.querySelector("#projectDetailModalLink");
+const projectDetailOpenButtons = document.querySelectorAll("[data-project-detail-open]");
+const projectDetailCloseButtons = document.querySelectorAll("[data-project-detail-close]");
+
+let projectDetailLastFocusedElement = null;
+
+function renderProjectDetailChips(chips = []) {
+  if (!projectDetailModalChips) return;
+
+  const fragment = document.createDocumentFragment();
+
+  chips.forEach((chip) => {
+    const chipElement = document.createElement("span");
+    chipElement.textContent = chip;
+    fragment.appendChild(chipElement);
+  });
+
+  projectDetailModalChips.replaceChildren(fragment);
 }
 
-function closeProjectPreviewModal() {
-  if (!projectPreviewModal || !projectPreviewImage) return;
+function openProjectDetailModal(projectKey, triggerElement = document.activeElement) {
+  const detail = projectDetails[projectKey];
+  if (!projectDetailModal || !detail) return;
 
-  deactivateFocusTrap(projectPreviewModal);
+  projectDetailLastFocusedElement = triggerElement;
 
-  closeAnimatedModal(projectPreviewModal, "project-preview-modal-open", () => {
-    projectPreviewImage.src = "";
-    projectPreviewImage.alt = "";
+  if (projectDetailModalTitle) {
+    projectDetailModalTitle.textContent = detail.title;
+  }
 
-    if (projectPreviewLastFocusedElement && typeof projectPreviewLastFocusedElement.focus === "function") {
-      projectPreviewLastFocusedElement.focus();
+  if (projectDetailModalImage) {
+    projectDetailModalImage.src = detail.image;
+    projectDetailModalImage.alt = detail.alt || `${detail.title} preview image`;
+  }
+
+  if (projectDetailModalDescription) {
+    projectDetailModalDescription.textContent = detail.description;
+  }
+
+  if (projectDetailModalNote) {
+    projectDetailModalNote.textContent = detail.note;
+  }
+
+  renderProjectDetailChips(detail.chips);
+
+  if (projectDetailModalLink) {
+    if (detail.link) {
+      projectDetailModalLink.hidden = false;
+      projectDetailModalLink.href = detail.link;
+      projectDetailModalLink.textContent = detail.linkLabel || "Open project link";
+    } else {
+      projectDetailModalLink.hidden = true;
+      projectDetailModalLink.removeAttribute("href");
+    }
+  }
+
+  const closeButton = projectDetailModal.querySelector(".project-detail-modal__close");
+  openAnimatedModal(projectDetailModal, "project-detail-modal-open");
+  activateFocusTrap(
+    projectDetailModal,
+    closeButton || projectDetailModal.querySelector("[data-project-detail-close]")
+  );
+
+  window.setTimeout(() => {
+    if (closeButton && !projectDetailModal.hidden) {
+      closeButton.focus();
+    }
+  }, 30);
+}
+
+function closeProjectDetailModal() {
+  if (!projectDetailModal) return;
+
+  deactivateFocusTrap(projectDetailModal);
+
+  closeAnimatedModal(projectDetailModal, "project-detail-modal-open", () => {
+    if (projectDetailModalImage) {
+      projectDetailModalImage.src = "";
+      projectDetailModalImage.alt = "";
+    }
+
+    if (projectDetailLastFocusedElement && typeof projectDetailLastFocusedElement.focus === "function") {
+      projectDetailLastFocusedElement.focus();
     }
   });
 }
 
-projectPreviewOpenButtons.forEach((button) => {
+projectDetailOpenButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    openProjectPreviewModal({
-      src: button.dataset.previewSrc || "",
-      title: button.dataset.previewTitle || "Project preview",
-      alt: button.dataset.previewAlt || ""
-    });
+    openProjectDetailModal(button.dataset.projectKey, button);
   });
 });
 
-projectPreviewCloseButtons.forEach((button) => {
-  button.addEventListener("click", closeProjectPreviewModal);
+projectDetailCloseButtons.forEach((button) => {
+  button.addEventListener("click", closeProjectDetailModal);
 });
-
 /* Opens the contact form and prepares a pre-filled email for the visitor's email app. */
 const emailModal = document.querySelector("#emailModal");
 const emailThanksModal = document.querySelector("#emailThanksModal");
@@ -2490,8 +2801,8 @@ document.addEventListener("keydown", (event) => {
       return;
     }
 
-    if (projectPreviewModal && !projectPreviewModal.hidden) {
-      closeProjectPreviewModal();
+    if (projectDetailModal && !projectDetailModal.hidden) {
+      closeProjectDetailModal();
       return;
     }
 

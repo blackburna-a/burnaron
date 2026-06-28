@@ -8,7 +8,28 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      var theme = "dark";
+
+      try {
+        var savedTheme = localStorage.getItem("burnaronTheme") || localStorage.getItem("burnaronGridTheme");
+        theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark";
+      } catch {}
+
+      var isLight = theme === "light";
+      document.documentElement.classList.add(isLight ? "theme-light" : "theme-dark");
+      document.documentElement.classList.add(isLight ? "grid-theme-light" : "grid-theme-dark");
+
+      try {
+        if (sessionStorage.getItem("burnaronSiteEntered") === "true") {
+          document.documentElement.classList.add("boot-seen", "preloader-seen");
+        }
+      } catch {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260628c" />
+  <link rel="stylesheet" href="css/theme-light.css?v=20260628c" />
 </head>
 
 <body>
@@ -25,6 +46,13 @@
       </div>
     </div>
   </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Aron Blackburn. Static portfolio utility page.</p>
+      <a href="https://burnaron.com/">Return to website</a>
+    </div>
+  </footer>
 
   <script>
     const params = new URLSearchParams(window.location.search);

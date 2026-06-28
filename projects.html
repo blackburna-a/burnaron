@@ -29,22 +29,50 @@
   <meta property="og:site_name" content="burnaron.com" />
   <meta property="og:image" content="https://burnaron.com/assets/og-image.png" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <script>
+    (function () {
+      var theme = "dark";
+
+      try {
+        var savedTheme = localStorage.getItem("burnaronTheme") || localStorage.getItem("burnaronGridTheme");
+        theme = savedTheme === "light" || savedTheme === "dark" ? savedTheme : "dark";
+      } catch {}
+
+      var isLight = theme === "light";
+      document.documentElement.classList.add(isLight ? "theme-light" : "theme-dark");
+      document.documentElement.classList.add(isLight ? "grid-theme-light" : "grid-theme-dark");
+
+      try {
+        if (sessionStorage.getItem("burnaronSiteEntered") === "true") {
+          document.documentElement.classList.add("boot-seen", "preloader-seen");
+        }
+      } catch {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=20260628c" />
+  <link rel="stylesheet" href="css/theme-light.css?v=20260628c" />
 </head>
 
 <body class="projects-page-body">
-  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop autoplay playsinline></audio>
+  <audio id="bgmAudio" src="assets/audio/clean-hud-idle.wav" preload="auto" loop playsinline></audio>
 
   <a class="skip-link" href="#main">Skip to projects</a>
 
   <div class="background-glow" aria-hidden="true"></div>
   <div class="background-grid" aria-hidden="true"></div>
   <div class="background-radar" aria-hidden="true"></div>
+  <div class="kinetic-grid" data-kinetic-grid aria-hidden="true">
+    <canvas class="kinetic-grid__canvas" data-kinetic-grid-canvas></canvas>
+  </div>
 
   <header class="site-header">
     <nav class="nav container" aria-label="Projects navigation">
       <div class="nav-identity">
         <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Play BGM</button>
+        <button class="grid-theme-toggle" id="gridThemeToggle" type="button" aria-pressed="false" aria-label="Toggle light theme" data-grid-theme-toggle>
+          <span class="grid-theme-toggle__icon" aria-hidden="true"></span>
+          <span class="sr-only">Toggle light theme</span>
+        </button>
         <a class="brand" href="index.html" aria-label="Aron Blackburn home">
           <span class="brand-label">Aron Blackburn</span>
         </a>
@@ -70,20 +98,114 @@
           </p>
         </header>
 
-        <div class="project-detail-list" aria-label="Project details">
+        <section class="project-carousel" id="project-systems-motion" data-project-carousel aria-labelledby="projectCarouselTitle">
+          <div class="project-carousel__intro">
+            <p class="eyebrow">Project systems in motion</p>
+            <h2 id="projectCarouselTitle">Practical experiments, clearer signal.</h2>
+            <p>
+              Move through the project previews one at a time, then open the selected project for
+              the operational context behind the build.
+            </p>
+          </div>
+
+          <div class="project-carousel__viewport" tabindex="0" aria-label="Project carousel">
+            <div class="project-carousel__track" data-project-carousel-track>
+              <button class="project-carousel__card is-active" type="button" data-project-carousel-card data-project-key="burnaron-com" aria-label="Open burnaron.com details">
+                <span class="project-carousel__index">01</span>
+                <span class="project-carousel__media project-carousel__media--portfolio" aria-hidden="true">
+                  <span class="project-carousel__browser-bar"></span>
+                  <span class="project-carousel__portfolio-title">burnaron.com</span>
+                  <span class="project-carousel__portfolio-lines"></span>
+                </span>
+                <span class="project-carousel__body">
+                  <strong>burnaron.com</strong>
+                  <span>A recruiter-friendly portfolio built around operational clarity and lightweight front-end interaction.</span>
+                  <span class="project-carousel__chips">
+                    <span>Portfolio design</span>
+                    <span>Static hosting</span>
+                    <span>UI/UX iteration</span>
+                  </span>
+                  <span class="project-carousel__action">Open project details</span>
+                </span>
+              </button>
+
+              <button class="project-carousel__card" type="button" data-project-carousel-card data-project-key="wolt-discount-finder" aria-label="Open Wolt Discount Finder details">
+                <span class="project-carousel__index">02</span>
+                <span class="project-carousel__media">
+                  <img src="assets/project-previews/wolt-discount-finder-preview.png" alt="Wolt Discount Finder extension popup showing discount results." loading="lazy" decoding="async" />
+                </span>
+                <span class="project-carousel__body">
+                  <strong>Wolt Discount Finder</strong>
+                  <span>Browser extension logic that scans visible restaurant listings and surfaces discount offers faster.</span>
+                  <span class="project-carousel__chips">
+                    <span>Browser extension</span>
+                    <span>DOM scanning</span>
+                    <span>Popup UI</span>
+                  </span>
+                  <span class="project-carousel__action">Open project details</span>
+                </span>
+              </button>
+
+              <button class="project-carousel__card" type="button" data-project-carousel-card data-project-key="searxng-local-search" aria-label="Open SearXNG Local Search details">
+                <span class="project-carousel__index">03</span>
+                <span class="project-carousel__media">
+                  <img src="assets/project-previews/searxng-preview.jpg" alt="Local SearXNG search results page in a desktop browser." loading="lazy" decoding="async" />
+                </span>
+                <span class="project-carousel__body">
+                  <strong>SearXNG Local Search</strong>
+                  <span>Self-hosted search experimentation focused on privacy, configuration and reliable local tooling.</span>
+                  <span class="project-carousel__chips">
+                    <span>Local hosting</span>
+                    <span>Privacy tooling</span>
+                    <span>Troubleshooting</span>
+                  </span>
+                  <span class="project-carousel__action">Open project details</span>
+                </span>
+              </button>
+
+              <button class="project-carousel__card" type="button" data-project-carousel-card data-project-key="deepseek-local-ai-model" aria-label="Open DeepSeek Local AI Model details">
+                <span class="project-carousel__index">04</span>
+                <span class="project-carousel__media">
+                  <img src="assets/project-previews/deepseek-local-ai-preview.jpg" alt="Local DeepSeek AI model chat interface showing SQL-style response content." loading="lazy" decoding="async" />
+                </span>
+                <span class="project-carousel__body">
+                  <strong>DeepSeek Local AI Model</strong>
+                  <span>Private AI workflow testing around local inference, prompts, system limits and useful documentation.</span>
+                  <span class="project-carousel__chips">
+                    <span>Local AI</span>
+                    <span>Prompt testing</span>
+                    <span>Private workflows</span>
+                  </span>
+                  <span class="project-carousel__action">Open project details</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="project-carousel__footer">
+            <div class="project-carousel__indicators" data-project-carousel-indicators aria-label="Project position"></div>
+            <div class="project-carousel__controls">
+              <button class="project-carousel__button" type="button" data-project-carousel-prev aria-label="Previous project">Previous project</button>
+              <button class="project-carousel__button" type="button" data-project-carousel-next aria-label="Next project">Next project</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="project-detail-list" aria-label="Project details" hidden>
           <article class="project-detail" id="burnaron-com" data-project-preview>
             <div class="project-detail__copy">
               <span class="project-detail__index">01</span>
               <h2>burnaron.com</h2>
               <p>
-                A static personal portfolio built to present fraud operations, responsible gambling,
+                A personal portfolio using focused front-end interactions, static hosting and
+                lightweight JavaScript to present fraud operations, responsible gambling,
                 customer support and technical operations experience clearly.
               </p>
 
               <div class="tag-row" aria-label="burnaron.com focus areas">
                 <span>Portfolio design</span>
-                <span>Static site structure</span>
-                <span>GitHub Pages deployment</span>
+                <span>Lightweight site structure</span>
+                <span>Static hosting deployment</span>
                 <span>UI/UX iteration</span>
                 <span>Accessibility-minded interactions</span>
                 <span>Operational positioning</span>
@@ -179,11 +301,12 @@
               <button
                 class="project-preview-trigger"
                 type="button"
-                data-project-image-open
+                data-project-detail-open
+                data-project-key="wolt-discount-finder"
                 data-preview-src="assets/project-previews/wolt-discount-finder-preview.png"
                 data-preview-title="Wolt Discount Finder preview"
                 data-preview-alt="Wolt Discount Finder extension popup showing discount results."
-                aria-label="Expand Wolt Discount Finder preview"
+                aria-label="Open Wolt Discount Finder details"
               >
                 <figure class="project-animation project-animation--screenshot project-animation--wolt">
                   <div class="project-animation__screen">
@@ -230,11 +353,12 @@
               <button
                 class="project-preview-trigger"
                 type="button"
-                data-project-image-open
+                data-project-detail-open
+                data-project-key="searxng-local-search"
                 data-preview-src="assets/project-previews/searxng-preview.jpg"
                 data-preview-title="SearXNG Local Search preview"
                 data-preview-alt="Local SearXNG search results page in a desktop browser."
-                aria-label="Expand SearXNG Local Search preview"
+                aria-label="Open SearXNG Local Search details"
               >
                 <figure class="project-animation project-animation--screenshot project-animation--searxng">
                   <div class="project-animation__screen">
@@ -280,11 +404,12 @@
               <button
                 class="project-preview-trigger"
                 type="button"
-                data-project-image-open
+                data-project-detail-open
+                data-project-key="deepseek-local-ai-model"
                 data-preview-src="assets/project-previews/deepseek-local-ai-preview.jpg"
                 data-preview-title="DeepSeek Local AI Model preview"
                 data-preview-alt="Local DeepSeek AI model chat interface showing SQL-style response content."
-                aria-label="Expand DeepSeek Local AI Model preview"
+                aria-label="Open DeepSeek Local AI Model details"
               >
                 <figure class="project-animation project-animation--screenshot project-animation--deepseek">
                   <div class="project-animation__screen">
@@ -302,35 +427,52 @@
     </section>
   </main>
 
-  <section class="project-preview-modal" id="projectPreviewModal" role="dialog" aria-modal="true" aria-labelledby="projectPreviewTitle" hidden>
-    <div class="project-preview-modal__backdrop" data-project-preview-close></div>
+  <section class="project-detail-modal" id="projectDetailModal" role="dialog" aria-modal="true" aria-labelledby="projectDetailModalTitle" hidden>
+    <div class="project-detail-modal__backdrop" data-project-detail-close></div>
 
-    <div class="project-preview-modal__panel" role="document">
-      <div class="project-preview-modal__bar">
+    <div class="project-detail-modal__panel" role="document">
+      <div class="project-detail-modal__bar">
         <div>
-          <p class="project-preview-modal__eyebrow">Image preview</p>
-          <h2 id="projectPreviewTitle">Project preview</h2>
+          <p class="project-detail-modal__eyebrow">Project details</p>
+          <h2 id="projectDetailModalTitle">Project details</h2>
         </div>
 
-        <button class="project-preview-modal__close" type="button" aria-label="Close project preview" data-project-preview-close>
+        <button class="project-detail-modal__close" type="button" aria-label="Close project details" data-project-detail-close>
           &times;
         </button>
       </div>
 
-      <div class="project-preview-modal__viewer">
-        <img class="project-preview-modal__image" id="projectPreviewImage" src="" alt="" />
+      <div class="project-detail-modal__layout">
+        <figure class="project-detail-modal__image-wrap">
+          <img class="project-detail-modal__image" id="projectDetailModalImage" src="" alt="" />
+        </figure>
+
+        <div class="project-detail-modal__content">
+          <p class="project-detail-modal__description" id="projectDetailModalDescription"></p>
+
+          <div class="project-detail-modal__chips" id="projectDetailModalChips" aria-label="Project focus areas"></div>
+
+          <div class="project-detail-modal__note">
+            <p class="card-kicker">Why it matters operationally</p>
+            <p id="projectDetailModalNote"></p>
+          </div>
+
+          <a class="button primary project-detail-modal__link" id="projectDetailModalLink" href="#" target="_blank" rel="noopener noreferrer" data-interface-sound hidden>
+            Open project link
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>&copy; <span id="year"></span> Aron Blackburn. Built as a static GitHub Pages portfolio.</p>
+      <p>&copy; <span id="year"></span> Aron Blackburn. Utilizing focused front-end interactions, static hosting and lightweight JavaScript.</p>
       <a href="#top">Back to top</a>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20260628c"></script>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6d30cd77187e40b19d858705036cf37a"}'></script>
   <!-- End Cloudflare Web Analytics -->
