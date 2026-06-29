@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -49,8 +49,8 @@
       } catch {}
     })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260628d" />
-  <link rel="stylesheet" href="css/theme-light.css?v=20260628d" />
+  <link rel="stylesheet" href="styles.css?v=20260629c" />
+  <link rel="stylesheet" href="css/theme-light.css?v=20260629c" />
 </head>
 
 <body class="case-page-body rg-case-page">
@@ -68,7 +68,24 @@
   <header class="site-header">
     <nav class="nav container" aria-label="Case navigation">
       <div class="nav-identity">
-        <button class="bgm-toggle" id="bgmToggle" type="button" aria-pressed="false">Play BGM</button>
+        <div class="audio-control" data-audio-control>
+          <button class="audio-control__button" id="audioControlButton" type="button" aria-label="Open audio controls" aria-expanded="false" aria-controls="audioControlPanel">
+            <span class="audio-control__icon" aria-hidden="true">
+              <span class="audio-control__wave audio-control__wave--inner"></span>
+              <span class="audio-control__wave audio-control__wave--outer"></span>
+            </span>
+          </button>
+          <div class="audio-control__panel" id="audioControlPanel" role="group" aria-label="Site audio controls" hidden>
+            <div class="audio-control__header">
+              <span class="audio-control__title">Site volume</span>
+              <span class="audio-control__value" id="audioControlValue">50%</span>
+            </div>
+            <label class="sr-only" for="audioControlSlider">Site volume</label>
+            <input class="audio-control__slider" id="audioControlSlider" type="range" min="0" max="100" step="1" value="50" aria-label="Site volume" />
+            <button class="audio-control__mute" id="audioControlMute" type="button" aria-pressed="false">Mute all</button>
+            <p class="audio-control__hint">Controls background music and interface sounds.</p>
+          </div>
+        </div>
         <button class="grid-theme-toggle" id="gridThemeToggle" type="button" aria-pressed="false" aria-label="Toggle light theme" data-grid-theme-toggle>
           <span class="grid-theme-toggle__icon" aria-hidden="true"></span>
           <span class="sr-only">Toggle light theme</span>
@@ -403,7 +420,7 @@
     </div>
   </footer>
 
-  <script src="script.js?v=20260628d"></script>
+  <script src="script.js?v=20260629c"></script>
   <!-- Cloudflare Web Analytics -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"6d30cd77187e40b19d858705036cf37a"}'></script>
   <!-- End Cloudflare Web Analytics -->

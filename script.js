@@ -2,13 +2,31 @@
 const bootScreen = document.querySelector("#bootScreen");
 const bootSkip = document.querySelector("#bootSkip");
 const bgmAudio = document.querySelector("#bgmAudio");
-const bgmToggle = document.querySelector("#bgmToggle");
+const audioControl = document.querySelector("[data-audio-control]");
+const audioControlButton = document.querySelector("#audioControlButton");
+const audioControlPanel = document.querySelector("#audioControlPanel");
+const audioControlSlider = document.querySelector("#audioControlSlider");
+const audioControlValue = document.querySelector("#audioControlValue");
+const audioControlMute = document.querySelector("#audioControlMute");
 const interfaceClickAudio = new Audio("assets/audio/click.mp3");
 const interfaceCloseAudio = new Audio("assets/audio/click-close.mp3");
 const interfaceWarningAudio = new Audio("assets/audio/beep_warning.mp3");
 const reducedMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
 const siteEntryStorageKey = "burnaronSiteEntered";
+const audioVolumeStorageKey = "burnaronAudioVolume";
+const audioMutedStorageKey = "burnaronAudioMuted";
+const legacyBgmMutedStorageKey = "burnaronBgmMuted";
+const legacySoundMutedStorageKey = "burnaronSoundMuted";
+const defaultAudioVolume = 0.5;
+const audioVolumeMultipliers = {
+  bgm: 0.16,
+  default: 0.92,
+  close: 0.86,
+  warning: 1,
+  typing: 0.72
+};
 let siteWasEnteredBeforeLoad = false;
+let audioControlCloseTimer = null;
 
 try {
   siteWasEnteredBeforeLoad = sessionStorage.getItem(siteEntryStorageKey) === "true";
@@ -18,63 +36,172 @@ try {
 }
 
 interfaceClickAudio.preload = "auto";
-interfaceClickAudio.volume = 0.58;
 
 interfaceCloseAudio.preload = "auto";
-interfaceCloseAudio.volume = 0.54;
 
 interfaceWarningAudio.preload = "auto";
-interfaceWarningAudio.volume = 0.64;
 
 let bgmNeedsUserStart = false;
-let bgmMuted = false;
 
-try {
-  bgmMuted = localStorage.getItem("burnaronBgmMuted") === "true";
-} catch {
-  bgmMuted = false;
-}
+function clampAudioVolume(value) {
+  const parsedValue = Number.parseFloat(value);
 
-if (bgmAudio) {
-  bgmAudio.preload = "auto";
-  bgmAudio.loop = true;
-  bgmAudio.volume = 0.08;
-  bgmAudio.muted = bgmMuted;
-}
-
-// Sets the background audio button label and pressed state.
-function updateBgmToggle() {
-  if (!bgmToggle) return;
-
-  const needsPlay = !bgmMuted && (!bgmAudio || bgmNeedsUserStart || bgmAudio.paused);
-
-  bgmToggle.textContent = bgmMuted ? "Unmute BGM" : needsPlay ? "Play BGM" : "Mute BGM";
-  bgmToggle.setAttribute("aria-pressed", String(bgmMuted));
-}
-
-// Stores and applies the background audio mute state.
-function setBgmMuted(isMuted) {
-  bgmMuted = isMuted;
-
-  if (bgmAudio) {
-    bgmAudio.muted = bgmMuted;
+  if (!Number.isFinite(parsedValue)) {
+    return defaultAudioVolume;
   }
+
+  return Math.min(1, Math.max(0, parsedValue));
+}
+
+function readAudioState() {
+  let volume = defaultAudioVolume;
+  let muted = false;
 
   try {
-    localStorage.setItem("burnaronBgmMuted", String(bgmMuted));
+    const savedVolume = localStorage.getItem(audioVolumeStorageKey);
+    const savedMuted = localStorage.getItem(audioMutedStorageKey);
+
+    if (savedVolume !== null) {
+      volume = clampAudioVolume(savedVolume);
+    }
+
+    if (savedMuted === "true" || savedMuted === "false") {
+      muted = savedMuted === "true";
+    } else {
+      muted =
+        localStorage.getItem(legacySoundMutedStorageKey) === "true" ||
+        localStorage.getItem(legacyBgmMutedStorageKey) === "true";
+    }
   } catch {}
 
-  if (bgmMuted) {
-    bgmNeedsUserStart = false;
+  return { volume, muted };
+}
+
+let audioState = readAudioState();
+
+function isAudioEffectivelyMuted() {
+  return audioState.muted || audioState.volume <= 0;
+}
+
+function getEffectiveSoundVolume(soundType = "default") {
+  if (isAudioEffectivelyMuted()) return 0;
+
+  const multiplier = audioVolumeMultipliers[soundType] ?? audioVolumeMultipliers.default;
+  return clampAudioVolume(audioState.volume * multiplier);
+}
+
+function isAllSoundMuted() {
+  return isAudioEffectivelyMuted();
+}
+
+function shouldPlayInterfaceSound(soundType = "default") {
+  return getEffectiveSoundVolume(soundType) > 0;
+}
+
+function persistAudioState() {
+  try {
+    localStorage.setItem(audioVolumeStorageKey, String(audioState.volume));
+    localStorage.setItem(audioMutedStorageKey, String(audioState.muted));
+  } catch {}
+}
+
+function updateAudioControl() {
+  if (!audioControl || !audioControlButton) return;
+
+  const percentage = Math.round(audioState.volume * 100);
+  const isMuted = isAudioEffectivelyMuted();
+  const isOpen = audioControl.classList.contains("is-open");
+
+  audioControl.classList.toggle("is-muted", isMuted);
+  audioControlButton.classList.toggle("is-muted", isMuted);
+  audioControlButton.setAttribute("aria-expanded", String(isOpen));
+  audioControlButton.setAttribute("aria-label", isOpen ? "Close audio controls" : "Open audio controls");
+  audioControlButton.title = isMuted ? "Audio muted" : `Site volume ${percentage}%`;
+
+  if (audioControlSlider) {
+    audioControlSlider.value = String(percentage);
+    audioControlSlider.setAttribute("aria-valuetext", `${percentage}%`);
+    audioControlSlider.style.setProperty("--audio-volume-percent", `${percentage}%`);
   }
 
-  updateBgmToggle();
+  if (audioControlValue) {
+    audioControlValue.textContent = `${percentage}%`;
+  }
+
+  if (audioControlMute) {
+    audioControlMute.textContent = audioState.muted ? "Unmute all" : "Mute all";
+    audioControlMute.setAttribute("aria-pressed", String(audioState.muted));
+  }
 }
+
+function applyAudioState({ persist = false } = {}) {
+  const bgmVolume = getEffectiveSoundVolume("bgm");
+
+  if (bgmAudio) {
+    bgmAudio.preload = "auto";
+    bgmAudio.loop = true;
+    bgmAudio.volume = bgmVolume;
+    bgmAudio.muted = isAudioEffectivelyMuted();
+  }
+
+  interfaceClickAudio.volume = getEffectiveSoundVolume("default");
+  interfaceCloseAudio.volume = getEffectiveSoundVolume("close");
+  interfaceWarningAudio.volume = getEffectiveSoundVolume("warning");
+
+  if (persist) {
+    persistAudioState();
+  }
+
+  updateAudioControl();
+}
+
+function setAudioVolume(value) {
+  audioState.volume = clampAudioVolume(value);
+  applyAudioState({ persist: true });
+}
+
+function setAudioMuted(isMuted) {
+  audioState.muted = Boolean(isMuted);
+  applyAudioState({ persist: true });
+}
+
+function openAudioControlPanel({ focusSlider = false } = {}) {
+  if (!audioControl || !audioControlPanel || !audioControlButton) return;
+
+  window.clearTimeout(audioControlCloseTimer);
+  audioControlPanel.hidden = false;
+  audioControl.classList.add("is-open");
+  updateAudioControl();
+
+  if (focusSlider && audioControlSlider) {
+    audioControlSlider.focus();
+  }
+}
+
+function closeAudioControlPanel({ restoreFocus = false } = {}) {
+  if (!audioControl || !audioControlPanel || !audioControlButton) return;
+
+  audioControl.classList.remove("is-open");
+  updateAudioControl();
+
+  window.clearTimeout(audioControlCloseTimer);
+  audioControlCloseTimer = window.setTimeout(() => {
+    if (!audioControl.classList.contains("is-open")) {
+      audioControlPanel.hidden = true;
+    }
+  }, reducedMotionPreference.matches ? 0 : 180);
+
+  if (restoreFocus) {
+    audioControlButton.focus();
+  }
+}
+
+applyAudioState({ persist: true });
 
 // Starts the background audio loop when playback is permitted by the visitor/browser.
 function startBgmAudio() {
-  if (!bgmAudio || bgmMuted) {
-    updateBgmToggle();
+  if (!bgmAudio || isAudioEffectivelyMuted()) {
+    updateAudioControl();
     return;
   }
 
@@ -84,56 +211,37 @@ function startBgmAudio() {
     playback
       .then(() => {
         bgmNeedsUserStart = false;
-        updateBgmToggle();
+        updateAudioControl();
       })
       .catch(() => {
         bgmNeedsUserStart = true;
-        updateBgmToggle();
+        updateAudioControl();
       });
 
     return;
   }
 
   bgmNeedsUserStart = false;
-  updateBgmToggle();
-}
-
-// Toggles background audio without resetting the loop position.
-function toggleBgmAudio() {
-  if (!bgmAudio) return;
-
-  if (bgmMuted) {
-    setBgmMuted(false);
-    startBgmAudio();
-    return;
-  }
-
-  if (bgmNeedsUserStart || bgmAudio.paused) {
-    bgmNeedsUserStart = false;
-    startBgmAudio();
-    return;
-  }
-
-  setBgmMuted(true);
+  updateAudioControl();
 }
 
 if (bgmAudio) {
   bgmAudio.addEventListener("play", () => {
     bgmNeedsUserStart = false;
-    updateBgmToggle();
+    updateAudioControl();
   });
 
-  bgmAudio.addEventListener("pause", updateBgmToggle);
+  bgmAudio.addEventListener("pause", updateAudioControl);
 }
-
-updateBgmToggle();
 
 // Plays one of the supplied click sounds.
 function playInterfaceClickSound(soundType = "default") {
+  if (!shouldPlayInterfaceSound(soundType)) return;
+
   const sourceAudio = soundType === "close" ? interfaceCloseAudio : interfaceClickAudio;
   const audio = sourceAudio.cloneNode();
 
-  audio.volume = sourceAudio.volume;
+  audio.volume = getEffectiveSoundVolume(soundType);
 
   const playback = audio.play();
 
@@ -145,6 +253,8 @@ function playInterfaceClickSound(soundType = "default") {
 let lastWarningSoundAt = 0;
 
 function playInterfaceWarningSound() {
+  if (!shouldPlayInterfaceSound("warning")) return;
+
   const now = Date.now();
 
   if (now - lastWarningSoundAt < 260) return;
@@ -155,6 +265,8 @@ function playInterfaceWarningSound() {
     interfaceWarningAudio.pause();
     interfaceWarningAudio.currentTime = 0;
   } catch {}
+
+  interfaceWarningAudio.volume = getEffectiveSoundVolume("warning");
 
   const playback = interfaceWarningAudio.play();
 
@@ -238,9 +350,42 @@ if (bootScreen && siteWasEnteredBeforeLoad) {
     });
   }
 }
-if (bgmToggle) {
-  bgmToggle.addEventListener("click", toggleBgmAudio);
+if (audioControlButton) {
+  audioControlButton.addEventListener("click", () => {
+    if (audioControl?.classList.contains("is-open")) {
+      closeAudioControlPanel();
+      return;
+    }
+
+    openAudioControlPanel();
+  });
 }
+
+if (audioControlSlider) {
+  audioControlSlider.addEventListener("input", (event) => {
+    setAudioVolume(Number(event.target.value) / 100);
+  });
+}
+
+if (audioControlMute) {
+  audioControlMute.addEventListener("click", () => {
+    setAudioMuted(!audioState.muted);
+  });
+}
+
+document.addEventListener("click", (event) => {
+  if (!audioControl?.classList.contains("is-open")) return;
+  if (audioControl.contains(event.target)) return;
+
+  closeAudioControlPanel();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape" || !audioControl?.classList.contains("is-open")) return;
+
+  event.preventDefault();
+  closeAudioControlPanel({ restoreFocus: true });
+});
 
 /* Handles the site-wide dark/light visual mode. */
 const gridThemeToggle = document.querySelector("#gridThemeToggle");
@@ -729,7 +874,7 @@ document.addEventListener("click", (event) => {
   }
 
   const standardControl = event.target.closest(
-    "#bootSkip, [data-email-open], [data-copy-email], [data-cv-open], [data-project-detail-open], [data-project-carousel-prev], [data-project-carousel-next], [data-grid-theme-toggle], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+    "#bootSkip, #audioControlButton, #audioControlMute, [data-email-open], [data-copy-email], [data-cv-open], [data-project-detail-open], [data-project-carousel-prev], [data-project-carousel-next], [data-grid-theme-toggle], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;
@@ -1518,12 +1663,15 @@ if (fraudCaseRoot) {
   }
 
   function playFraudCaseTypingSound() {
-    if (fraudCaseReducedMotion) return;
+    if (fraudCaseReducedMotion || isAllSoundMuted()) return;
 
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) return;
 
     try {
+      const toneVolume = getEffectiveSoundVolume("typing");
+      if (toneVolume <= 0) return;
+
       fraudCaseAudioContext = fraudCaseAudioContext || new AudioContextClass();
       const startAt = fraudCaseAudioContext.currentTime;
 
@@ -1534,7 +1682,7 @@ if (fraudCaseRoot) {
         oscillator.type = "square";
         oscillator.frequency.value = 680 + (index % 2) * 90;
         gain.gain.setValueAtTime(0.0001, startAt + offset);
-        gain.gain.exponentialRampToValueAtTime(0.018, startAt + offset + 0.006);
+        gain.gain.exponentialRampToValueAtTime(0.018 * toneVolume, startAt + offset + 0.006);
         gain.gain.exponentialRampToValueAtTime(0.0001, startAt + offset + 0.035);
         oscillator.connect(gain);
         gain.connect(fraudCaseAudioContext.destination);
@@ -1545,7 +1693,7 @@ if (fraudCaseRoot) {
   }
 
   function playFraudCaseStepSound(stepIndex) {
-    if (fraudCaseReducedMotion) return;
+    if (fraudCaseReducedMotion || isAllSoundMuted()) return;
 
     if (stepIndex === 0) {
       playInterfaceWarningSound();
@@ -2117,7 +2265,7 @@ if (rgCaseRoot) {
   }
 
   function playRgCaseTone(kind = "click") {
-    if (rgCaseReducedMotion) return;
+    if (rgCaseReducedMotion || isAllSoundMuted()) return;
 
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) return;
@@ -2131,6 +2279,9 @@ if (rgCaseRoot) {
     const [frequency, duration] = toneMap[kind] || toneMap.click;
 
     try {
+      const toneVolume = getEffectiveSoundVolume("typing");
+      if (toneVolume <= 0) return;
+
       rgAudioContext = rgAudioContext || new AudioContextClass();
       const oscillator = rgAudioContext.createOscillator();
       const gain = rgAudioContext.createGain();
@@ -2142,7 +2293,7 @@ if (rgCaseRoot) {
         oscillator.frequency.linearRampToValueAtTime(frequency * 1.3, startAt + duration);
       }
       gain.gain.setValueAtTime(0.0001, startAt);
-      gain.gain.exponentialRampToValueAtTime(0.025, startAt + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.025 * toneVolume, startAt + 0.012);
       gain.gain.exponentialRampToValueAtTime(0.0001, startAt + duration);
       oscillator.connect(gain);
       gain.connect(rgAudioContext.destination);
@@ -2152,7 +2303,7 @@ if (rgCaseRoot) {
   }
 
   function playRgTypingSound() {
-    if (rgCaseReducedMotion) return;
+    if (rgCaseReducedMotion || isAllSoundMuted()) return;
     [0, 80, 165, 255].forEach((delay) => {
       const timer = window.setTimeout(() => playRgCaseTone("click"), delay);
       rgTypingTimers.push(timer);
@@ -2160,7 +2311,7 @@ if (rgCaseRoot) {
   }
 
   function playRgStepSound(stepIndex) {
-    if (rgCaseReducedMotion) return;
+    if (rgCaseReducedMotion || isAllSoundMuted()) return;
 
     if (stepIndex === 2) {
       playRgTypingSound();
