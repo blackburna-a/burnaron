@@ -26,8 +26,9 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 
 - Responsive static portfolio built with HTML, CSS, and JavaScript
 - Cyber/HUD-inspired visual interface with layered grid, glow, scanline, and console styling
-- Short logo preloader with a subtle kinetic grid that runs only on first entry during a browser-tab visit
-- Light-mode aware intro skip button with readable contrast and clear hover/focus states
+- Refresh-visible entry screen with Profile, Projects, and Cases route choices
+- Animated entry route buttons with a subtle kinetic grid, skip control, and Escape-key dismissal
+- Light-mode aware entry controls with readable contrast and clear hover/focus states
 - Section-reveal moments that keep animations smooth without blocking normal browsing for long
 - Progressive section reveals triggered by wheel, touch, keyboard, or progress-rail interaction
 - Fast slide-up section transitions with smooth first-view card animations
@@ -38,7 +39,7 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Reduced-motion aware theme hint behaviour
 - Homepage section hamburger navigation with outside-click and Escape-key closing
 - Secondary mobile page-navigation menu labelled `Pages`
-- Mobile page navigation for Home, Projects, Fraud/AML Case, and RG Case
+- Mobile page navigation for Home, Projects, and Cases
 - Desktop page navigation that stays inline on wider layouts
 - Menu state handling with `aria-expanded`, `aria-controls`, outside-click closing, Escape-key closing, and overlap prevention between menus
 - Current-page navigation state that is greyed out, non-clickable, and marked with `aria-current`
@@ -96,6 +97,17 @@ The goal is to make my background easy to scan, easy to verify, and clearer than
 - Top-right close button, backdrop close, Escape close, focus trap, focus return, and scroll lock for the project detail modal
 - Lazy-loaded project preview images
 
+### Cases Page
+
+- Dedicated Cases page for choosing between fictional operational case studies
+- Two centered case-study cards for Fraud/AML and Responsible Gambling scenarios
+- Computer-styled mini animations representing each case type
+- Hover and keyboard-focus card lift effects
+- Case buttons that reveal on card hover/focus on desktop
+- Always-visible case buttons on touch and mobile layouts
+- Responsive case-card layout that sits side by side on desktop and stacks cleanly on smaller screens
+- Header navigation using a single scalable Cases route
+
 ### Fraud/AML Case Page
 
 - Dedicated fictional Fraud/AML case walkthrough
@@ -141,6 +153,7 @@ The site includes:
 - Core strengths
 - Homepage project preview
 - Dedicated projects, tools, and technical experiments
+- Dedicated cases selection page
 - Development direction
 - Personal edge
 - Contact
@@ -213,6 +226,7 @@ No build system or framework is required. The site is intentionally static, ligh
 |   |-- theme-light.css
 |   `-- theme-cyber-risk-console.css
 |-- 404.html
+|-- cases.html
 |-- CNAME
 |-- email-handoff.html
 |-- favicon.ico

@@ -96,30 +96,30 @@ html.theme-light body {
     0 0 0 1px rgba(255, 255, 255, 0.5) inset;
 }
 
-.theme-light .logo-preloader__skip,
-.theme-light .boot-screen__skip {
-  border-color: rgba(8, 116, 153, 0.42);
+.theme-light .entry-screen__button {
+  border-color: rgba(8, 116, 153, 0.28);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(219, 244, 250, 0.9)),
-    rgba(239, 250, 253, 0.94);
-  color: #082f49;
+    radial-gradient(circle at 26% 20%, rgba(8, 145, 178, 0.16), transparent 60%),
+    rgba(244, 252, 255, 0.9);
+  color: #082033;
   box-shadow:
-    0 16px 36px rgba(21, 94, 117, 0.18),
-    0 0 0 1px rgba(255, 255, 255, 0.58) inset;
+    0 16px 36px rgba(21, 94, 117, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.55) inset;
 }
 
-.theme-light .logo-preloader__skip:hover,
-.theme-light .logo-preloader__skip:focus-visible,
-.theme-light .boot-screen__skip:hover,
-.theme-light .boot-screen__skip:focus-visible {
-  border-color: rgba(8, 91, 122, 0.68);
+.theme-light .entry-screen__button:hover,
+.theme-light .entry-screen__button:focus-visible {
+  border-color: rgba(8, 116, 153, 0.54);
   background:
-    linear-gradient(180deg, rgba(239, 251, 255, 0.98), rgba(190, 232, 245, 0.94)),
-    rgba(225, 246, 252, 0.98);
-  color: #031522;
+    radial-gradient(circle at 26% 20%, rgba(8, 145, 178, 0.22), transparent 60%),
+    rgba(231, 248, 253, 0.96);
   box-shadow:
-    0 18px 42px rgba(21, 94, 117, 0.22),
+    0 18px 42px rgba(21, 94, 117, 0.18),
     0 0 0 3px rgba(14, 116, 144, 0.12);
+}
+
+.theme-light .entry-screen__connector {
+  background: linear-gradient(180deg, rgba(8, 116, 153, 0.48), rgba(13, 148, 136, 0.22));
 }
 
 .theme-light .button.primary {
@@ -145,12 +145,19 @@ html.theme-light body {
 .theme-light .case-card,
 .theme-light .case-panel,
 .theme-light .rg-case-card,
-.theme-light .rg-case-panel {
+.theme-light .rg-case-panel,
+.theme-light .case-choice-card {
   border-color: rgba(8, 116, 153, 0.2);
   background:
     linear-gradient(135deg, rgba(250, 254, 255, 0.9), rgba(224, 244, 251, 0.78)),
     rgba(245, 252, 255, 0.82);
   box-shadow: var(--shadow);
+}
+
+.theme-light .case-choice-card:hover,
+.theme-light .case-choice-card:focus-within {
+  border-color: rgba(8, 116, 153, 0.46);
+  box-shadow: 0 24px 68px rgba(21, 94, 117, 0.18);
 }
 
 .theme-light .project-detail::before {
@@ -204,11 +211,32 @@ html.theme-light body {
 }
 
 .theme-light .project-carousel__media,
-.theme-light .project-detail-modal__image-wrap {
+.theme-light .project-detail-modal__image-wrap,
+.theme-light .case-choice-card__preview {
   border-color: rgba(8, 116, 153, 0.2);
   background:
     radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.12), transparent 42%),
     rgba(235, 249, 253, 0.8);
+}
+
+.theme-light .case-choice-card__preview {
+  background:
+    linear-gradient(rgba(8, 116, 153, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 116, 153, 0.08) 1px, transparent 1px),
+    rgba(240, 251, 255, 0.78);
+  background-size: 18px 18px, 18px 18px, auto;
+}
+
+.theme-light .case-choice-card__window,
+.theme-light .case-choice-card__message,
+.theme-light .case-choice-card__phone {
+  border-color: rgba(8, 116, 153, 0.22);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 14px 30px rgba(21, 94, 117, 0.12);
+}
+
+.theme-light .case-choice-card__phone {
+  color: #075985;
 }
 
 .theme-light .project-carousel__media::after,
@@ -229,6 +257,8 @@ html.theme-light body {
 .theme-light .project-detail-modal__description,
 .theme-light .project-detail-modal__note p:last-child,
 .theme-light .projects-page__hero p,
+.theme-light .cases-page__hero p,
+.theme-light .case-choice-card p,
 .theme-light .project-carousel__intro p:not(.eyebrow) {
   color: var(--text-soft);
 }
@@ -740,6 +770,23 @@ html.theme-light {
 .theme-light .grid-theme-toggle[aria-pressed="true"] .grid-theme-toggle__icon::before,
 .theme-light .grid-theme-toggle[aria-pressed="true"] .grid-theme-toggle__icon::after {
   border-color: rgba(202, 138, 4, 0.9);
+}
+
+.theme-light .floating-theme-dock__tab {
+  border-color: rgba(8, 91, 122, 0.28);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(14, 116, 144, 0.14), transparent 62%),
+    rgba(242, 251, 254, 0.88);
+  color: #075985;
+  box-shadow: 0 14px 30px rgba(21, 94, 117, 0.12);
+}
+
+.theme-light .floating-theme-dock__tab:hover,
+.theme-light .floating-theme-dock__tab:focus-visible {
+  border-color: rgba(8, 91, 122, 0.54);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(14, 116, 144, 0.2), transparent 64%),
+    rgba(229, 247, 252, 0.96);
 }
 
 .theme-light .contact-section {

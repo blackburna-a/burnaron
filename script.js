@@ -1,6 +1,5 @@
-/* Runs the short logo preloader before the main portfolio is shown. */
+/* Shows the entry screen before the main portfolio is revealed. */
 const bootScreen = document.querySelector("#bootScreen");
-const bootSkip = document.querySelector("#bootSkip");
 const bgmAudio = document.querySelector("#bgmAudio");
 const audioControl = document.querySelector("[data-audio-control]");
 const audioControlButton = document.querySelector("#audioControlButton");
@@ -12,7 +11,7 @@ const interfaceClickAudio = new Audio("assets/audio/click.mp3");
 const interfaceCloseAudio = new Audio("assets/audio/click-close.mp3");
 const interfaceWarningAudio = new Audio("assets/audio/beep_warning.mp3");
 const reducedMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
-const siteEntryStorageKey = "burnaronSiteEntered";
+const entryDismissStorageKey = "burnaronEntryDismissedForNavigation";
 const audioVolumeStorageKey = "burnaronAudioVolume";
 const audioMutedStorageKey = "burnaronAudioMuted";
 const legacyBgmMutedStorageKey = "burnaronBgmMuted";
@@ -25,14 +24,14 @@ const audioVolumeMultipliers = {
   warning: 1,
   typing: 0.72
 };
-let siteWasEnteredBeforeLoad = false;
+let entryDismissedForNavigation = false;
 let audioControlCloseTimer = null;
 
 try {
-  siteWasEnteredBeforeLoad = sessionStorage.getItem(siteEntryStorageKey) === "true";
-  sessionStorage.setItem(siteEntryStorageKey, "true");
+  entryDismissedForNavigation = sessionStorage.getItem(entryDismissStorageKey) === "true";
+  sessionStorage.removeItem(entryDismissStorageKey);
 } catch {
-  siteWasEnteredBeforeLoad = false;
+  entryDismissedForNavigation = false;
 }
 
 interfaceClickAudio.preload = "auto";
@@ -297,6 +296,12 @@ function preventBootScroll(event) {
 }
 
 function preventBootKeyScroll(event) {
+  if (isBootActive() && event.key === "Escape") {
+    event.preventDefault();
+    dismissEntryScreen({ immediate: reducedMotionPreference.matches });
+    return;
+  }
+
   if (isBootActive() && bootScrollKeys.has(event.key)) {
     event.preventDefault();
   }
@@ -314,42 +319,144 @@ function dispatchPreloaderComplete() {
   window.dispatchEvent(new CustomEvent("burnaron:preloader-complete"));
 }
 
-function completeLogoPreloader({ immediate = false } = {}) {
+function markEntryDismissedForNavigation() {
+  try {
+    sessionStorage.setItem(entryDismissStorageKey, "true");
+  } catch {}
+}
+
+function getCurrentPageName() {
+  return window.location.pathname.split("/").pop().toLowerCase() || "index.html";
+}
+
+function finishEntryDismissal() {
+  unlockBootScroll();
+
+  if (bootScreen?.isConnected) {
+    bootScreen.remove();
+  }
+
+  dispatchPreloaderComplete();
+  window.dispatchEvent(new CustomEvent("burnaron:grid-resize"));
+}
+
+function dismissEntryScreen({ immediate = false } = {}) {
   if (!bootScreen) return;
 
   document.documentElement.classList.add("boot-seen", "preloader-seen");
   document.body.classList.add("is-preloader-complete");
-  bootScreen.classList.add("is-preloader-complete", "is-complete");
+  bootScreen.classList.add("is-entry-dismissing", "is-preloader-complete", "is-complete");
 
-  const removeDelay = immediate || reducedMotionPreference.matches ? 80 : 620;
+  if (immediate || reducedMotionPreference.matches) {
+    finishEntryDismissal();
+    return;
+  }
 
-  window.setTimeout(() => {
-    unlockBootScroll();
-    bootScreen.remove();
-    dispatchPreloaderComplete();
-    window.dispatchEvent(new CustomEvent("burnaron:grid-resize"));
-  }, removeDelay);
+  window.setTimeout(finishEntryDismissal, 440);
 }
 
-if (bootScreen && siteWasEnteredBeforeLoad) {
+function scrollToPageTop() {
+  window.setTimeout(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: reducedMotionPreference.matches ? "auto" : "smooth"
+    });
+  }, 120);
+}
+
+function navigateFromEntry(action) {
+  const currentPage = getCurrentPageName();
+
+  if (action === "profile") {
+    if (currentPage === "index.html" || currentPage === "") {
+      dismissEntryScreen();
+      scrollToPageTop();
+      return;
+    }
+
+    markEntryDismissedForNavigation();
+    dismissEntryScreen({ immediate: true });
+    window.location.href = "index.html";
+    return;
+  }
+
+  const targetByAction = {
+    projects: "projects.html",
+    cases: "cases.html"
+  };
+  const target = targetByAction[action];
+
+  if (!target) return;
+
+  if (currentPage === target) {
+    dismissEntryScreen();
+    scrollToPageTop();
+    return;
+  }
+
+  markEntryDismissedForNavigation();
+  dismissEntryScreen({ immediate: true });
+  window.location.href = target;
+}
+
+function shouldSuppressEntryForLink(link) {
+  if (!link || (link.target && link.target !== "_self") || link.hasAttribute("download")) return false;
+
+  const href = link.getAttribute("href");
+
+  if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return false;
+
+  let targetUrl;
+
+  try {
+    targetUrl = new URL(link.href, window.location.href);
+  } catch {
+    return false;
+  }
+
+  if (targetUrl.origin !== window.location.origin) return false;
+
+  const entryPages = new Set(["index.html", "projects.html", "cases.html", "fraud-case.html", "rg-case.html"]);
+  const targetPage = targetUrl.pathname.split("/").pop().toLowerCase() || "index.html";
+  const currentPage = getCurrentPageName();
+
+  return entryPages.has(targetPage) && targetPage !== currentPage;
+}
+
+if (bootScreen && entryDismissedForNavigation) {
   bootScreen.remove();
   unlockBootScroll();
   document.documentElement.classList.add("boot-seen", "preloader-seen");
+  dispatchPreloaderComplete();
+  window.dispatchEvent(new CustomEvent("burnaron:grid-resize"));
 } else if (bootScreen) {
-  const preloaderDuration = reducedMotionPreference.matches ? 520 : 4380;
-  const preloaderTimer = window.setTimeout(completeLogoPreloader, preloaderDuration);
-
   window.addEventListener("wheel", preventBootScroll, { passive: false });
   window.addEventListener("touchmove", preventBootScroll, { passive: false });
   window.addEventListener("keydown", preventBootKeyScroll);
 
-  if (bootSkip) {
-    bootSkip.addEventListener("click", () => {
-      window.clearTimeout(preloaderTimer);
-      completeLogoPreloader({ immediate: true });
+  bootScreen.querySelectorAll("[data-entry-action]").forEach((button) => {
+    button.addEventListener("click", () => {
+      playInterfaceClickSound("default");
+      navigateFromEntry(button.dataset.entryAction);
     });
-  }
+  });
+
+} else {
+  unlockBootScroll();
+  document.documentElement.classList.add("boot-seen", "preloader-seen");
 }
+
+document.addEventListener(
+  "click",
+  (event) => {
+    const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
+
+    if (document.documentElement.classList.contains("preloader-seen") && shouldSuppressEntryForLink(link)) {
+      markEntryDismissedForNavigation();
+    }
+  },
+  true
+);
 if (audioControlButton) {
   audioControlButton.addEventListener("click", () => {
     if (audioControl?.classList.contains("is-open")) {
@@ -389,9 +496,12 @@ document.addEventListener("keydown", (event) => {
 
 /* Handles the site-wide dark/light visual mode. */
 const gridThemeToggle = document.querySelector("#gridThemeToggle");
+const themeDock = document.querySelector("[data-theme-dock]");
+const themeDockTab = document.querySelector("[data-theme-dock-tab]");
 const themeStorageKey = "burnaronTheme";
 const legacyGridThemeStorageKey = "burnaronGridTheme";
 const themeHintStorageKey = "burnaronThemeHintSeen";
+const themeDockStorageKey = "burnaronThemeDockCollapsed";
 
 function getSavedTheme() {
   try {
@@ -437,6 +547,43 @@ function applySiteTheme(theme) {
 
 const initialTheme = getSavedTheme() || "dark";
 applySiteTheme(initialTheme);
+
+function isThemeDockCollapsed() {
+  return Boolean(themeDock?.classList.contains("is-collapsed"));
+}
+
+function readThemeDockCollapsed() {
+  try {
+    return localStorage.getItem(themeDockStorageKey) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function persistThemeDockCollapsed(isCollapsed) {
+  try {
+    localStorage.setItem(themeDockStorageKey, String(isCollapsed));
+  } catch {}
+}
+
+function setThemeDockCollapsed(isCollapsed, { persist = true } = {}) {
+  if (!themeDock) return;
+
+  const collapsed = Boolean(isCollapsed);
+  themeDock.classList.toggle("is-collapsed", collapsed);
+
+  if (themeDockTab) {
+    themeDockTab.setAttribute("aria-expanded", String(!collapsed));
+    themeDockTab.setAttribute("aria-label", collapsed ? "Show theme toggle" : "Hide theme toggle");
+    themeDockTab.title = collapsed ? "Show theme toggle" : "Hide theme toggle";
+  }
+
+  if (persist) {
+    persistThemeDockCollapsed(collapsed);
+  }
+}
+
+setThemeDockCollapsed(readThemeDockCollapsed(), { persist: false });
 
 function hasSeenThemeHint() {
   try {
@@ -500,6 +647,84 @@ function scheduleThemeToggleHint() {
   }
 
   startHint();
+}
+
+if (themeDockTab) {
+  themeDockTab.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    playInterfaceClickSound("default");
+    setThemeDockCollapsed(!isThemeDockCollapsed());
+  });
+}
+
+if (themeDock) {
+  let themeDockPointer = null;
+  let suppressThemeDockClick = false;
+
+  themeDock.addEventListener(
+    "click",
+    (event) => {
+      if (suppressThemeDockClick) {
+        event.preventDefault();
+        event.stopPropagation();
+        suppressThemeDockClick = false;
+        return;
+      }
+
+      if (!isThemeDockCollapsed() || themeDockTab?.contains(event.target)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      playInterfaceClickSound("default");
+      setThemeDockCollapsed(false);
+    },
+    true
+  );
+
+  themeDock.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse") return;
+
+    themeDockPointer = {
+      id: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY
+    };
+    themeDock.classList.add("is-dragging");
+
+    try {
+      themeDock.setPointerCapture(event.pointerId);
+    } catch {}
+  });
+
+  themeDock.addEventListener("pointerup", (event) => {
+    if (!themeDockPointer || themeDockPointer.id !== event.pointerId) return;
+
+    const deltaX = event.clientX - themeDockPointer.startX;
+    const deltaY = Math.abs(event.clientY - themeDockPointer.startY);
+    const isSwipeRight = deltaX > 34 && deltaX > deltaY * 1.25;
+
+    themeDock.classList.remove("is-dragging");
+
+    try {
+      themeDock.releasePointerCapture(event.pointerId);
+    } catch {}
+
+    themeDockPointer = null;
+
+    if (isSwipeRight) {
+      event.preventDefault();
+      suppressThemeDockClick = true;
+      setThemeDockCollapsed(true);
+    }
+  });
+
+  themeDock.addEventListener("pointercancel", (event) => {
+    if (!themeDockPointer || themeDockPointer.id !== event.pointerId) return;
+
+    themeDock.classList.remove("is-dragging");
+    themeDockPointer = null;
+  });
 }
 
 if (gridThemeToggle) {
@@ -874,7 +1099,7 @@ document.addEventListener("click", (event) => {
   }
 
   const standardControl = event.target.closest(
-    "#bootSkip, #audioControlButton, #audioControlMute, [data-email-open], [data-copy-email], [data-cv-open], [data-project-detail-open], [data-project-carousel-prev], [data-project-carousel-next], [data-grid-theme-toggle], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
+    "#audioControlButton, #audioControlMute, [data-email-open], [data-copy-email], [data-cv-open], [data-project-detail-open], [data-project-carousel-prev], [data-project-carousel-next], [data-grid-theme-toggle], [data-theme-dock-tab], [data-interface-sound], .hero-actions a[href*='linkedin.com'], #emailModal button[type='submit']"
   );
 
   if (!standardControl || standardControl.matches(":disabled, [aria-disabled='true']")) return;

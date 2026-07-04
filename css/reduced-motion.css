@@ -66,6 +66,19 @@
     transform: none !important;
   }
 
+  .case-choice-card,
+  .case-choice-card__button {
+    transform: none !important;
+  }
+
+  .case-choice-card__button {
+    opacity: 1 !important;
+  }
+
+  .case-choice-card__scan {
+    display: none !important;
+  }
+
   .logo-preloader__grid {
     opacity: 0.16 !important;
   }

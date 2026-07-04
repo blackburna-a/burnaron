@@ -22,14 +22,15 @@
       document.documentElement.classList.add(isLight ? "grid-theme-light" : "grid-theme-dark");
 
       try {
-        if (sessionStorage.getItem("burnaronSiteEntered") === "true") {
+        if (sessionStorage.getItem("burnaronEntryDismissedForNavigation") === "true") {
           document.documentElement.classList.add("boot-seen", "preloader-seen");
+          sessionStorage.removeItem("burnaronEntryDismissedForNavigation");
         }
       } catch {}
     })();
   </script>
-  <link rel="stylesheet" href="styles.css?v=20260629e" />
-  <link rel="stylesheet" href="css/theme-light.css?v=20260629e" />
+  <link rel="stylesheet" href="styles.css?v=20260704b" />
+  <link rel="stylesheet" href="css/theme-light.css?v=20260704b" />
 </head>
 
 <body>
