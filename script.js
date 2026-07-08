@@ -274,6 +274,231 @@ function playInterfaceWarningSound() {
   }
 }
 
+function initializeCustomCursor() {
+  const finePointerPreference = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  if (document.querySelector("[data-custom-cursor]")) return;
+
+  const cursor = document.createElement("div");
+  cursor.className = "custom-cursor custom-cursor--hidden custom-cursor--disabled";
+  cursor.dataset.customCursor = "true";
+  cursor.setAttribute("aria-hidden", "true");
+  cursor.innerHTML = '<span class="custom-cursor__dot"></span><span class="custom-cursor__ring"></span>';
+  document.body.append(cursor);
+
+  const dot = cursor.querySelector(".custom-cursor__dot");
+  const ring = cursor.querySelector(".custom-cursor__ring");
+
+  if (!dot || !ring) return;
+
+  const hoverSelector = [
+    "a[href]",
+    "button",
+    "[role='button']",
+    "[tabindex]:not([tabindex='-1'])",
+    "summary",
+    "label",
+    "select",
+    "input[type='button']",
+    "input[type='submit']",
+    "input[type='reset']",
+    "[data-entry-action]",
+    "[data-email-open]",
+    "[data-copy-email]",
+    "[data-cv-open]",
+    "[data-project-detail-open]",
+    "[data-project-carousel-prev]",
+    "[data-project-carousel-next]",
+    "[data-theme-dock-tab]",
+    "[data-interface-sound]",
+    ".project-carousel__card",
+    ".project-preview-trigger",
+    ".project-detail-modal__close",
+    ".email-modal__close",
+    ".cv-modal__close",
+    ".nav-toggle",
+    ".nav-page-toggle",
+    ".grid-theme-toggle",
+    ".audio-control__button",
+    ".audio-control__mute",
+    ".case-page__step",
+    ".case-choice-card"
+  ].join(",");
+  const textSelector = [
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "li",
+    "blockquote",
+    "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='range']):not([type='checkbox']):not([type='radio'])",
+    "textarea",
+    "[contenteditable='true']",
+    ".project-detail-modal",
+    ".case-page__panel",
+    ".case-flow-step__panel",
+    ".case-panel",
+    ".rg-case-panel",
+    ".case-summary",
+    ".rg-summary"
+  ].join(",");
+  const editableTextSelector = [
+    "input:not([type='button']):not([type='submit']):not([type='reset']):not([type='range']):not([type='checkbox']):not([type='radio'])",
+    "textarea",
+    "[contenteditable='true']"
+  ].join(",");
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let dotX = 0;
+  let dotY = 0;
+  let ringX = 0;
+  let ringY = 0;
+  let hasPointerPosition = false;
+  let animationFrame = null;
+
+  function isCustomCursorAllowed() {
+    return finePointerPreference.matches && !reducedMotionPreference.matches;
+  }
+
+  function setCursorClass(className, isEnabled) {
+    if (cursor.classList.contains(className) !== isEnabled) {
+      cursor.classList.toggle(className, isEnabled);
+    }
+  }
+
+  function stopCursorAnimation() {
+    if (!animationFrame) return;
+
+    window.cancelAnimationFrame(animationFrame);
+    animationFrame = null;
+  }
+
+  function renderCursor() {
+    const dotEase = 0.62;
+    const ringEase = 0.2;
+
+    dotX += (mouseX - dotX) * dotEase;
+    dotY += (mouseY - dotY) * dotEase;
+    ringX += (mouseX - ringX) * ringEase;
+    ringY += (mouseY - ringY) * ringEase;
+
+    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(var(--custom-cursor-dot-scale, 1))`;
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) scale(var(--custom-cursor-ring-scale, 1))`;
+
+    animationFrame = window.requestAnimationFrame(renderCursor);
+  }
+
+  function startCursorAnimation() {
+    if (animationFrame || !isCustomCursorAllowed()) return;
+
+    animationFrame = window.requestAnimationFrame(renderCursor);
+  }
+
+  function enableCustomCursor() {
+    if (!isCustomCursorAllowed()) {
+      disableCustomCursor();
+      return;
+    }
+
+    cursor.classList.remove("custom-cursor--disabled");
+    document.documentElement.classList.add("custom-cursor-enabled");
+
+    if (hasPointerPosition) {
+      setCursorClass("custom-cursor--hidden", false);
+      startCursorAnimation();
+    }
+  }
+
+  function disableCustomCursor() {
+    stopCursorAnimation();
+    cursor.classList.add("custom-cursor--disabled", "custom-cursor--hidden");
+    cursor.classList.remove("custom-cursor--hover", "custom-cursor--active", "custom-cursor--text");
+    document.documentElement.classList.remove("custom-cursor-enabled");
+  }
+
+  function hideCustomCursor() {
+    setCursorClass("custom-cursor--hidden", true);
+    setCursorClass("custom-cursor--active", false);
+  }
+
+  function showCustomCursor() {
+    if (!isCustomCursorAllowed()) {
+      disableCustomCursor();
+      return;
+    }
+
+    enableCustomCursor();
+    setCursorClass("custom-cursor--hidden", false);
+  }
+
+  function updateCursorTarget(target) {
+    if (!(target instanceof Element)) return;
+
+    const isEditableTextTarget = Boolean(target.closest(editableTextSelector));
+    const isHoverTarget = !isEditableTextTarget && Boolean(target.closest(hoverSelector));
+    const isTextTarget = isEditableTextTarget || (!isHoverTarget && Boolean(target.closest(textSelector)));
+
+    setCursorClass("custom-cursor--hover", isHoverTarget);
+    setCursorClass("custom-cursor--text", isTextTarget);
+  }
+
+  function handlePointerMove(event) {
+    if (event.pointerType && event.pointerType !== "mouse") return;
+
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+
+    if (!hasPointerPosition) {
+      dotX = mouseX;
+      dotY = mouseY;
+      ringX = mouseX;
+      ringY = mouseY;
+      hasPointerPosition = true;
+    }
+
+    showCustomCursor();
+    updateCursorTarget(event.target);
+  }
+
+  function handlePointerDown(event) {
+    if (event.pointerType && event.pointerType !== "mouse") return;
+
+    setCursorClass("custom-cursor--active", true);
+  }
+
+  function handlePointerUp() {
+    setCursorClass("custom-cursor--active", false);
+  }
+
+  function watchMediaQuery(mediaQuery, handler) {
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", handler);
+      return;
+    }
+
+    if (typeof mediaQuery.addListener === "function") {
+      mediaQuery.addListener(handler);
+    }
+  }
+
+  window.addEventListener("pointermove", handlePointerMove, { passive: true });
+  window.addEventListener("pointerover", (event) => updateCursorTarget(event.target), { passive: true });
+  window.addEventListener("pointerdown", handlePointerDown, { passive: true });
+  window.addEventListener("pointerup", handlePointerUp, { passive: true });
+  document.addEventListener("mouseleave", hideCustomCursor);
+  window.addEventListener("blur", hideCustomCursor);
+  window.addEventListener("focus", () => {
+    if (hasPointerPosition) showCustomCursor();
+  });
+  watchMediaQuery(finePointerPreference, enableCustomCursor);
+  watchMediaQuery(reducedMotionPreference, enableCustomCursor);
+  enableCustomCursor();
+}
+
+initializeCustomCursor();
+
 const bootScrollKeys = new Set([
   "ArrowDown",
   "ArrowUp",

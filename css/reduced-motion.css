@@ -9,6 +9,15 @@
     scroll-behavior: auto !important;
   }
 
+  html.custom-cursor-enabled,
+  html.custom-cursor-enabled * {
+    cursor: auto !important;
+  }
+
+  .custom-cursor {
+    display: none !important;
+  }
+
   *,
   *::before,
   *::after {

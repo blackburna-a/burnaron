@@ -30,6 +30,29 @@ html.theme-light body {
   color: var(--text);
 }
 
+.theme-light .custom-cursor {
+  --custom-cursor-dot: #075985;
+  --custom-cursor-ring: rgba(8, 91, 122, 0.62);
+  --custom-cursor-glow: rgba(8, 116, 153, 0.14);
+}
+
+.theme-light .custom-cursor__dot {
+  box-shadow: 0 0 10px rgba(8, 116, 153, 0.16);
+}
+
+.theme-light .custom-cursor__ring {
+  background: rgba(8, 116, 153, 0.025);
+  box-shadow:
+    0 0 14px rgba(8, 116, 153, 0.1),
+    inset 0 0 10px rgba(8, 116, 153, 0.04);
+}
+
+.theme-light .custom-cursor--hover {
+  --custom-cursor-dot: #0f766e;
+  --custom-cursor-ring: rgba(15, 118, 110, 0.78);
+  --custom-cursor-glow: rgba(15, 118, 110, 0.16);
+}
+
 .theme-light .background-grid {
   background:
     linear-gradient(rgba(8, 85, 112, 0.08) 1px, transparent 1px),
