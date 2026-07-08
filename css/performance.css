@@ -12,6 +12,21 @@
   transform-style: flat;
 }
 
+.is-animation-paused .project-animation__scroll-track,
+.is-animation-paused .project-animation__scroll-thumb,
+.is-animation-paused .project-animation__mini-cards span,
+.is-animation-paused .project-animation__scan,
+.is-animation-paused .project-animation__badge,
+.is-animation-paused .project-animation__typing,
+.is-animation-paused .project-animation__result,
+.is-animation-paused .case-choice-card__scan,
+.is-animation-paused .fraud-case__cursor span,
+.is-animation-paused .rg-case__message,
+.is-animation-paused .rg-case__call-indicator::before,
+html.animations-paused * {
+  animation-play-state: paused !important;
+}
+
 @media (max-width: 980px), (hover: none) {
   .hero-card,
   .info-card,

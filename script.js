@@ -137,7 +137,7 @@ function applyAudioState({ persist = false } = {}) {
   const bgmVolume = getEffectiveSoundVolume("bgm");
 
   if (bgmAudio) {
-    bgmAudio.preload = "auto";
+    bgmAudio.preload = "none";
     bgmAudio.loop = true;
     bgmAudio.volume = bgmVolume;
     bgmAudio.muted = isAudioEffectivelyMuted();
@@ -317,6 +317,27 @@ function unlockBootScroll() {
 
 function dispatchPreloaderComplete() {
   window.dispatchEvent(new CustomEvent("burnaron:preloader-complete"));
+  dispatchEntryDismissed();
+}
+
+let entryDismissedEventDispatched = false;
+
+function dispatchEntryDismissed() {
+  if (entryDismissedEventDispatched) return;
+
+  entryDismissedEventDispatched = true;
+  window.dispatchEvent(new CustomEvent("burnaron:entry-dismissed"));
+}
+
+function runAfterEntryDismissed(callback) {
+  if (typeof callback !== "function") return;
+
+  if (!bootScreen || !bootScreen.isConnected || document.documentElement.classList.contains("preloader-seen")) {
+    callback();
+    return;
+  }
+
+  window.addEventListener("burnaron:entry-dismissed", callback, { once: true });
 }
 
 function markEntryDismissedForNavigation() {
@@ -749,44 +770,73 @@ function initializeKineticGrid() {
 
   document.documentElement.classList.add("has-kinetic-grid");
 
+  const kineticGridSharedPointer = {
+    clientX: -9999,
+    clientY: -9999,
+    active: false,
+    frame: null
+  };
+
+  let isDocumentVisible = !document.hidden;
+  let resizeFrame = null;
+  let isReducedMotion = reducedMotionPreference.matches;
+
   const gridControllers = [];
 
-  gridRoots.forEach((gridRoot) => {
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function getGridPalette() {
+    const isLight = document.documentElement.classList.contains("theme-light");
+
+    return isLight
+      ? {
+          dot: "rgba(37, 99, 123, 0.2)",
+          activeDot: "rgba(8, 116, 153, 0.62)",
+          ripple: "rgba(8, 116, 153, 0.24)"
+        }
+      : {
+          dot: "rgba(72, 217, 255, 0.18)",
+          activeDot: "rgba(93, 247, 226, 0.72)",
+          ripple: "rgba(72, 217, 255, 0.32)"
+        };
+  }
+
+  function makeGridController(gridRoot) {
     const canvas = gridRoot.querySelector("[data-kinetic-grid-canvas]");
-    if (!canvas) return;
+    if (!canvas) return null;
 
     const context = canvas.getContext("2d", { alpha: true });
-    if (!context) return;
+    if (!context) return null;
 
+    const isEntryGrid = gridRoot.closest("#bootScreen") !== null || gridRoot.classList.contains("entry-screen__grid");
     const pointer = { x: -9999, y: -9999, active: false };
     const pulses = [];
+    let bounds = { left: 0, top: 0, right: 0, bottom: 0 };
     let width = 0;
     let height = 0;
     let animationFrame = null;
-    let isAnimating = false;
-    let isReducedMotion = reducedMotionPreference.matches;
+    let isVisible = true;
 
-    function clamp(value, min, max) {
-      return Math.min(max, Math.max(min, value));
-    }
+    function shouldDraw() {
+      if (!isDocumentVisible || !gridRoot.isConnected || width <= 0 || height <= 0) return false;
 
-    function getGridPalette() {
-      const isLight = document.documentElement.classList.contains("theme-light");
+      if (isEntryGrid) {
+        return Boolean(bootScreen?.isConnected);
+      }
 
-      return isLight
-        ? {
-            dot: "rgba(37, 99, 123, 0.2)",
-            activeDot: "rgba(8, 116, 153, 0.62)",
-            ripple: "rgba(8, 116, 153, 0.24)"
-          }
-        : {
-            dot: "rgba(72, 217, 255, 0.18)",
-            activeDot: "rgba(93, 247, 226, 0.72)",
-            ripple: "rgba(72, 217, 255, 0.32)"
-          };
+      return !isBootActive() && isVisible;
     }
 
     function drawGrid(timestamp = window.performance.now()) {
+      animationFrame = null;
+
+      if (!shouldDraw()) {
+        pulses.length = 0;
+        return;
+      }
+
       const palette = getGridPalette();
       const spacing = width < 720 ? 38 : 44;
       const radius = isReducedMotion ? 0 : 150;
@@ -820,140 +870,232 @@ function initializeKineticGrid() {
         }
       }
 
-      pulses.forEach((pulse) => {
-        const age = timestamp - pulse.startedAt;
-        const progress = clamp(age / 720, 0, 1);
+      if (!isReducedMotion) {
+        pulses.forEach((pulse) => {
+          const age = timestamp - pulse.startedAt;
+          const progress = clamp(age / 720, 0, 1);
 
-        context.beginPath();
-        context.strokeStyle = palette.ripple;
-        context.lineWidth = 1.4 * (1 - progress);
-        context.arc(pulse.x, pulse.y, 18 + progress * 150, 0, Math.PI * 2);
-        context.stroke();
-      });
+          context.beginPath();
+          context.strokeStyle = palette.ripple;
+          context.lineWidth = 1.4 * (1 - progress);
+          context.arc(pulse.x, pulse.y, 18 + progress * 150, 0, Math.PI * 2);
+          context.stroke();
+        });
 
-      for (let index = pulses.length - 1; index >= 0; index -= 1) {
-        if (timestamp - pulses[index].startedAt > 760) {
-          pulses.splice(index, 1);
+        for (let index = pulses.length - 1; index >= 0; index -= 1) {
+          if (timestamp - pulses[index].startedAt > 760) {
+            pulses.splice(index, 1);
+          }
         }
       }
 
-      isAnimating = pulses.length > 0;
-
-      if (isAnimating) {
-        animationFrame = window.requestAnimationFrame(drawGrid);
+      if (pulses.length > 0 && shouldDraw()) {
+        requestGridDraw();
       } else {
         animationFrame = null;
       }
     }
 
     function requestGridDraw() {
-      if (animationFrame) return;
-      animationFrame = window.requestAnimationFrame((timestamp) => {
-        animationFrame = null;
-        drawGrid(timestamp);
-      });
+      if (animationFrame || document.hidden) return;
+      animationFrame = window.requestAnimationFrame(drawGrid);
     }
 
-    function resizeCanvas() {
-      const rect = gridRoot.getBoundingClientRect();
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    function cancelGridDraw() {
+      if (!animationFrame) return;
 
-      width = Math.max(1, Math.round(rect.width));
-      height = Math.max(1, Math.round(rect.height));
-      canvas.width = Math.round(width * pixelRatio);
-      canvas.height = Math.round(height * pixelRatio);
-      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-      drawGrid();
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
     }
 
-    function updatePointerFromEvent(event) {
-      if (isReducedMotion) return;
-      if (!gridRoot.isConnected) return;
-
-      const rect = gridRoot.getBoundingClientRect();
-      const isInside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-
-      if (!isInside) {
-        pointer.active = false;
-        requestGridDraw();
+    function refreshBounds({ draw = true } = {}) {
+      if (!gridRoot.isConnected) {
+        cancelGridDraw();
         return;
       }
 
-      pointer.x = event.clientX - rect.left;
-      pointer.y = event.clientY - rect.top;
+      const rect = gridRoot.getBoundingClientRect();
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      const nextWidth = Math.max(1, Math.round(rect.width));
+      const nextHeight = Math.max(1, Math.round(rect.height));
+
+      bounds = {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom
+      };
+
+      if (nextWidth !== width || nextHeight !== height || canvas.width !== Math.round(nextWidth * pixelRatio)) {
+        width = nextWidth;
+        height = nextHeight;
+        canvas.width = Math.round(width * pixelRatio);
+        canvas.height = Math.round(height * pixelRatio);
+        context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      }
+
+      if (draw) {
+        requestGridDraw();
+      }
+    }
+
+    function isPointerInsideBounds() {
+      return kineticGridSharedPointer.clientX >= bounds.left &&
+        kineticGridSharedPointer.clientX <= bounds.right &&
+        kineticGridSharedPointer.clientY >= bounds.top &&
+        kineticGridSharedPointer.clientY <= bounds.bottom;
+    }
+
+    function resetPointer({ draw = true } = {}) {
+      if (!pointer.active) return;
+
+      pointer.active = false;
+
+      if (draw) {
+        requestGridDraw();
+      }
+    }
+
+    function updatePointerFromSharedState() {
+      if (isReducedMotion || !kineticGridSharedPointer.active || !shouldDraw()) {
+        resetPointer();
+        return;
+      }
+
+      if (!isPointerInsideBounds()) {
+        resetPointer();
+        return;
+      }
+
+      pointer.x = kineticGridSharedPointer.clientX - bounds.left;
+      pointer.y = kineticGridSharedPointer.clientY - bounds.top;
       pointer.active = true;
       requestGridDraw();
     }
 
-    function resetPointer() {
-      pointer.active = false;
-      requestGridDraw();
-    }
-
-    function addPulseFromEvent(event) {
-      if (isReducedMotion) return;
-      if (!gridRoot.isConnected) return;
-
-      const rect = gridRoot.getBoundingClientRect();
-      const isInside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-
-      if (!isInside) return;
+    function addPulseFromSharedState() {
+      if (isReducedMotion || !kineticGridSharedPointer.active || !shouldDraw() || !isPointerInsideBounds()) return;
 
       pulses.push({
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
+        x: kineticGridSharedPointer.clientX - bounds.left,
+        y: kineticGridSharedPointer.clientY - bounds.top,
         startedAt: window.performance.now()
       });
 
-      if (!animationFrame) {
-        animationFrame = window.requestAnimationFrame(drawGrid);
-      }
+      requestGridDraw();
     }
 
-    window.addEventListener("resize", resizeCanvas, { passive: true });
-    window.addEventListener("burnaron:grid-resize", resizeCanvas);
-    window.addEventListener("burnaron:grid-theme-change", () => {
-      resizeCanvas();
-      requestGridDraw();
-    });
+    function setVisible(nextVisible) {
+      isVisible = Boolean(nextVisible);
 
-    reducedMotionPreference.addEventListener?.("change", (event) => {
-      isReducedMotion = event.matches;
-      pointer.active = false;
-      pulses.length = 0;
-      requestGridDraw();
-    });
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && animationFrame) {
-        window.cancelAnimationFrame(animationFrame);
-        animationFrame = null;
-      } else if (!document.hidden) {
-        requestGridDraw();
+      if (!isVisible) {
+        resetPointer({ draw: false });
+        pulses.length = 0;
+        cancelGridDraw();
+        return;
       }
-    });
 
-    resizeCanvas();
-    gridControllers.push({
-      addPulseFromEvent,
+      refreshBounds();
+    }
+
+    refreshBounds({ draw: false });
+
+    return {
+      addPulseFromSharedState,
+      cancelGridDraw,
+      isEntryGrid,
+      refreshBounds,
+      requestGridDraw,
       resetPointer,
-      resizeCanvas,
-      updatePointerFromEvent
+      root: gridRoot,
+      setVisible,
+      updatePointerFromSharedState
+    };
+  }
+
+  gridRoots.forEach((gridRoot) => {
+    const controller = makeGridController(gridRoot);
+
+    if (controller) {
+      gridControllers.push(controller);
+    }
+  });
+
+  if (gridControllers.length === 0) return;
+
+  function refreshAllBounds() {
+    resizeFrame = null;
+    gridControllers.forEach((controller) => controller.refreshBounds());
+  }
+
+  function scheduleBoundsRefresh() {
+    if (resizeFrame) return;
+    resizeFrame = window.requestAnimationFrame(refreshAllBounds);
+  }
+
+  function updateControllersFromPointer() {
+    kineticGridSharedPointer.frame = null;
+    gridControllers.forEach((controller) => controller.updatePointerFromSharedState());
+  }
+
+  function schedulePointerUpdate() {
+    if (kineticGridSharedPointer.frame) return;
+    kineticGridSharedPointer.frame = window.requestAnimationFrame(updateControllersFromPointer);
+  }
+
+  if ("IntersectionObserver" in window) {
+    const visibilityObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const controller = gridControllers.find((candidate) => candidate.root === entry.target);
+
+        if (controller) {
+          controller.setVisible(entry.isIntersecting || controller.isEntryGrid);
+        }
+      });
+    }, { threshold: 0.01 });
+
+    gridControllers.forEach((controller) => visibilityObserver.observe(controller.root));
+  }
+
+  window.addEventListener("resize", scheduleBoundsRefresh, { passive: true });
+  window.addEventListener("scroll", scheduleBoundsRefresh, { passive: true });
+  window.addEventListener("burnaron:grid-resize", scheduleBoundsRefresh);
+  window.addEventListener("burnaron:preloader-complete", scheduleBoundsRefresh);
+  window.addEventListener("burnaron:grid-theme-change", () => {
+    scheduleBoundsRefresh();
+    gridControllers.forEach((controller) => controller.requestGridDraw());
+  });
+
+  reducedMotionPreference.addEventListener?.("change", (event) => {
+    isReducedMotion = event.matches;
+    gridControllers.forEach((controller) => {
+      controller.resetPointer({ draw: false });
+      controller.requestGridDraw();
     });
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    isDocumentVisible = !document.hidden;
+
+    if (!isDocumentVisible) {
+      kineticGridSharedPointer.active = false;
+      gridControllers.forEach((controller) => {
+        controller.resetPointer({ draw: false });
+        controller.cancelGridDraw();
+      });
+      return;
+    }
+
+    scheduleBoundsRefresh();
   });
 
   window.addEventListener(
     "pointermove",
     (event) => {
-      gridControllers.forEach((controller) => controller.updatePointerFromEvent(event));
+      kineticGridSharedPointer.clientX = event.clientX;
+      kineticGridSharedPointer.clientY = event.clientY;
+      kineticGridSharedPointer.active = true;
+      schedulePointerUpdate();
     },
     { passive: true }
   );
@@ -961,27 +1103,244 @@ function initializeKineticGrid() {
   window.addEventListener(
     "pointerdown",
     (event) => {
-      gridControllers.forEach((controller) => controller.addPulseFromEvent(event));
+      kineticGridSharedPointer.clientX = event.clientX;
+      kineticGridSharedPointer.clientY = event.clientY;
+      kineticGridSharedPointer.active = true;
+      gridControllers.forEach((controller) => controller.addPulseFromSharedState());
     },
     { passive: true }
   );
 
-  window.addEventListener("pointerleave", () => {
+  function resetSharedPointer() {
+    kineticGridSharedPointer.active = false;
     gridControllers.forEach((controller) => controller.resetPointer());
-  });
+  }
 
-  window.addEventListener("blur", () => {
-    gridControllers.forEach((controller) => controller.resetPointer());
-  });
+  window.addEventListener("pointerleave", resetSharedPointer);
+  window.addEventListener("blur", resetSharedPointer);
 
   document.documentElement.classList.add("is-grid-ready");
+  scheduleBoundsRefresh();
 }
 
 initializeKineticGrid();
+
+function initCustomCursor() {
+  const finePointerQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const clickableSelector = [
+    "a[href]",
+    "button",
+    "[role='button']",
+    "[tabindex]:not([tabindex='-1'])",
+    "[data-entry-action]",
+    "[data-copy-email]",
+    "[data-cv-open]",
+    "[data-email-open]",
+    "[data-project-detail-open]",
+    "[data-project-carousel-card]",
+    "[data-project-carousel-prev]",
+    "[data-project-carousel-next]",
+    "[data-fraud-step]",
+    "[data-rg-step]",
+    ".case-choice-card",
+    ".project-carousel__card",
+    ".modal-close",
+    ".nav-toggle",
+    ".nav-page-toggle",
+    ".audio-control__button",
+    ".grid-theme-toggle"
+  ].join(",");
+  const textSelector = [
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "li",
+    "blockquote",
+    "input",
+    "textarea",
+    "[contenteditable='true']",
+    ".project-detail-modal",
+    ".case-page__panel",
+    ".rg-case__panel"
+  ].join(",");
+
+  let cursor = null;
+  let dot = null;
+  let ring = null;
+  let enabled = false;
+  let hasMoved = false;
+  let animationFrame = null;
+  let targetX = 0;
+  let targetY = 0;
+  let dotX = 0;
+  let dotY = 0;
+  let ringX = 0;
+  let ringY = 0;
+
+  function createCursor() {
+    if (cursor) return;
+
+    cursor = document.createElement("div");
+    cursor.className = "custom-cursor custom-cursor--hidden";
+    cursor.setAttribute("aria-hidden", "true");
+
+    dot = document.createElement("span");
+    dot.className = "custom-cursor__dot";
+
+    ring = document.createElement("span");
+    ring.className = "custom-cursor__ring";
+
+    cursor.append(dot, ring);
+    document.body.appendChild(cursor);
+  }
+
+  function setCursorClass(className, isActive) {
+    if (!cursor || cursor.classList.contains(className) === isActive) return;
+    cursor.classList.toggle(className, isActive);
+  }
+
+  function setCursorHidden(isHidden) {
+    setCursorClass("custom-cursor--hidden", isHidden);
+  }
+
+  function renderCursor() {
+    animationFrame = null;
+
+    if (!enabled || !dot || !ring || !hasMoved) return;
+
+    const snapToPointer = reducedMotionPreference.matches;
+    const dotEase = snapToPointer ? 1 : 0.55;
+    const ringEase = snapToPointer ? 1 : 0.22;
+
+    dotX += (targetX - dotX) * dotEase;
+    dotY += (targetY - dotY) * dotEase;
+    ringX += (targetX - ringX) * ringEase;
+    ringY += (targetY - ringY) * ringEase;
+
+    dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%)`;
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+
+    if (
+      !snapToPointer &&
+      (Math.abs(targetX - ringX) > 0.1 || Math.abs(targetY - ringY) > 0.1)
+    ) {
+      animationFrame = window.requestAnimationFrame(renderCursor);
+    }
+  }
+
+  function requestCursorFrame() {
+    if (animationFrame || document.hidden) return;
+    animationFrame = window.requestAnimationFrame(renderCursor);
+  }
+
+  function updateInteractionState(target) {
+    if (!(target instanceof Element) || !cursor) return;
+
+    const clickableElement = target.closest(clickableSelector);
+    const disabledClickable = clickableElement?.matches(":disabled, [aria-disabled='true']");
+    const isClickable = Boolean(clickableElement && !disabledClickable);
+    const isText = !isClickable && Boolean(target.closest(textSelector));
+
+    setCursorClass("custom-cursor--hover", isClickable);
+    setCursorClass("custom-cursor--text", isText);
+  }
+
+  function updateCursorPosition(event) {
+    targetX = event.clientX;
+    targetY = event.clientY;
+
+    if (!hasMoved) {
+      hasMoved = true;
+      dotX = targetX;
+      dotY = targetY;
+      ringX = targetX;
+      ringY = targetY;
+    }
+
+    setCursorHidden(false);
+    updateInteractionState(event.target);
+    requestCursorFrame();
+  }
+
+  function handlePointerMove(event) {
+    if (!enabled || (event.pointerType && event.pointerType !== "mouse")) return;
+    updateCursorPosition(event);
+  }
+
+  function handleMouseMove(event) {
+    if (!enabled) return;
+    updateCursorPosition(event);
+  }
+
+  function hideCursor() {
+    setCursorHidden(true);
+    setCursorClass("custom-cursor--active", false);
+  }
+
+  function enableCursor() {
+    if (enabled || !finePointerQuery.matches) return;
+
+    createCursor();
+    enabled = true;
+    hasMoved = false;
+    document.documentElement.classList.add("custom-cursor-enabled");
+    cursor.classList.toggle("custom-cursor--reduced", reducedMotionPreference.matches);
+  }
+
+  function disableCursor() {
+    enabled = false;
+    hasMoved = false;
+    document.documentElement.classList.remove("custom-cursor-enabled");
+
+    if (animationFrame) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+
+    hideCursor();
+  }
+
+  function syncCursorAvailability() {
+    if (finePointerQuery.matches) {
+      enableCursor();
+    } else {
+      disableCursor();
+    }
+  }
+
+  document.addEventListener("pointermove", handlePointerMove, { passive: true });
+  document.addEventListener("mousemove", handleMouseMove, { passive: true });
+  document.addEventListener("pointerdown", () => setCursorClass("custom-cursor--active", true), { passive: true });
+  document.addEventListener("pointerup", () => setCursorClass("custom-cursor--active", false), { passive: true });
+  document.addEventListener("pointercancel", hideCursor, { passive: true });
+  document.addEventListener("pointerleave", hideCursor);
+  window.addEventListener("blur", hideCursor);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      hideCursor();
+      return;
+    }
+
+    requestCursorFrame();
+  });
+
+  finePointerQuery.addEventListener?.("change", syncCursorAvailability);
+  reducedMotionPreference.addEventListener?.("change", (event) => {
+    cursor?.classList.toggle("custom-cursor--reduced", event.matches);
+  });
+
+  syncCursorAvailability();
+}
+
+initCustomCursor();
 /* Controls the non-sticky project carousel on the Projects page. */
 function initializeProjectCarousel() {
   const carousel = document.querySelector("[data-project-carousel]");
   if (!carousel) return;
+  if (carousel.dataset.carouselInitialized === "true") return;
 
   const track = carousel.querySelector("[data-project-carousel-track]");
   const cards = Array.from(carousel.querySelectorAll("[data-project-carousel-card]"));
@@ -993,6 +1352,7 @@ function initializeProjectCarousel() {
   let indicators = [];
 
   if (!track || cards.length === 0) return;
+  carousel.dataset.carouselInitialized = "true";
 
   function clampIndex(index) {
     return (index + cards.length) % cards.length;
@@ -1086,7 +1446,7 @@ function initializeProjectCarousel() {
   setActiveProject(activeIndex, { behavior: "auto" });
 }
 
-initializeProjectCarousel();
+runAfterEntryDismissed(initializeProjectCarousel);
 // Assigns the supplied click sounds to selected portfolio controls.
 document.addEventListener("click", (event) => {
   const closeControl = event.target.closest(
@@ -1226,6 +1586,7 @@ const progressiveScrollKeys = new Set([
   " "
 ]);
 
+let progressiveSectionsInitialized = false;
 let progressiveLastRevealedIndex = 0;
 let progressiveRevealLocked = false;
 let progressiveWheelLastAt = 0;
@@ -1472,6 +1833,9 @@ function handleProgressiveKeydown(event) {
 
 function initializeProgressiveSections() {
   if (progressiveSections.length < 2) return;
+  if (progressiveSectionsInitialized) return;
+
+  progressiveSectionsInitialized = true;
 
   document.documentElement.classList.add("progressive-sections");
 
@@ -1520,7 +1884,7 @@ function initializeProgressiveSections() {
   }
 }
 
-initializeProgressiveSections();
+runAfterEntryDismissed(initializeProgressiveSections);
 
 
 
@@ -1564,14 +1928,23 @@ function setupCardReveal(sectionSelector, cardSelector) {
   }
 }
 
-setupCardReveal("#experience", "#experience .experience-brand");
-setupCardReveal("#skills", "#skills .reveal-card");
-setupCardReveal("#projects", "#projects .reveal-card");
+function initializeCardReveals() {
+  setupCardReveal("#experience", "#experience .experience-brand");
+  setupCardReveal("#skills", "#skills .reveal-card");
+  setupCardReveal("#projects", "#projects .reveal-card");
+}
+
+runAfterEntryDismissed(initializeCardReveals);
+
+let projectPreviewAnimationsInitialized = false;
 
 function initializeProjectPreviewAnimations() {
   const projectPreviews = Array.from(document.querySelectorAll("[data-project-preview]"));
 
   if (projectPreviews.length === 0) return;
+  if (projectPreviewAnimationsInitialized) return;
+
+  projectPreviewAnimationsInitialized = true;
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1596,7 +1969,49 @@ function initializeProjectPreviewAnimations() {
   });
 }
 
-initializeProjectPreviewAnimations();
+runAfterEntryDismissed(initializeProjectPreviewAnimations);
+
+let animationVisibilityInitialized = false;
+
+function initializeAnimationVisibility() {
+  if (animationVisibilityInitialized) return;
+
+  const animatedRoots = Array.from(document.querySelectorAll([
+    "[data-project-preview]",
+    "[data-project-carousel]",
+    "[data-fraud-case]",
+    "[data-rg-case]"
+  ].join(",")));
+
+  if (animatedRoots.length === 0) return;
+
+  animationVisibilityInitialized = true;
+
+  const setPageAnimationPause = () => {
+    document.documentElement.classList.toggle("animations-paused", document.hidden);
+  };
+
+  setPageAnimationPause();
+  document.addEventListener("visibilitychange", setPageAnimationPause);
+
+  if (reducedMotionPreference.matches || !("IntersectionObserver" in window)) {
+    animatedRoots.forEach((root) => root.classList.remove("is-animation-paused"));
+    return;
+  }
+
+  const animationObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle("is-animation-paused", !entry.isIntersecting);
+    });
+  }, { rootMargin: "120px 0px", threshold: 0.01 });
+
+  animatedRoots.forEach((root) => {
+    root.classList.add("is-animation-paused");
+    animationObserver.observe(root);
+  });
+}
+
+runAfterEntryDismissed(initializeAnimationVisibility);
 
 /* Runs the fictional Fraud/AML Case page when its root element is present. */
 const fraudCaseRoot = document.querySelector("[data-fraud-case]");

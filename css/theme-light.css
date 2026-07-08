@@ -18,7 +18,14 @@ html.theme-light {
   --accent-green: #0f766e;
   --accent-gold: #986b16;
   --shadow: 0 22px 70px rgba(21, 94, 117, 0.16), 0 0 38px rgba(8, 145, 178, 0.08);
+  --custom-cursor-dot: #06283a;
+  --custom-cursor-ring: rgba(8, 116, 153, 0.7);
+  --custom-cursor-glow: rgba(8, 116, 153, 0.14);
   background: var(--bg);
+}
+
+.theme-light .custom-cursor {
+  mix-blend-mode: normal;
 }
 
 html.theme-light body {

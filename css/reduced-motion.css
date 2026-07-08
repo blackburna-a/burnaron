@@ -82,4 +82,15 @@
   .logo-preloader__grid {
     opacity: 0.16 !important;
   }
+
+  .custom-cursor,
+  .custom-cursor__dot,
+  .custom-cursor__ring {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .custom-cursor__ring {
+    box-shadow: none !important;
+  }
 }
