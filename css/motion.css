@@ -1,0 +1,67 @@
+/* All resting states are visible. JavaScript adds finite, cancelable motion. */
+.button, .text-link, .text-button, .close-button, .command-trigger, .secret-mark,
+.site-header nav a, .project-visual, .case-link, details > summary {
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease;
+}
+.hero-art { --scene-x: 0px; --scene-y: 0px; transform: translate3d(var(--scene-x),var(--scene-y),0); transition: transform .35s var(--ease); }
+.hero.is-pointed .hero-art { transition: none; }
+.hero-images { transform-origin: 70% 50%; }
+.hero-images > img { transition: opacity .32s var(--ease), visibility .32s; }
+.hero-haze { opacity: .2; }
+.hero-light { opacity: .5; }
+.site-header nav a { position: relative; }
+.site-header nav a::after { content: ''; position: absolute; bottom: 6px; left: 0; right: 0; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .24s var(--ease); }
+.site-header nav a:is(:hover,:focus-visible,[aria-current])::after { transform: scaleX(1); }
+.text-link > span, .email-link > span, .card-heading > span, .case-arrow { display: inline-block; transition: transform .28s var(--ease), color .18s ease; }
+.text-link:is(:hover,:focus-visible) > span, .email-link:is(:hover,:focus-visible) > span,
+.project-card:focus-within .card-heading > span, .project-card:hover .card-heading > span,
+.case-link:is(:hover,:focus-visible) .case-arrow { transform: translate(3px,-3px); }
+.project-card:is(:hover,:focus-within) .project-visual { border-color: var(--quiet); }
+.case-link:is(:hover,:focus-visible) { border-top-color: var(--accent); }
+.toast { transform: translate(-50%,6px); transition: opacity .2s ease, transform .28s var(--ease); }
+.toast.is-visible { transform: translate(-50%,0); }
+.bike-road { height: 58px; }
+.motorcycle { width: 88px; height: 51px; bottom: 1px; }
+.bike-wheel { transform-box: fill-box; transform-origin: center; }
+.signature-pop { box-shadow: 0 8px 32px #0003; }
+.signature-ring { position: absolute; inset: -7px; border: 1px solid var(--accent); border-radius: 50%; opacity: 0; }
+
+:root.is-changing-appearance body,
+:root.is-changing-appearance :is(.site-header,.site-footer,.cases-section,.project-visual,.project-evidence,.case-desk,.desk-panel,.desk-message,.desk-signal,.disclosure,.case-takeaway,.button,.appearance select,dialog,.hero-caption),
+:root.is-changing-appearance .hero-art::after {
+  transition: background-color .24s ease, color .24s ease, border-color .24s ease;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-pointer-surface] { --light-x: 50%; --light-y: 50%; }
+  .hero::after, .project-visual::after { content: ''; position: absolute; inset: 0; background: radial-gradient(350px circle at var(--light-x) var(--light-y),var(--spotlight),transparent 75%); opacity: 0; pointer-events: none; z-index: 2; transition: opacity .28s ease; }
+  .hero.is-pointed::after, .project-card.is-pointed .project-visual::after { opacity: 1; }
+  .project-visual { transform: perspective(1000px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)); transition: transform .35s var(--ease), border-color .18s ease; }
+  .project-card.is-pointed .project-visual { transition: border-color .18s ease; }
+  [data-magnetic] > span { transform: translate(var(--magnet-x,0px),var(--magnet-y,0px)); transition: transform .3s var(--ease); }
+  [data-magnetic].is-pointed > span { transition: none; }
+}
+
+/* Progressive cross-document navigation: native links, history and scroll remain native. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: page-out .16s ease both; }
+::view-transition-new(root) { animation: page-in .18s ease both; }
+@keyframes page-out { to { opacity: 0; } }
+@keyframes page-in { from { opacity: 0; } }
+
+:root[data-motion="still"] *, :root[data-motion="still"] *::before, :root[data-motion="still"] *::after { animation: none !important; transition: none !important; }
+:root[data-motion="still"] { view-transition-name: none; }
+:root[data-motion="still"] :is(.hero-art,.project-visual,[data-magnetic] > span) { transform: none !important; }
+:root[data-motion="still"] .hero::after, :root[data-motion="still"] .project-visual::after { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .hero-art, .project-visual, [data-magnetic] > span { transform: none !important; }
+  .brand path { stroke-dashoffset: 0 !important; }
+  .hero::after, .project-visual::after { display: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  dialog::backdrop { background: var(--backdrop-solid); }
+  .hero-haze, .hero-light, .hero::after, .project-visual::after { display: none; }
+}
