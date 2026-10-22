@@ -1,0 +1,66 @@
+{
+  "projects": [
+    {
+      "slug": "wolt",
+      "name": "Wolt Discount Finder",
+      "description": "A Firefox extension that pulls visible restaurant discounts into a simpler view.",
+      "href": "/projects.html#wolt"
+    },
+    {
+      "slug": "searxng",
+      "name": "SearXNG Local Search",
+      "description": "A local search setup for exploring privacy, configuration and self-hosted services.",
+      "href": "/projects.html#searxng"
+    },
+    {
+      "slug": "deepseek",
+      "name": "DeepSeek Local AI",
+      "description": "Testing prompts, responses and system limits with a locally hosted AI model.",
+      "href": "/projects.html#deepseek"
+    },
+    {
+      "slug": "burnaron",
+      "name": "burnaron.com",
+      "description": "This website: a lightweight portfolio and fictional case studies.",
+      "href": "/projects.html#portfolio"
+    }
+  ],
+  "cases": [
+    {
+      "slug": "fraud",
+      "href": "/fraud-case.html",
+      "name": "Fraud / AML Case"
+    },
+    {
+      "slug": "rg",
+      "href": "/rg-case.html",
+      "name": "Responsible Gambling Case"
+    }
+  ],
+  "experience": [
+    {
+      "date": "2026",
+      "company": "Momentum Group",
+      "role": "Reactivation Agent",
+      "detail": "Role recorded from July 2026."
+    },
+    {
+      "date": "2025 – 2026",
+      "company": "bet365",
+      "role": "Responsible Gambling Specialist",
+      "detail": "August 2025 to February 2026"
+    },
+    {
+      "date": "2025",
+      "company": "Abtran / HSE Live",
+      "role": "Support Representative",
+      "detail": "February to May 2025"
+    },
+    {
+      "date": "2022 – 2024",
+      "company": "Flutter",
+      "role": "Customer service → Fraud operations",
+      "detail": "Customer service: October 2022 to February 2023. Fraud Ringfence: February to August 2023. Fraud Operations Analyst: August 2023 to July 2024."
+    }
+  ]
+}
